@@ -144,8 +144,8 @@ If you need assistance with your robot project [visit us][9].
 
 [1]: https://github.com/KnoP-01/rapid-for-vim/releases/latest
 [2]: https://github.com/KnoP-01/rapid-for-vim#tldr
-[3]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L134
-[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L175
+[3]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L154
+[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
 [4]: https://vim.sourceforge.io/scripts/script.php?script_id=5348
 [5]: https://github.com/KnoP-01/rapid-for-vim/issues
 [7]: https://vim.sourceforge.io/scripts/script.php?script_id=3695
