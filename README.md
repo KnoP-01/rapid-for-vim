@@ -26,9 +26,10 @@ backup folder structure. Rapid for Vim modifies 'path' by default accordingly.
 
 ## Installation:
 
-Extract the most recent [release][1] archive into your `~/.vim/` or
-`%USERPROFILE%\vimfiles\` directory (depending on your System) keeping the
-folder structure. Overwrite rapid.\* files from older installation. 
+Extract the most recent [release][1] and copy the folders 
+`/doc`, `/ftdetect`, `/ftplugin`, `/indent` and `/syntax` 
+into your `~/.vim/` or `%USERPROFILE%\vimfiles\` directory. 
+Overwrite krl.\* files from older installation. 
 
 To fully use these scripts put >
 
@@ -71,9 +72,9 @@ Requires >
   
   
 #### ~/.vim/ftdetect/rapid.vim
-Detects Rapid files. For \*.prg and \*.mod this depends on the file ending.
-\*.sys get filetype rapid if there is "MODULE" or any "%%%" present in the
-first none blank line. Since v1.4.0 \*.cfg get filetype rapid too.
+Detects Rapid files based on their file name and content. Rapid files are
+checked for the presence of a MODULE line or any %%% HEADER. In case of an
+empty file you need to :set filetype=rapid manually.  
 .../ftdetect/rapid.vim also corrects mixed line endings (unix/dos-mix to unix)
 in \*.cfg files if |g:rapidAutoCorrCfgLineEnd| is set to 1.
 Requires >
