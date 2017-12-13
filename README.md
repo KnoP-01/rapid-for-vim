@@ -50,7 +50,7 @@ to use the help within Vim after installation. >
 
     :help rapid
 
-Or just open the file .../doc/krl.txt
+Or just open the file .../doc/rapid.txt
 
 ## Content description
 
