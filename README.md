@@ -29,7 +29,7 @@ backup folder structure. Rapid for Vim modifies 'path' by default accordingly.
 Extract the most recent [release][1] and copy the folders 
 `/doc`, `/ftdetect`, `/ftplugin`, `/indent` and `/syntax` 
 into your `~/.vim/` or `%USERPROFILE%\vimfiles\` directory. 
-Overwrite krl.\* files from older installation. 
+Overwrite rapid.\* files from older installation. 
 
 To fully use these scripts put >
 
