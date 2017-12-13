@@ -74,7 +74,7 @@ Requires >
 #### ~/.vim/ftdetect/rapid.vim
 Detects Rapid files based on their file name and content. Rapid files are
 checked for the presence of a MODULE line or any %%% HEADER. In case of an
-empty file you need to :set filetype=rapid manually.  
+empty file you need to `:set filetype=rapid` manually.  
 .../ftdetect/rapid.vim also corrects mixed line endings (unix/dos-mix to unix)
 in \*.cfg files if |g:rapidAutoCorrCfgLineEnd| is set to 1.
 Requires >
