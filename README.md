@@ -31,7 +31,7 @@ Extract the most recent [release][1] and copy the folders
 into your `~/.vim/` or `%USERPROFILE%\vimfiles\` directory. 
 Overwrite rapid.\* files from older installation. 
 
-To fully use these scripts put >
+To fully use these plugins put >
 
     filetype plugin indent on
     syntax on
@@ -115,7 +115,7 @@ A: I try not to interfere with user settings to much. So I made most of the
    settings that get changed optional.
 
 Q: I'm here to feed my kids, not to read. Do you have a quick suggestion on
-   krl settings for my |.vimrc|?  
+   rapid settings for my |.vimrc|?  
 A: Yes: >
 
     let g:rapidMoveAroundKeyMap=1 " [[, ]], [] and ][ jumps around PROC/FUNC..
