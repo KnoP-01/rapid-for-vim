@@ -1,8 +1,8 @@
 " Vim syntax file
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 1.5.2
-" Last Change: 20. Sep 2017
+" Version: 1.5.3
+" Last Change: 13. Dec 2017
 " Credits: 
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -244,6 +244,9 @@ else
   " Error
   if exists("g:rapidShowError") && g:rapidShowError==1
     " some more or less common typos
+    "
+    " vars or funcs >32 chars are not possible in rapid. a234567890123456789012345
+    syn match rapidError /\w\{33,}/ containedin=rapidFunction,rapidNames,rapidLabel
     "
     syn match rapidError /\c\v^\s*\zs(esle>|endfi>|ednif>|ednwhile>|ednfor>)/
     "
