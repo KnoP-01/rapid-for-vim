@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 0.5.1
-" Last Change: 30. Jan 2018
+" Last Change: 31. Jan 2018
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -897,7 +897,7 @@ if !exists("*s:KnopVerboseEcho()")
   endif
 
   " }}} Format Comments 
-  " Funktion Text Objects with preceding comments {{{
+  " Funktion Text Object with preceding comments {{{
 
   function s:RapidFunctionWithCommentsTextObject()
     silent! normal [[
@@ -909,7 +909,7 @@ if !exists("*s:KnopVerboseEcho()")
     silent! normal V][
   endfunction " RapidFunctionWithCommentsTextObject()
 
-  " }}} Funktion Text Objects with preceding comments
+  " }}} Funktion Text Object with preceding comments
 endif " !exists("*s:KnopVerboseEcho()")
 " Vim Settings {{{ 
 
@@ -986,7 +986,7 @@ if exists("loaded_matchit")
 endif
 
 " }}} Match It
-" Move Around key mappings [[, [], ]] ... {{{ 
+" Move Around and Function Text Object key mappings {{{ 
 
 if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap==1
   " Move around functions
@@ -1004,15 +1004,15 @@ if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap==1
   nnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'se')<Bar>:unlet b:knopCount<cr>
   vnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'seW')<Bar>:unlet b:knopCount<cr>
   " inner and around function text objects
-  vnoremap aF :<C-U>silent! call <SID>RapidFunctionWithCommentsTextObject()<CR>
-  vnoremap af :<C-U>silent! normal [[V][<CR>
-  vnoremap if :<C-U>silent! normal [[jV][k<CR>
-  omap aF :silent! normal VaF<CR>
-  omap af :silent! normal Vaf<CR>
-  omap if :silent! normal Vif<CR>
+  vnoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionWithCommentsTextObject()<CR>
+  vnoremap <silent><buffer> af :<C-U>normal [[V][<CR>
+  vnoremap <silent><buffer> if :<C-U>normal [[jV][k<CR>
+  omap <silent><buffer> aF :normal VaF<CR>
+  omap <silent><buffer> af :normal Vaf<CR>
+  omap <silent><buffer> if :normal Vif<CR>
 endif
 
-" }}} Move Around
+" }}} Move Around and Function Text Object key mappings
 " Other configurable key mappings {{{ 
 
 if exists("g:rapidGoDefinitionKeyMap") && g:rapidGoDefinitionKeyMap==1
