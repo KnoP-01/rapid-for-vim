@@ -1,8 +1,8 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 0.5.1
-" Last Change: 31. Jan 2018
+" Version: 1.0.0
+" Last Change: 01. Jan 2018
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -897,19 +897,36 @@ if !exists("*s:KnopVerboseEcho()")
   endif
 
   " }}} Format Comments 
-  " Funktion Text Object with preceding comments {{{
+  " Funktion Text Object {{{
 
-  function s:RapidFunctionWithCommentsTextObject()
-    silent! normal [[
-    " TODO eventuell fuer aF nur Kommentare mit gleicher einrueckung vor PROC et al
-    " mitnehmen
-    while line('.')>1 && getline(line('.')-1)=~'^\s*!'
-      silent! normal k
-    endwhile
-    silent! normal V][
-  endfunction " RapidFunctionWithCommentsTextObject()
+  if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap==1 " depends on move around key mappings
+    function s:RapidFunctionTextObject(inner,withcomment)
+      if a:inner==1
+        let l:n = 1
+      else
+        let l:n = v:count1
+      endif
+      if getline('.')!~'\v\c^\s*end(proc|func|trap|record|module)?>'
+        silent normal ][
+      endif
+      silent normal [[
+      if a:inner==1
+        silent normal! j
+      elseif a:withcomment==1
+        while line('.')>1 && getline(line('.')-1)=~'^\s*!'
+          silent normal! k
+        endwhile
+      endif
+      exec "silent normal V".l:n."]["
+      if a:inner==1
+        silent normal! k
+      elseif a:withcomment==1 && getline(line('.')+1)=~'^\s*$'
+        silent normal! j
+      endif
+    endfunction " RapidFunctionTextObject()
+  endif
 
-  " }}} Funktion Text Object with preceding comments
+  " }}} Funktion Text Object
 endif " !exists("*s:KnopVerboseEcho()")
 " Vim Settings {{{ 
 
@@ -988,7 +1005,7 @@ endif
 " }}} Match It
 " Move Around and Function Text Object key mappings {{{ 
 
-if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap==1
+if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1
   " Move around functions
   nnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'bs')<Bar>:unlet b:knopCount<CR>
   vnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'bsW')<Bar>:unlet b:knopCount<CR>
@@ -1003,13 +1020,15 @@ if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap==1
   vnoremap <silent><buffer> [! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '^\(\s*!.*\n\)\@<!\(\s*!\)', 'bsW')<Bar>:unlet b:knopCount<cr>
   nnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'se')<Bar>:unlet b:knopCount<cr>
   vnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'seW')<Bar>:unlet b:knopCount<cr>
-  " inner and around function text objects
-  vnoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionWithCommentsTextObject()<CR>
-  vnoremap <silent><buffer> af :<C-U>normal [[V][<CR>
-  vnoremap <silent><buffer> if :<C-U>normal [[jV][k<CR>
-  omap <silent><buffer> aF :normal VaF<CR>
-  omap <silent><buffer> af :normal Vaf<CR>
-  omap <silent><buffer> if :normal Vif<CR>
+  if g:rapidMoveAroundKeyMap==2
+    " inner and around function text objects
+    vnoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
+    vnoremap <silent><buffer> af :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
+    vnoremap <silent><buffer> if :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
+    omap <silent><buffer> aF :normal VaF<CR>
+    omap <silent><buffer> af :normal Vaf<CR>
+    omap <silent><buffer> if :normal Vif<CR>
+  endif
 endif
 
 " }}} Move Around and Function Text Object key mappings
