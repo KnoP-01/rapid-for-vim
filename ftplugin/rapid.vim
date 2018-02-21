@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 1.0.0
-" Last Change: 01. Jan 2018
+" Last Change: 22. Feb 2018
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -899,7 +899,7 @@ if !exists("*s:KnopVerboseEcho()")
   " }}} Format Comments 
   " Funktion Text Object {{{
 
-  if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap==1 " depends on move around key mappings
+  if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1 " depends on move around key mappings
     function s:RapidFunctionTextObject(inner,withcomment)
       if a:inner==1
         let l:n = 1
@@ -1003,7 +1003,7 @@ if exists("loaded_matchit")
 endif
 
 " }}} Match It
-" Move Around and Function Text Object key mappings {{{ 
+" Move Around and Function Text Object key mappings {{{
 
 if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1
   " Move around functions
@@ -1025,14 +1025,14 @@ if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1
     vnoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
     vnoremap <silent><buffer> af :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
     vnoremap <silent><buffer> if :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
-    omap <silent><buffer> aF :normal VaF<CR>
-    omap <silent><buffer> af :normal Vaf<CR>
-    omap <silent><buffer> if :normal Vif<CR>
+    onoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
+    onoremap <silent><buffer> af :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
+    onoremap <silent><buffer> if :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
   endif
 endif
 
 " }}} Move Around and Function Text Object key mappings
-" Other configurable key mappings {{{ 
+" Other configurable key mappings {{{
 
 if exists("g:rapidGoDefinitionKeyMap") && g:rapidGoDefinitionKeyMap==1
   " gd mimic
