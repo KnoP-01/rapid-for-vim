@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 2017 Sep 20
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 2018 Feb 22
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -43,7 +43,7 @@ Introducion:
 ------------
 Index: |rapid-index|
 
-Have a look at |tl:dr| to get a very quick overview over the most important
+Have a look at |rapid-tl:dr| to get a very quick overview over the most important
 options provided by Rapid for Vim.
 
 Rapid for Vim (7.4 or later) is a collection of Vim scripts to help programing
@@ -189,7 +189,7 @@ Also see those options for alternative <PLUG> mappings
 |g:rapidMoveAroundKeyMap|    [[, ]] ... jumps around PROC/TRAP/...
 |g:rapidListDefKeyMap|       <leader>f lists PROC/TRAP/... of current file
 |g:rapidGoDefinitionKeyMap|  gd to see declaration of current word
-|g:rapidListUsageKeyMap|     <leader>u lists all appearance of curr. word
+|g:rapidListUsageKeyMap|     <leader>u lists all appearances of curr. word
 |g:rapidConcealStructsKeyMap|  <F2>/<F3> to conceal/show structure values
 |g:rapidAutoFormKeyMap|      <leader>n inserts body for PROC/TRAP/...
 Options to enable things:
