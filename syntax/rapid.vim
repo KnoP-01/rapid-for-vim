@@ -1,8 +1,8 @@
 " Vim syntax file
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 1.5.4
-" Last Change: 02. Jan 2018
+" Version: 1.5.5
+" Last Change: 23. Mar 2018
 " Credits: 
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -128,7 +128,7 @@ else
   highlight default link rapidRepeat Repeat
   " Label
   syn keyword rapidLabel GOTO
-  syn match rapidLabel /\c\v^\s*\a\w*\:\ze([^=]|$)/
+  syn match rapidLabel /\c\v^\s*\a\w*\:\ze([^=]|$)/ contains=rapidConditional,rapidOperator
   highlight default link rapidLabel Label
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasIO AliasIOReset BitClear BitSet BookErrNo
