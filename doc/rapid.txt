@@ -78,6 +78,7 @@ Q: I'm here to feed my kids, not to read. Do you have a quick suggestion on
 A: Yes: >
 
     let g:rapidMoveAroundKeyMap=1 " [[, ]], [] and ][ jumps around PROC/FUNC..
+    " let g:rapidMoveAroundKeyMap=2 " also add textobjects af, aF and if 
     let g:rapidGoDefinitionKeyMap=1 " gd shows the declaration of curr. word
     let g:rapidListDefKeyMap=1 " <leader>f shows all PROC/FUNC.. in curr. file
     let g:rapidListUsageKeyMap=1 " <leader>u shows all appearance of curr. word
