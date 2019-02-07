@@ -108,7 +108,9 @@ else
   " SoftMove data types
   syn keyword rapidType css_offset_dir css_soft_dir cssframe
   " arc data types
-  syn keyword rapidType seamdata weavedata trackdata welddata arcdata Multidata Adaptdata
+  syn keyword rapidType advSeamData arcdata flystartdata seamdata arctrackdata opttrackdata weavedata welddata 
+  " arc Weldguide and MultiPass data types
+  syn keyword rapidType Adaptdata trackdata Multidata 
   " spot weld
   syn keyword rapidType spotdata gundata forcedata simdata smeqdata
   highlight default link rapidType Type
@@ -149,7 +151,9 @@ else
   syn keyword rapidKeyword TestSignDefine TestSignReset TextTabInstall TPErase TPReadDnum TPReadFK TPReadNum TPShow TPWrite TriggCheckIO TriggDataCopy TriggDataReset TriggEquip TriggInt TriggIO TriggRampAO TriggSpeed TriggStopProc TryInt TuneReset TuneServo
   syn keyword rapidKeyword UIMsgBox UIMsgWrite UIMsgWriteAbort UIShow UnLoad UnpackRawBytes VelSet WaitAI WaitAO WaitDI WaitDO WaitGI WaitGO WaitLoad WaitRob WaitSensor WaitSyncTask WaitTestAndSet WaitTime WaitUntil WaitWObj WarmStart WITH WorldAccLim Write WriteAnyBin WriteBin WriteBlock WriteCfgData WriteRawBytes WriteStrBin WriteVar WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZHomeJointDef WZLimJointDef WZLimSup WZSphDef
   " arc instructions
-  syn keyword rapidKeyword MPSavePath MPLoadPath MPReadInPath MPOffsEaxOnPath ArcRefresh 
+  syn keyword rapidKeyword ArcRefresh RecoveryMenu RecoveryMenuWR RecoveryPosSet RecoveryPosReset SetWRProcName 
+  " arc Weldguide and MultiPass instructions
+  syn keyword rapidKeyword MPSavePath MPLoadPath MPReadInPath MPOffsEaxOnPath
   " spot instructions
   syn keyword rapidKeyword SetForce Calibrate ReCalcTCP IndGunMoveReset OpenHighLift CloseHighLift IndGunMove SwSetIntSpotData SwSetIntForceData SwSetIntGunData SwSetIntSimData
   highlight default link rapidKeyword Keyword
@@ -160,7 +164,11 @@ else
   " ---
 
   " special keyword for move command
-  syn keyword rapidMovement ArcLStart ArcL1Start ArcL2Start ArcCStart ArcC1Start ArcC2Start ArcL ArcL1 ArcL2 ArcC ArcC1 ArcC2 ArcLEnd ArcL1End ArcL2End ArcCEnd ArcC1End ArcC2End ArcRepL ArcAdaptLStart ArcAdaptL ArcAdaptC ArcAdaptLEnd ArcAdaptCEnd ArcCalcLStart ArcCalcL ArcCalcC ArcCalcLEnd ArcCalcCEnd ArcAdaptRepL ArcMoveExtJ 
+  " arc instructions
+  syn keyword rapidMovement ArcC ArcC1 ArcC2 ArcCEnd ArcC1End ArcC2End ArcCStart ArcC1Start ArcC2Start 
+  syn keyword rapidMovement ArcL ArcL1 ArcL2 ArcLEnd ArcL1End ArcL2End ArcLStart ArcL1Start ArcL2Start ArcMoveExtJ 
+  " arc Weldguide and MultiPass instructions
+  syn keyword rapidMovement ArcRepL ArcAdaptLStart ArcAdaptL ArcAdaptC ArcAdaptLEnd ArcAdaptCEnd ArcCalcLStart ArcCalcL ArcCalcC ArcCalcLEnd ArcCalcCEnd ArcAdaptRepL 
   syn keyword rapidMovement Break 
   syn keyword rapidMovement CapC CapL CSSDeactMoveL ContactL
   syn keyword rapidMovement DispL DispC DispJ
