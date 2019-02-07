@@ -7,6 +7,8 @@
 "
 " Suggestions of improvement are very welcome. Please email me!
 "
+" TODO:   - highlight rapid constants and maybe constants from common
+"           technology packages
 
 " Remove any old syntax stuff that was loaded (5.x) or quit when a syntax file
 " was already loaded (6.x).
@@ -103,6 +105,8 @@ else
   syn keyword rapidType sensor sensorstate shapedata signalorigin signalai signalao signaldi signaldo signalgi signalgo socketdev socketstatus speeddata stoppointdata string stringdig supervtimeouts switch symnum syncident 
   syn keyword rapidType taskid tasks testsignal tooldata tpnum trapdata triggdata triggios triggiosdnum triggmode triggstrgo tunetype
   syn keyword rapidType uishownum weavestartdata wobjdata wzstationary wztemporary zonedata
+  " SoftMove data types
+  syn keyword rapidType css_offset_dir css_soft_dir cssframe
   " arc data types
   syn keyword rapidType seamdata weavedata trackdata welddata arcdata Multidata Adaptdata
   " spot weld
@@ -133,6 +137,7 @@ else
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasIO AliasIOReset BitClear BitSet BookErrNo
   syn keyword rapidKeyword CallByVar CamFlush CamGetParameter CamGetResult CamLoadJob CamReqImage CamSetExposure CamSetParameter CamSetProgramMode CamSetRunMode CamStartLoadJob CamWaitLoadJob CancelLoad CapAPTrSetup CapCondSetDO CapEquiDist CapLATrSetup CapNoProcess CapRefresh CapWeaveSync CheckProgRef CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir ConfJ ConfL CONNECT CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrWrite
+  syn keyword rapidKeyword CSSAct CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTuneCSSOffsetTune
   syn keyword rapidKeyword DeactEventBuffer DeactUnit Decr DitherAct DitherDeact DropSensor DropWObj 
   syn keyword rapidKeyword EGMActJoint EGMActMove EGMActPose EGMGetId EGMReset EGMSetupAI EGMSetupAO EGMSetupGI EGMSetupLTAPP EGMSetupUC EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrWrite
   syn keyword rapidKeyword FricIdInit FricIdEvaluate FricIdSetFricLevels 
