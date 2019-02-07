@@ -95,24 +95,32 @@ else
   " highlight default link rapidAnyType Type
   " Type
   syn keyword rapidType aiotrigg bool btnres busstate buttondata byte
-  syn keyword rapidType cameradev cameratarget capdata caplatrackdata capspeeddata captrackdata capweavedata cfgdomain clock confdata corrdescr datapos dionum dir dnum
-  syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum errstr errtype event_type exec_level extjoint flypointdata handler_type
+  syn keyword rapidType cameradev cameratarget cfgdomain clock confdata corrdescr datapos dionum dir dnum
+  syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum errstr errtype event_type exec_level extjoint handler_type
   syn keyword rapidType icondata identno intnum iodev iounit_state jointtarget
   syn keyword rapidType listitem loaddata loadidnum loadsession mecunit motsetdata
   " num, siehe unten
-  syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pos pose processtimes progdisp
-  syn keyword rapidType rawbytes restartblkdata restartdata rmqheader rmqmessage rmqslot robjoint robtarget
-  syn keyword rapidType sensor sensorstate shapedata signalorigin signalai signalao signaldi signaldo signalgi signalgo socketdev socketstatus speeddata stoppointdata string stringdig supervtimeouts switch symnum syncident 
+  syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pos pose progdisp
+  syn keyword rapidType rawbytes restartdata rmqheader rmqmessage rmqslot robjoint robtarget
+  syn keyword rapidType sensor sensorstate shapedata signalorigin signalai signalao signaldi signaldo signalgi signalgo socketdev socketstatus speeddata stoppointdata string stringdig switch symnum syncident 
   syn keyword rapidType taskid tasks testsignal tooldata tpnum trapdata triggdata triggios triggiosdnum triggmode triggstrgo tunetype
-  syn keyword rapidType uishownum weavestartdata wobjdata wzstationary wztemporary zonedata
+  syn keyword rapidType uishownum wobjdata wzstationary wztemporary zonedata
   " SoftMove data types
   syn keyword rapidType css_offset_dir css_soft_dir cssframe
   " arc data types
   syn keyword rapidType advSeamData arcdata flystartdata seamdata arctrackdata opttrackdata weavedata welddata 
+  " conveyor tracking data types
+  syn keyword rapidType indcnvdata
+  " Integrated Vision data types
+  syn keyword rapidType cameradev cameratarget 
   " arc Weldguide and MultiPass data types
-  syn keyword rapidType Adaptdata trackdata Multidata 
-  " spot weld
-  syn keyword rapidType spotdata gundata forcedata simdata smeqdata
+  syn keyword rapidType adaptdata trackdata multidata 
+  " dispense data types
+  syn keyword rapidType beaddata equipdata
+  " Spot options data types
+  syn keyword rapidType gundata spotdata forcedata simdata smeqdata
+  " Continuous Application Platform data types
+  syn keyword rapidType capdata caplatrackdata capspeeddata captrackdata capweavedata flypointdata processtimes restartblkdata supervtimeouts weavestartdata 
   highlight default link rapidType Type
   " Storage class
   syn keyword rapidStorageClass LOCAL TASK GLOBAL VAR PERS CONST ALIAS NOVIEW NOSTEPIN VIEWONLY READONLY SYSMODULE INOUT
@@ -138,24 +146,32 @@ else
   highlight default link rapidLabel Label
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasIO AliasIOReset BitClear BitSet BookErrNo
-  syn keyword rapidKeyword CallByVar CamFlush CamGetParameter CamGetResult CamLoadJob CamReqImage CamSetExposure CamSetParameter CamSetProgramMode CamSetRunMode CamStartLoadJob CamWaitLoadJob CancelLoad CapAPTrSetup CapCondSetDO CapEquiDist CapLATrSetup CapNoProcess CapRefresh CapWeaveSync CheckProgRef CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir ConfJ ConfL CONNECT CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrWrite
+  syn keyword rapidKeyword CallByVar CancelLoad CheckProgRef CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir ConfJ ConfL CONNECT CopyFile CopyRawBytes CorrClear CorrCon CorrDiscon CorrWrite
   syn keyword rapidKeyword CSSAct CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTuneCSSOffsetTune
-  syn keyword rapidKeyword DeactEventBuffer DeactUnit Decr DitherAct DitherDeact DropSensor DropWObj 
+  syn keyword rapidKeyword DeactEventBuffer DeactUnit Decr DitherAct DitherDeact DropSensor 
   syn keyword rapidKeyword EGMActJoint EGMActMove EGMActPose EGMGetId EGMReset EGMSetupAI EGMSetupAO EGMSetupGI EGMSetupLTAPP EGMSetupUC EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrWrite
   syn keyword rapidKeyword FricIdInit FricIdEvaluate FricIdSetFricLevels 
-  syn keyword rapidKeyword GetDataVal GetSysData GetTrapData GripLoad HollowWristReset ICap IDelete IDisable IEnable IError Incr IndReset InitSuperv InvertDO IOBusStart IOBusState IODisable IOEnable IPathPos IPers IRMQMessage ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep ITimer IVarValue IWatch
+  syn keyword rapidKeyword GetDataVal GetSysData GetTrapData GripLoad HollowWristReset IDelete IDisable IEnable IError Incr IndReset InvertDO IOBusStart IOBusState IODisable IOEnable IPers IRMQMessage ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep ITimer IVarValue IWatch
   syn keyword rapidKeyword Load LoadId MakeDir ManLoadIdProc MechUnitLoad MotionProcessModeSet MotionSup MToolRotCalib MToolTCPCalib Open OpenDir
   syn keyword rapidKeyword PackDNHeader PackRawBytes PathAccLim PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery PrxActivAndStoreRecord PrxActivRecord PrxDbgStoreRecord PrxDeactRecord PrxResetPos PrxResetRecords PrxSetPosOffset PrxSetRecordSampleTime PrxSetSyncalarm PrxStartRecord PrxStopRecord PrxStoreRecord PrxUseFileRecord PulseDO
-  syn keyword rapidKeyword ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes RemoveAllCyclicBool RemoveCyclicBool RemoveDir RemoveFile RemoveSuperv RenameFile Reset ResetPPMoved ResetRetryCount RestoPath Rewind RMQEmptyQueue RMQFindSlot RMQGetMessage RMQGetMsgData RMQGetMsgHeader RMQReadWait RMQSendMessage RMQSendWait
-  syn keyword rapidKeyword SafetyControllerSyncRequest Save SaveCfgData SCWrite SenDevice Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SetLeadThrough SetSysData SetupCyclicBool SetupSuperv SiConnect SiClose SiGetCyclic SingArea SiSetCyclic SkipWarn SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketReceiveFrom SocketSend SocketSendTo SoftAct SoftDeact SpeedLimAxis SpeedLimCheckPoint SpeedRefresh SpyStart SpyStop StartLoad STCalib STClose STIndGun STIndGunReset SToolRotCalib SToolTCPCalib STOpen StorePath STTune STTuneReset SupSyncSensorOff SupSyncSensorOn SyncMoveOff SyncMoveOn SyncMoveResume SyncMoveSuspend SyncMoveUndo SyncToSensor SystemStopAction
+  syn keyword rapidKeyword ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes RemoveAllCyclicBool RemoveCyclicBool RemoveDir RemoveFile RenameFile Reset ResetPPMoved ResetRetryCount RestoPath Rewind RMQEmptyQueue RMQFindSlot RMQGetMessage RMQGetMsgData RMQGetMsgHeader RMQReadWait RMQSendMessage RMQSendWait
+  syn keyword rapidKeyword SafetyControllerSyncRequest Save SaveCfgData SCWrite SenDevice Set SetAllDataVal SetAO SetDataSearch SetDataVal SetDO SetGO SetLeadThrough SetSysData SetupCyclicBool SiConnect SiClose SiGetCyclic SingArea SiSetCyclic SkipWarn SocketAccept SocketBind SocketClose SocketConnect SocketCreate SocketListen SocketReceive SocketReceiveFrom SocketSend SocketSendTo SoftAct SoftDeact SpeedLimAxis SpeedLimCheckPoint SpeedRefresh SpyStart SpyStop StartLoad STCalib STClose STIndGun STIndGunReset SToolRotCalib SToolTCPCalib STOpen StorePath STTune STTuneReset SupSyncSensorOff SupSyncSensorOn SyncMoveOff SyncMoveOn SyncMoveResume SyncMoveSuspend SyncMoveUndo SyncToSensor SystemStopAction
   syn keyword rapidKeyword TestSignDefine TestSignReset TextTabInstall TPErase TPReadDnum TPReadFK TPReadNum TPShow TPWrite TriggCheckIO TriggDataCopy TriggDataReset TriggEquip TriggInt TriggIO TriggRampAO TriggSpeed TriggStopProc TryInt TuneReset TuneServo
-  syn keyword rapidKeyword UIMsgBox UIMsgWrite UIMsgWriteAbort UIShow UnLoad UnpackRawBytes VelSet WaitAI WaitAO WaitDI WaitDO WaitGI WaitGO WaitLoad WaitRob WaitSensor WaitSyncTask WaitTestAndSet WaitTime WaitUntil WaitWObj WarmStart WITH WorldAccLim Write WriteAnyBin WriteBin WriteBlock WriteCfgData WriteRawBytes WriteStrBin WriteVar WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZHomeJointDef WZLimJointDef WZLimSup WZSphDef
+  syn keyword rapidKeyword UIMsgBox UIMsgWrite UIMsgWriteAbort UIShow UnLoad UnpackRawBytes VelSet WaitAI WaitAO WaitDI WaitDO WaitGI WaitGO WaitLoad WaitRob WaitSensor WaitSyncTask WaitTestAndSet WaitTime WaitUntil WarmStart WITH WorldAccLim Write WriteAnyBin WriteBin WriteBlock WriteCfgData WriteRawBytes WriteStrBin WriteVar WZBoxDef WZCylDef WZDisable WZDOSet WZEnable WZFree WZHomeJointDef WZLimJointDef WZLimSup WZSphDef
   " arc instructions
   syn keyword rapidKeyword ArcRefresh RecoveryMenu RecoveryMenuWR RecoveryPosSet RecoveryPosReset SetWRProcName 
+  " conveyor tracking instructions
+  syn keyword rapidKeyword UseACCProfile WaitWObj DropWObj RecordProfile WaitAndRecProf StoreProfile LoadProfile ActivateProfile DeactProfile CnvGenInstr IndCnvInit IndCnvEnable IndCnvDisable IndCnvReset IndCnvAddObject 
+  " Integrated Vision instructions
+  syn keyword rapidKeyword CamFlush CamGetParameter CamGetResult CamLoadJob CamReqImage CamSetExposure CamSetParameter CamSetProgramMode CamSetRunMode CamStartLoadJob CamWaitLoadJob 
   " arc Weldguide and MultiPass instructions
   syn keyword rapidKeyword MPSavePath MPLoadPath MPReadInPath MPOffsEaxOnPath
-  " spot instructions
-  syn keyword rapidKeyword SetForce Calibrate ReCalcTCP IndGunMoveReset OpenHighLift CloseHighLift IndGunMove SwSetIntSpotData SwSetIntForceData SwSetIntGunData SwSetIntSimData
+  " Spot options instructions
+  syn keyword rapidKeyword SetForce Calibrate ReCalcTCP IndGunMove IndGunMoveReset OpenHighLift CloseHighLift SwSetIntSpotData SwSetIntForceData SwSetIntGunData SwSetIntSimData SwGetCalibData SwGetFixTipData 
+  " dispense instructions
+  syn keyword rapidKeyword SetTmSignal
+  " Continuous Application Platform instructions
+  syn keyword rapidKeyword CapAPTrSetup CapCondSetDO CapEquiDist CapLATrSetup CapNoProcess CapRefresh CapWeaveSync ICap InitSuperv IPathPos RemoveSuperv SetupSuperv 
   highlight default link rapidKeyword Keyword
   " Exception
   syn keyword rapidException EXIT ErrRaise ExitCycle RAISE RaiseToUser RETRY RETURN TRYNEXT
@@ -170,8 +186,10 @@ else
   " arc Weldguide and MultiPass instructions
   syn keyword rapidMovement ArcRepL ArcAdaptLStart ArcAdaptL ArcAdaptC ArcAdaptLEnd ArcAdaptCEnd ArcCalcLStart ArcCalcL ArcCalcC ArcCalcLEnd ArcCalcCEnd ArcAdaptRepL 
   syn keyword rapidMovement Break 
+  " Continuous Application Platform instructions
   syn keyword rapidMovement CapC CapL CSSDeactMoveL ContactL
-  syn keyword rapidMovement DispL DispC DispJ
+  " dispense instructions
+  syn keyword rapidMovement DispL DispC
   syn keyword rapidMovement EGMMoveC EGMMoveL EGMRunJoint EGMRunPose EGMStop
   syn keyword rapidMovement IndAMove IndCMove IndDMove IndRMove 
   syn keyword rapidMovement MoveAbsJ MoveC MoveExtJ MoveJ MoveL 
@@ -180,6 +198,7 @@ else
   syn keyword rapidMovement PathRecMoveBwd PathRecMoveFwd 
   syn keyword rapidMovement PaintL PaintC
   syn keyword rapidMovement StartMove StartMoveRetry StepBwdPath StopMove StopMoveReset
+  " Spot options instructions
   syn keyword rapidMovement SpotL SpotJ SpotML SpotMJ CalibL CalibJ MeasureWearL 
   syn keyword rapidMovement SMoveJ SMoveJDO SMoveJGO SMoveJSync SMoveL SMoveLDO SMoveLGO SMoveLSync SSearchL STriggJ STriggL
   syn keyword rapidMovement SearchC SearchExtJ SearchL
@@ -222,9 +241,15 @@ else
   highlight default link rapidType Type
 
   " BuildInFunction
+  " dispense functions
+  syn keyword rapidBuildInFunction contained GetSignal
+  " Integrated Vision Platform functions
+  syn keyword rapidBuildInFunction contained CamGetExposure CamGetLoadedJob CamGetName CamNumberOfResults 
+  " Continuous Application Platform functions
+  syn keyword rapidBuildInFunction contained CapGetFailSigs 
   syn keyword rapidBuildInFunction contained Abs AbsDnum ACos ACosDnum AInput AOutput ArgName ASin ASinDnum ATan ATanDnum ATan2 ATan2Dnum
   syn keyword rapidBuildInFunction contained BitAnd BitAndDnum BitCheck BitCheckDnum BitLSh BitLShDnum BitNeg BitNegDnum BitOr BitOrDnum BitRSh BitRShDnum BitXOr BitXOrDnum ByteToStr
-  syn keyword rapidBuildInFunction contained CalcJointT CalcRobT CalcRotAxFrameZ CalcRotAxisFrame CamGetExposure CamGetLoadedJob CamGetName CamNumberOfResults CapGetFailSigs CDate CJointT ClkRead CorrRead Cos CosDnum CPos CRobT CSpeedOverride CTime CTool CWObj
+  syn keyword rapidBuildInFunction contained CalcJointT CalcRobT CalcRotAxFrameZ CalcRotAxisFrame CamGetExposure CamGetLoadedJob CamGetName CamNumberOfResults CDate CJointT ClkRead CorrRead Cos CosDnum CPos CRobT CSpeedOverride CTime CTool CWObj
   syn keyword rapidBuildInFunction contained DecToHex DefAccFrame DefDFrame DefFrame Dim DInput Distance DnumToNum DnumToStr DotProd DOutput 
   syn keyword rapidBuildInFunction contained EGMGetState EulerZYX EventType ExecHandler ExecLevel Exp
   syn keyword rapidBuildInFunction contained FileSize FileTime FileTimeDnum FSSize
@@ -240,7 +265,7 @@ else
   syn keyword rapidBuildInFunction contained Tan TanDnum TaskRunMec TaskRunRob TasksInSync TestAndSet TestDI TestSignRead TextGet TextTabFreeToUse TextTabGet TriggDataValid Trunc TruncDnum Type
   syn keyword rapidBuildInFunction contained UIAlphaEntry UIClientExist UIDnumEntry UIDnumTune UIListView UIMessageBox UINumEntry UINumTune
   syn keyword rapidBuildInFunction contained ValidIO ValToStr Vectmagn
-  " spot functions
+  " Spot options functions
   syn keyword rapidBuildInFunction contained SwGetCurrTargetName SwGetCurrSpotName 
   if exists("g:rapidNoHighlight") && g:rapidNoHighlight==1
         \|| exists("g:rapidNoHighLink") && g:rapidNoHighLink==1
