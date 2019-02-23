@@ -1,7 +1,7 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 1.0.0
+" Version: 1.0.1
 " Last Change: 22. Feb 2018
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "
@@ -12,6 +12,7 @@
 "       - make [[, [], ][ and ]] text objects
 "
 " }}} ToDo's
+
 " Init {{{
 
 " Only do this when not done yet for this buffer
@@ -38,8 +39,10 @@ if exists("g:rapidLhsQuickfix")
 endif
 
 " }}} init
+
 " only declare functions once
 if !exists("*s:KnopVerboseEcho()")
+
   " Little Helper {{{
 
   if !exists("g:knopNoVerbose") || g:knopNoVerbose!=1
@@ -55,6 +58,25 @@ if !exists("*s:KnopVerboseEcho()")
       echo a:msg
     endif
   endfunction " s:knopNoVerbose()
+
+  function s:KnopDirExists(in)
+    if finddir( substitute(a:in,'\\','','g') )!=''
+      return 1
+    endif
+    return 0
+  endfunction " s:KnopDirExists
+
+  function s:KnopFnameescape4Path(in)
+    " escape a path for use as 'execute "set path=" . s:KnopFnameescape4Path(mypath)'
+    " use / (not \) as a separator for the input parameter
+    let l:out = fnameescape( a:in )
+    let l:out = substitute(l:out, '\\#', '#', "g") " # and % will get escaped by fnameescape() but must not be escaped for set path...
+    let l:out = substitute(l:out, '\\%', '%', "g")
+    let l:out = substitute(l:out, '\\ ', '\\\\\\ ', 'g') " escape spaces with three backslashes
+    let l:out = substitute(l:out, ',', '\\\\,', 'g') " escape comma and semicolon with two backslashes
+    let l:out = substitute(l:out, ';', '\\\\;', "g")
+    return l:out
+  endfunction
 
   function s:KnopSubStartToEnd(search,sub,start,end)
     execute 'silent '. a:start .','. a:end .' s/'. a:search .'/'. a:sub .'/ge'
@@ -78,20 +100,27 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:KnopUniqueListItems()
 
   function s:KnopPreparePath(path,file)
+    " prepares 'path' for use with vimgrep
     let l:path = substitute(a:path,'$',' ','') " make sure that space is the last char
-    let l:path = substitute(l:path,',',' ','g') " literal commas in a:path do not work
-    let l:path = substitute(l:path, '\*\* ', '**/'.a:file.' ', 'g')
-    let l:path = substitute(l:path, '\.\. ', '../'.a:file.' ', 'g')
-    let l:path = substitute(l:path, '\. ',    './'.a:file.' ', 'g')
-    let l:path = substitute(l:path, '[\\/] ',  '/'.a:file.' ', 'g')
+    let l:path = substitute(l:path,'\v(^|[^\\])\zs,+',' ','g') " separate with spaces instead of comma
+    let l:path = substitute(l:path, '\\,', ',', "g") " unescape comma and semicolon
+    let l:path = substitute(l:path, '\\;', ';', "g")
+    let l:path = substitute(l:path, "#", '\\#', "g") " escape #, % and `
+    let l:path = substitute(l:path, "%", '\\%', "g")
+    let l:path = substitute(l:path, '`', '\\`', "g")
+    " let l:path = substitute(l:path, '{', '\\{', "g") " I don't get curly braces to work
+    " let l:path = substitute(l:path, '}', '\\}', "g")
+    let l:path = substitute(l:path, '\*\* ', '**/'.a:file.' ', "g") " append a / to **, . and ..
+    let l:path = substitute(l:path, '\.\. ', '../'.a:file.' ', "g")
+    let l:path = substitute(l:path, '\. ', './'.a:file.' ', "g")
     return l:path
   endfunction " s:KnopPreparePath()
 
   function s:KnopQfCompatible()
     " check for qf.vim compatiblity
     if exists('g:loaded_qf') && (!exists('g:qf_window_bottom') || g:qf_window_bottom!=0)
-          \&& (exists("g:knopRhsQuickfix") && g:knopRhsQuickfix==1 
-          \|| exists("g:knopLhsQuickfix") && g:knopLhsQuickfix==1)
+          \&& (get(g:,'knopRhsQuickfix',0)
+          \||  get(g:,'knopLhsQuickfix',0))
       call s:KnopVerboseEcho("NOTE: \nIf you use qf.vim then g:krlRhsQuickfix, g:krlLhsQuickfix, g:rapidRhsQuickfix and g:rapidLhsQuickfix will not work unless g:qf_window_bottom is 0 (Zero). \nTo use g:<foo>[RL]hsQuickfix put this in your .vimrc: \n  let g:qf_window_bottom = 0\n\n")
       return 0
     endif
@@ -99,12 +128,11 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:KnopQfCompatible()
 
   let g:knopPositionQf=1
-  function s:KnopOpenQf(ft)
+  function s:KnopOpenQf(useSyntax)
     if getqflist()==[] | return -1 | endif
     cwindow 4
     if getbufvar('%', "&buftype")!="quickfix"
       let l:getback=1
-      " noautocmd copen
       copen
     endif
     augroup KnopOpenQf
@@ -113,12 +141,15 @@ if !exists("*s:KnopVerboseEcho()")
       let l:cmd = 'au BufWinLeave <buffer='.bufnr('%').'> let g:knopPositionQf=1'
       execute l:cmd
     augroup END
-    if a:ft!='' | let &filetype=a:ft | endif
+    if a:useSyntax!='' 
+      let l:cmd = 'set syntax='.a:useSyntax 
+      execute l:cmd
+    endif
     if exists('g:knopPositionQf') && s:KnopQfCompatible() 
       unlet g:knopPositionQf
-      if exists("g:knopRhsQuickfix") && g:knopRhsQuickfix==1
+      if get(g:,'knopRhsQuickfix',0)
         wincmd L
-      elseif exists("g:knopLhsQuickfix") && g:knopLhsQuickfix==1 
+      elseif get(g:,'knopLhsQuickfix',0)
         wincmd H
       endif
     endif
@@ -129,7 +160,7 @@ if !exists("*s:KnopVerboseEcho()")
     return 0
   endfunction " s:KnopOpenQf()
 
-  function s:KnopSearchPathForPatternNTimes(Pattern,path,n,ft)
+  function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax)
     let l:cmd = ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
     try
       execute l:cmd
@@ -143,7 +174,10 @@ if !exists("*s:KnopVerboseEcho()")
       call s:KnopVerboseEcho(":vimgrep stopped with E683. No match found")
       return -1
     endtry
-    if s:KnopOpenQf(a:ft)==-1
+    if a:n == 1
+      call setqflist(s:KnopUniqueListItems(getqflist()))
+    endif
+    if s:KnopOpenQf(a:useSyntax)==-1
       call s:KnopVerboseEcho("No match found")
       return -1
     endif
@@ -163,6 +197,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " <SID>KnopNTimesSearch()
 
   " }}} Little Helper
+
   " Rapid Helper {{{
 
   function s:RapidCurrentWordIs()
@@ -250,6 +285,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:RapidCurrentWordIs()
 
   " }}} Rapid Helper
+
   " Go Definition {{{
 
   function s:RapidPutCursorOnModuleAndReturnEndmoduleline()
@@ -527,6 +563,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " <SID>RapidGoDefinition()
 
   " }}} Go Definition
+
   " Auto Form {{{
 
   function s:RapidGetGlobal(sAction)
@@ -777,6 +814,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " <SID>RapidAutoForm()
 
   " }}} Auto Form 
+
   " List Def/Usage {{{ 
 
   function <SID>RapidListDef()
@@ -799,6 +837,7 @@ if !exists("*s:KnopVerboseEcho()")
         augroup rapidDelTmpFile
           au!
           au VimLeavePre * call delete(g:rapidTmpFile)
+          au VimLeavePre * call delete(g:rapidTmpFile . "~")
         augroup END
       endif
       execute 'silent save! ' . g:rapidTmpFile
@@ -848,8 +887,10 @@ if !exists("*s:KnopVerboseEcho()")
         " rule out if l:currentWord is part of a strings except in *.cfg files
         let l:qfresult = []
         for l:i in getqflist()
-          if get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
-                \|| bufname(get(l:i,'bufnr')) =~ '\v\c\w+\.cfg$'
+          if bufname(get(l:i,'bufnr')) !~ '\~$'
+                \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
+                \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
+                \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
             call add(l:qfresult,l:i)
           endif
         endfor
@@ -862,6 +903,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " <SID>RapidListUsage()
 
   " }}} List Def/Usage 
+
   " Format Comments {{{ 
 
   " TODO decide: abandon this one?
@@ -897,6 +939,7 @@ if !exists("*s:KnopVerboseEcho()")
   endif
 
   " }}} Format Comments 
+
   " Funktion Text Object {{{
 
   if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1 " depends on move around key mappings
@@ -927,7 +970,9 @@ if !exists("*s:KnopVerboseEcho()")
   endif
 
   " }}} Funktion Text Object
+
 endif " !exists("*s:KnopVerboseEcho()")
+
 " Vim Settings {{{ 
 
 " default on; no option
@@ -966,29 +1011,52 @@ endif
 if !exists("g:rapidNoPath") || g:rapidNoPath!=1
   let s:rapidpath=&path.'./**,'
   let s:rapidpath=substitute(s:rapidpath,'\/usr\/include,','','g')
-  " if finddir('../PROGMOD')         !='' | let s:rapidpath.='../PROGMOD/**,'           | endif
-  " if finddir('../SYSMOD')          !='' | let s:rapidpath.='../SYSMOD/**,'            | endif
-  if finddir('../../../RAPID')     !='' | let s:rapidpath.='../../../RAPID/TASK*/**,'       | endif
-  if finddir('../../../SYSPAR')    !='' | let s:rapidpath.='../../../SYSPAR/**,'      | endif
-  if finddir('../../../HOME')      !='' | let s:rapidpath.='../../../HOME/**,'        | endif
-  if finddir('../../../BACKINFO')  !='' | let s:rapidpath.='../../../BACKINFO/**,'    | endif
-  if finddir('../RAPID')           !='' | let s:rapidpath.='../RAPID/TASK*/**,'             | endif
-  if finddir('../SYSPAR')          !='' | let s:rapidpath.='../SYSPAR/**,'            | endif
-  if finddir('../HOME')            !='' | let s:rapidpath.='../HOME/**,'              | endif
-  if finddir('../BACKINFO')        !='' | let s:rapidpath.='../BACKINFO/**,'          | endif
-  if finddir('./SYSPAR')           !='' | let s:rapidpath.='./SYSPAR/**,'             | endif
+  " if finddir('../PROGMOD')          !='' | let s:rapidpath.='../PROGMOD/**,'            | endif
+  " if finddir('../SYSMOD')           !='' | let s:rapidpath.='../SYSMOD/**,'             | endif
+  if finddir('../../../RAPID')      !='' | let s:rapidpath.='../../../RAPID/TASK*/**,'  | endif
+  if finddir('../../../SYSPAR')     !='' | let s:rapidpath.='../../../SYSPAR/**,'       | endif
+  if finddir('../../../HOME')       !='' | let s:rapidpath.='../../../HOME/**,'         | endif
+  if finddir('../../../BACKINFO')   !='' | let s:rapidpath.='../../../BACKINFO/**,'     | endif
+  if finddir('../../../CS')         !='' | let s:rapidpath.='../../../CS/**,'           | endif
+  if finddir('../RAPID')            !='' | let s:rapidpath.='../RAPID/TASK*/**,'        | endif
+  if finddir('../SYSPAR')           !='' | let s:rapidpath.='../SYSPAR/**,'             | endif
+  if finddir('../HOME')             !='' | let s:rapidpath.='../HOME/**,'               | endif
+  if finddir('../BACKINFO')         !='' | let s:rapidpath.='../BACKINFO/**,'           | endif
+  if finddir('../CS')               !='' | let s:rapidpath.='../CS/**,'                 | endif
+  if finddir('./SYSPAR')            !='' | let s:rapidpath.='./SYSPAR/**,'              | endif
   execute "setlocal path=".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 endif
 
 " conceal structure values (for MoveJ * v2500,z100...)
-if exists("g:rapidConcealStructs") && g:rapidConcealStructs==1
-      \&& getbufvar('%', "&buftype")!="quickfix" 
-  setlocal conceallevel=2
-  let b:undo_ftplugin = b:undo_ftplugin." cole<"
+if get(g:,'rapidConcealStructs',1)
+
+  if !exists("*<SID>RapidConcealLevel")
+    function <SID>RapidConcealLevel(lvl)
+      " g:rapidConcealStructs may be used as input for a:lvl
+
+      if a:lvl == 2
+        " conceal all structure values
+        setlocal conceallevel=2 concealcursor=nc
+        return
+      elseif a:lvl == 1
+        " conceal less structure values
+        setlocal conceallevel=2 concealcursor=
+        return
+      endif
+        " conceal no structure values
+      setlocal conceallevel=0 concealcursor=
+
+    endfunction " <SID>RapidConcealLevel(lvl)
+  endif " !exists("*<SID>RapidConcealLevel")
+
+  call <SID>RapidConcealLevel(get(g:,'rapidConcealStructs',0))
+
+  let b:undo_ftplugin = b:undo_ftplugin." cole< cocu<"
 endif
 
 " }}} Vim Settings 
+
 " Match It % {{{ 
 
 " matchit support
@@ -1003,6 +1071,7 @@ if exists("loaded_matchit")
 endif
 
 " }}} Match It
+
 " Move Around and Function Text Object key mappings {{{
 
 if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1
@@ -1032,27 +1101,38 @@ if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1
 endif
 
 " }}} Move Around and Function Text Object key mappings
+
 " Other configurable key mappings {{{
 
-if exists("g:rapidGoDefinitionKeyMap") && g:rapidGoDefinitionKeyMap==1
+if get(g:,'rapidGoDefinitionKeyMap',0)
   " gd mimic
   nnoremap <silent><buffer> gd :call <SID>RapidGoDefinition()<CR>
 endif
-if exists("g:rapidListDefKeyMap") && g:rapidListDefKeyMap==1
+if get(g:,'rapidListDefKeyMap',0)
   " list all PROCs of current file
   nnoremap <silent><buffer> <leader>f :call <SID>RapidListDef()<CR>
 endif
-if exists("g:rapidListUsageKeyMap") && g:rapidListUsageKeyMap==1
+if get(g:,'rapidListUsageKeyMap',0)
   " list all uses of word under cursor
   nnoremap <silent><buffer> <leader>u :call <SID>RapidListUsage()<CR>
 endif
-if exists("g:rapidConcealStructsKeyMap") && g:rapidConcealStructsKeyMap==1
+
+if get(g:,'rapidConcealStructsKeyMaps',0)
+  " conceal all structure values
+  nnoremap <silent><buffer> <F4> :call <SID>RapidConcealLevel(2)<CR>
+  " conceal less structure values
+  nnoremap <silent><buffer> <F3> :call <SID>RapidConcealLevel(1)<CR>
+  " conceal no structure values
+  nnoremap <silent><buffer> <F2> :call <SID>RapidConcealLevel(0)<CR>
+elseif get(g:,'rapidConcealStructsKeyMap',0)
+  " deprecated
+  " compatiblity
   " conceal struct values, usefull for * robtargets
   nnoremap <silent><buffer> <F2> :setlocal conceallevel=2<CR>
   nnoremap <silent><buffer> <F3> :setlocal conceallevel=0<CR>
 endif
 
-if exists("g:rapidAutoFormKeyMap") && g:rapidAutoFormKeyMap==1
+if get(g:,'rapidAutoFormKeyMap',0)
   nnoremap <silent><buffer> <leader>n    :call <SID>RapidAutoForm("   ")<cr>
   nnoremap <silent><buffer> <leader>nn   :call <SID>RapidAutoForm("   ")<cr>
   "
@@ -1112,6 +1192,7 @@ if exists("g:rapidAutoFormKeyMap") && g:rapidAutoFormKeyMap==1
 endif " g:rapidAutoFormKeyMap
 
 " }}} Configurable mappings
+
 " <PLUG> mappings {{{ 
 
 " gd mimic 
@@ -1123,9 +1204,12 @@ nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDef()<CR>
 " list usage
 nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<cr>
 
-" conceal struct values
-nnoremap <silent><buffer> <plug>RapidConcealStructs :setlocal conceallevel=2<CR>
-nnoremap <silent><buffer> <plug>RapidShowStructs    :setlocal conceallevel=0<CR>
+" conceal all structure values
+nnoremap <silent><buffer> <plug>RapidConcealStructs     :call <SID>RapidConcealLevel(2)<CR>
+" conceal less structure values
+nnoremap <silent><buffer> <plug>RapidPartConcealStructs :call <SID>RapidConcealLevel(1)<CR>
+" conceal no structure values
+nnoremap <silent><buffer> <plug>RapidShowStructs        :call <SID>RapidConcealLevel(0)<CR>
 
 " format comments
 nnoremap <silent><buffer> <plug>RapidFormatComments :call <SID>RapidFormatComments()<CR>
@@ -1162,10 +1246,12 @@ nnoremap <silent><buffer> <plug>RapidAutoFormGlobalFuncWobj   :call <SID>RapidAu
 " auto form end
 
 " }}} <plug> mappings
+
 " Finish {{{ 
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
 
 " }}} Finish
+
 " vim:sw=2 sts=2 et fdm=marker
