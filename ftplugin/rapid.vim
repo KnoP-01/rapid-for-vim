@@ -517,7 +517,7 @@ if !exists("*s:KnopVerboseEcho()")
     "
     " dont start from within qf or loc window
     if getbufvar('%', "&buftype") == "quickfix" | return | endif
-    let l:declPrefix = '\c\v^\s*(local\s+|task\s+|global\s+)?(var|pers|const)\s+\w+\s+'
+    let l:declPrefix = '\c\v^\s*(local\s+|task\s+|global\s+)?(var|pers|const|alias)\s+\w+\s+'
     "
     " suche das naechste wort
     if search('\w','cW',line("."))
@@ -1117,7 +1117,7 @@ if get(g:,'rapidListUsageKeyMap',0)
   nnoremap <silent><buffer> <leader>u :call <SID>RapidListUsage()<CR>
 endif
 
-if get(g:,'rapidConcealStructsKeyMaps',0)
+if get(g:,'rapidConcealStructKeyMap',0)
   " conceal all structure values
   nnoremap <silent><buffer> <F4> :call <SID>RapidConcealLevel(2)<CR>
   " conceal less structure values
