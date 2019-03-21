@@ -24,10 +24,19 @@ let b:did_ftplugin = 1
 let s:keepcpo = &cpo
 set cpo&vim
 
-" compatiblity
+" if rapidNoVerbose exists it's pushed to knopNoVerbose
 if exists("g:rapidNoVerbose")
   let g:knopNoVerbose=g:rapidNoVerbose
   unlet g:rapidNoVerbose
+endif
+" if knopVerbose exists it overrides knopNoVerbose
+if exists("g:knopVerbose")
+  silent! unlet g:knopNoVerbose
+endif
+" if knopNoVerbose still exists it's pushed to knopVerbose
+if exists("g:knopNoVerbose")
+  let g:knopVerbose=!get(g:,'knopNoVerbose')
+  unlet g:knopNoVerbose
 endif
 if exists("g:rapidRhsQuickfix")
   let g:knopRhsQuickfix = g:rapidRhsQuickfix
@@ -45,19 +54,19 @@ if !exists("*s:KnopVerboseEcho()")
 
   " Little Helper {{{
 
-  if !exists("g:knopNoVerbose") || g:knopNoVerbose!=1
+  if get(g:,'knopVerbose',0)
     let g:knopVerboseMsgSet = 1
   endif
   function s:KnopVerboseEcho(msg)
-    if !exists("g:knopNoVerbose") || g:knopNoVerbose!=1
+    if get(g:,'knopVerbose',0)
       if exists('g:knopVerboseMsgSet')
         unlet g:knopVerboseMsgSet
-        echo "\nSwitch verbose messages off with \":let g:knopNoVerbose=1\" any time. You may put this in your .vimrc"
+        echo "\nSwitch verbose messages off with \":let g:knopVerbose=0\" any time. You may put this in your .vimrc"
         echo " "
       endif
       echo a:msg
     endif
-  endfunction " s:knopNoVerbose()
+  endfunction " s:KnopVerboseEcho()
 
   function s:KnopDirExists(in)
     if finddir( substitute(a:in,'\\','','g') )!=''
