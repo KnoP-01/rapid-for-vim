@@ -1,7 +1,7 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 1.5.8
+" Version: 2.0.0
 " Last Change: 23. Mar 2018
 " Credits: 
 "
