@@ -144,6 +144,21 @@ if !exists("*s:KnopVerboseEcho()")
       let l:getback=1
       copen
     endif
+    if get(g:,'knopShortenQFPath',1)
+      setlocal modifiable
+      silent! %substitute/\v\c^([^|]{50,})/\=pathshorten(submatch(1))/
+      0
+      if !exists("g:knopTmpFile")
+        let g:knopTmpFile=tempname()
+        augroup knopDelTmpFile
+          au!
+          au VimLeavePre * call delete(g:knopTmpFile)
+          au VimLeavePre * call delete(g:knopTmpFile . "~")
+        augroup END
+      endif
+      execute 'silent save! ' . g:knopTmpFile
+      setlocal nomodifiable
+    endif
     augroup KnopOpenQf
       au!
       " reposition after closing
@@ -208,6 +223,11 @@ if !exists("*s:KnopVerboseEcho()")
   " }}} Little Helper
 
   " Rapid Helper {{{
+
+  function <SID>RapidCleanBufferList()
+    execute 'silent! bd! ' . substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+    execute 'silent! bd! ' . substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+  endfunction " <SID>RapidCleanBufferList()
 
   function s:RapidCurrentWordIs()
     " returns the string "<type><name>" depending on the word under the cursor
@@ -826,7 +846,7 @@ if !exists("*s:KnopVerboseEcho()")
 
   " List Def/Usage {{{ 
 
-  function <SID>RapidListDef()
+  function <SID>RapidListDefinition()
     " dont start from within qf or loc window
     if getbufvar('%', "&buftype")=="quickfix" | return | endif
     " list defs in qf
@@ -856,7 +876,7 @@ if !exists("*s:KnopVerboseEcho()")
         wincmd p
       endif
     endif
-  endfunction " <SID>RapidListDef()
+  endfunction " <SID>RapidListDefinition()
 
   function <SID>RapidListUsage()
     " dont start from within qf or loc window
@@ -911,47 +931,11 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " <SID>RapidListUsage()
 
-  " }}} List Def/Usage 
+  " }}} List Def/Usage
 
-  " Format Comments {{{ 
+  " Function Text Object {{{
 
-  " TODO decide: abandon this one?
-  if exists("g:rapidFormatComments") && g:rapidFormatComments==1
-    function <SID>RapidFormatComments()
-      "
-      normal! m'
-      0
-      let l:numCurrLine = 1
-      let l:numLastLine = (line("$") - 1)
-      "
-      while l:numCurrLine >= 0 && l:numCurrLine <= l:numLastLine
-        if getline(l:numCurrLine) =~ '^\s*!'
-          let l:numNextNoneCommentLine = search('^\s*[^ \t!]',"nW")
-          if l:numNextNoneCommentLine == 0
-            normal! gqG
-          elseif l:numNextNoneCommentLine-l:numCurrLine <= 1
-            normal! gqq
-          else
-            execute "normal!" (l:numNextNoneCommentLine-l:numCurrLine-1)."gqj"
-          endif
-        endif
-        " check next line
-        let l:searchnextcomment = search('^\s*!',"W")
-        if l:searchnextcomment == 0
-          normal! G
-        endif
-        let l:numCurrLine = line(".")
-        let l:numLastLine = (line("$") - 1)
-      endwhile
-      "
-    endfunction " <SID>RapidFormatComments()
-  endif
-
-  " }}} Format Comments 
-
-  " Funktion Text Object {{{
-
-  if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1 " depends on move around key mappings
+  if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
     function s:RapidFunctionTextObject(inner,withcomment)
       if a:inner==1
         let l:n = 1
@@ -978,7 +962,7 @@ if !exists("*s:KnopVerboseEcho()")
     endfunction " RapidFunctionTextObject()
   endif
 
-  " }}} Funktion Text Object
+  " }}} Function Text Object
 
 endif " !exists("*s:KnopVerboseEcho()")
 
@@ -1032,7 +1016,7 @@ if !exists("g:rapidNoPath") || g:rapidNoPath!=1
   if finddir('../HOME')             !='' | let s:rapidpath.='../HOME/**,'               | endif
   if finddir('../BACKINFO')         !='' | let s:rapidpath.='../BACKINFO/**,'           | endif
   if finddir('../CS')               !='' | let s:rapidpath.='../CS/**,'                 | endif
-  if finddir('./SYSPAR')            !='' | let s:rapidpath.='./SYSPAR/**,'              | endif
+  " if finddir('./SYSPAR')            !='' | let s:rapidpath.='./SYSPAR/**,'              | endif
   execute "setlocal path=".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 endif
@@ -1062,11 +1046,12 @@ if get(g:,'rapidConcealStructs',1)
   call <SID>RapidConcealLevel(get(g:,'rapidConcealStructs',0))
 
   let b:undo_ftplugin = b:undo_ftplugin." cole< cocu<"
-endif
 
-" }}} Vim Settings 
+endif " get(g:,'rapidConcealStructs',1)
 
-" Match It % {{{ 
+" }}} Vim Settings
+
+" Match It {{{
 
 " matchit support
 if exists("loaded_matchit")
@@ -1083,29 +1068,45 @@ endif
 
 " Move Around and Function Text Object key mappings {{{
 
-if exists("g:rapidMoveAroundKeyMap") && g:rapidMoveAroundKeyMap>=1
+if get(g:,'rapidMoveAroundKeyMap',1)
   " Move around functions
   nnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'bs')<Bar>:unlet b:knopCount<CR>
-  vnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'bsW')<Bar>:unlet b:knopCount<CR>
+  xnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'bsW')<Bar>:unlet b:knopCount<CR>
   nnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 's')<Bar>:unlet b:knopCount<CR>
-  vnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'sW')<Bar>:unlet b:knopCount<CR>
+  xnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?<(proc\|func\|trap\|record\|module)>', 'sW')<Bar>:unlet b:knopCount<CR>
   nnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bse')<Bar>:unlet b:knopCount<CR>
-  vnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bseW')<Bar>:unlet b:knopCount<CR>
+  xnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bseW')<Bar>:unlet b:knopCount<CR>
   nnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'se')<Bar>:unlet b:knopCount<CR>
-  vnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'seW')<Bar>:unlet b:knopCount<CR>
+  xnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'seW')<Bar>:unlet b:knopCount<CR>
   " Move around comments
   nnoremap <silent><buffer> [! :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '^\(\s*!.*\n\)\@<!\(\s*!\)', 'bs')<Bar>:unlet b:knopCount<cr>
-  vnoremap <silent><buffer> [! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '^\(\s*!.*\n\)\@<!\(\s*!\)', 'bsW')<Bar>:unlet b:knopCount<cr>
+  xnoremap <silent><buffer> [! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '^\(\s*!.*\n\)\@<!\(\s*!\)', 'bsW')<Bar>:unlet b:knopCount<cr>
   nnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'se')<Bar>:unlet b:knopCount<cr>
-  vnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'seW')<Bar>:unlet b:knopCount<cr>
-  if g:rapidMoveAroundKeyMap==2
-    " inner and around function text objects
-    vnoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
-    vnoremap <silent><buffer> af :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
-    vnoremap <silent><buffer> if :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
-    onoremap <silent><buffer> aF :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
-    onoremap <silent><buffer> af :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
-    onoremap <silent><buffer> if :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
+  xnoremap <silent><buffer> ]! :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\ze\n\s*([^!\t ]\|$)', 'seW')<Bar>:unlet b:knopCount<cr>
+  " inner and around function text objects
+  if get(g:,'rapidMoveAroundKeyMap',0)
+        \|| mapcheck("aF","x")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncInclCo','x')
+    xmap <silent><buffer> aF <plug>RapidTxtObjAroundFuncInclCo
+  endif
+  if get(g:,'rapidMoveAroundKeyMap',0)
+        \|| mapcheck("af","x")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncExclCo','x')
+    xmap <silent><buffer> af <plug>RapidTxtObjAroundFuncExclCo
+  endif
+  if get(g:,'rapidMoveAroundKeyMap',0)
+        \|| mapcheck("if","x")=="" && !hasmapto('<plug>RapidTxtObjInnerFunc','x')
+    xmap <silent><buffer> if <plug>RapidTxtObjInnerFunc
+  endif
+  if get(g:,'rapidMoveAroundKeyMap',0)
+        \|| mapcheck("aF","o")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncInclCo','o')
+    omap <silent><buffer> aF <plug>RapidTxtObjAroundFuncInclCo
+  endif
+  if get(g:,'rapidMoveAroundKeyMap',0)
+        \|| mapcheck("af","o")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncExclCo','o')
+    omap <silent><buffer> af <plug>RapidTxtObjAroundFuncExclCo
+  endif
+  if get(g:,'rapidMoveAroundKeyMap',0)
+        \|| mapcheck("if","o")=="" && !hasmapto('<plug>RapidTxtObjInnerFunc','o')
+    omap <silent><buffer> if <plug>RapidTxtObjInnerFunc
   endif
 endif
 
@@ -1113,32 +1114,23 @@ endif
 
 " Other configurable key mappings {{{
 
+" if the mapping does not exist and there is no plug-mapping just map it,
+" otherwise look for the config variable
+
 if get(g:,'rapidGoDefinitionKeyMap',0)
-  " gd mimic
-  nnoremap <silent><buffer> gd :call <SID>RapidGoDefinition()<CR>
+      \|| mapcheck("gd","n")=="" && !hasmapto('<plug>RapidGoDef','n')
+  " Go Definition
+  nmap <silent><buffer> gd <plug>RapidGoDef
 endif
 if get(g:,'rapidListDefKeyMap',0)
+      \|| mapcheck("<leader>f","n")=="" && !hasmapto('<plug>RapidListDef','n')
   " list all PROCs of current file
-  nnoremap <silent><buffer> <leader>f :call <SID>RapidListDef()<CR>
+  nmap <silent><buffer> <leader>f <plug>RapidListDef
 endif
 if get(g:,'rapidListUsageKeyMap',0)
+      \|| mapcheck("<leader>u","n")=="" && !hasmapto('<plug>RapidListUse','n')
   " list all uses of word under cursor
-  nnoremap <silent><buffer> <leader>u :call <SID>RapidListUsage()<CR>
-endif
-
-if get(g:,'rapidConcealStructKeyMap',0)
-  " conceal all structure values
-  nnoremap <silent><buffer> <F4> :call <SID>RapidConcealLevel(2)<CR>
-  " conceal less structure values
-  nnoremap <silent><buffer> <F3> :call <SID>RapidConcealLevel(1)<CR>
-  " conceal no structure values
-  nnoremap <silent><buffer> <F2> :call <SID>RapidConcealLevel(0)<CR>
-elseif get(g:,'rapidConcealStructsKeyMap',0)
-  " deprecated
-  " compatiblity
-  " conceal struct values, usefull for * robtargets
-  nnoremap <silent><buffer> <F2> :setlocal conceallevel=2<CR>
-  nnoremap <silent><buffer> <F3> :setlocal conceallevel=0<CR>
+  nmap <silent><buffer> <leader>u <plug>RapidListUse
 endif
 
 if get(g:,'rapidAutoFormKeyMap',0)
@@ -1200,28 +1192,35 @@ if get(g:,'rapidAutoFormKeyMap',0)
   nnoremap <silent><buffer> <leader>ngfw :call <SID>RapidAutoForm("gfw")<cr>
 endif " g:rapidAutoFormKeyMap
 
+if get(g:,'rapidConcealStructKeyMap',0)
+        \|| mapcheck("<F2>","n")=="" && mapcheck("<F3>","n")=="" && mapcheck("<F4>","n")==""
+        \&& !hasmapto('<plug>RapidConcealStructs','n') && !hasmapto('<plug>RapidPartConcealStructs','n') && !hasmapto('<plug>RapidShowStructs','n')
+  " conceal all structure values
+  nmap <silent><buffer> <F4> <plug>RapidConcealStructs
+  " conceal less structure values
+  nmap <silent><buffer> <F3> <plug>RapidPartConcealStructs
+  " conceal no structure values
+  nmap <silent><buffer> <F2> <plug>RapidShowStructs
+elseif get(g:,'rapidConcealStructsKeyMap',0)
+  " deprecated
+  " compatiblity
+  " conceal struct values, usefull for * robtargets
+  nmap <silent><buffer> <F2> <plug>RapidConcealStructs
+  nmap <silent><buffer> <F3> <plug>RapidShowStructs
+endif
+
 " }}} Configurable mappings
 
-" <PLUG> mappings {{{ 
+" <PLUG> mappings {{{
 
-" gd mimic 
-nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>
+" gd mimic
+nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
 
 " list all PROCs of current file
-nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDef()<CR>
+nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
 
 " list usage
-nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<cr>
-
-" conceal all structure values
-nnoremap <silent><buffer> <plug>RapidConcealStructs     :call <SID>RapidConcealLevel(2)<CR>
-" conceal less structure values
-nnoremap <silent><buffer> <plug>RapidPartConcealStructs :call <SID>RapidConcealLevel(1)<CR>
-" conceal no structure values
-nnoremap <silent><buffer> <plug>RapidShowStructs        :call <SID>RapidConcealLevel(0)<CR>
-
-" format comments
-nnoremap <silent><buffer> <plug>RapidFormatComments :call <SID>RapidFormatComments()<CR>
+nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<CR>:call <SID>RapidCleanBufferList()<CR>
 
 " auto form
 nnoremap <silent><buffer> <plug>RapidAutoForm                 :call <SID>RapidAutoForm("   ")<cr>
@@ -1254,13 +1253,28 @@ nnoremap <silent><buffer> <plug>RapidAutoFormGlobalFuncWobj   :call <SID>RapidAu
 
 " auto form end
 
+" Function Text Object
+if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
+  xnoremap <silent><buffer> <plug>RapidTxtObjAroundFuncInclCo :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
+  xnoremap <silent><buffer> <plug>RapidTxtObjAroundFuncExclCo :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
+  xnoremap <silent><buffer> <plug>RapidTxtObjInnerFunc        :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
+  onoremap <silent><buffer> <plug>RapidTxtObjAroundFuncInclCo :<C-U>call <SID>RapidFunctionTextObject(0,1)<CR>
+  onoremap <silent><buffer> <plug>RapidTxtObjAroundFuncExclCo :<C-U>call <SID>RapidFunctionTextObject(0,0)<CR>
+  onoremap <silent><buffer> <plug>RapidTxtObjInnerFunc        :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
+endif
+
+" conceal all structure values
+nnoremap <silent><buffer> <plug>RapidConcealStructs     :call <SID>RapidConcealLevel(2)<CR>
+" conceal less structure values
+nnoremap <silent><buffer> <plug>RapidPartConcealStructs :call <SID>RapidConcealLevel(1)<CR>
+" conceal no structure values
+nnoremap <silent><buffer> <plug>RapidShowStructs        :call <SID>RapidConcealLevel(0)<CR>
+
 " }}} <plug> mappings
 
-" Finish {{{ 
-
+" Finish {{{
 let &cpo = s:keepcpo
 unlet s:keepcpo
-
 " }}} Finish
 
 " vim:sw=2 sts=2 et fdm=marker
