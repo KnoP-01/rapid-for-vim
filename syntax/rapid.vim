@@ -248,7 +248,7 @@ else
   syn match rapidNames /[a-zA-Z_][.a-zA-Z0-9_]*/
   highlight default link rapidNames None
   " Function
-  syn match rapidFunction contains=rapidBuildInFunction /\c\(\s*\(proc\|module\)\s\+\)\@1<![a-zA-Z_]\w\+ *(/me=e-1
+  syn match rapidFunction contains=rapidBuildInFunction /\v\c(<(proc|module)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
   highlight default link rapidFunction Function
   " call by var: %"product"+NumToStr(nProductNumber)%;
   " call by var: if bBool %stString%;
