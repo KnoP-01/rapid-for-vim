@@ -225,8 +225,12 @@ if !exists("*s:KnopVerboseEcho()")
   " Rapid Helper {{{
 
   function <SID>RapidCleanBufferList()
-    execute 'silent! bd! ' . substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
-    execute 'silent! bd! ' . substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+    if exists("g:knopTmpFile")
+      execute 'silent! bd! ' . substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+    endif
+    if exists("g:rapidTmpFile")
+      execute 'silent! bd! ' . substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+    endif
   endfunction " <SID>RapidCleanBufferList()
 
   function s:RapidCurrentWordIs()
