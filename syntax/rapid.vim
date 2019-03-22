@@ -248,7 +248,7 @@ else
   syn match rapidNames /[a-zA-Z_][.a-zA-Z0-9_]*/
   highlight default link rapidNames None
   " Function
-  syn match rapidFunction contains=rapidBuildInFunction /\c\(\s*\(proc\|module\)\s\+\)\@<![a-zA-Z_]\w\+ *(/me=e-1
+  syn match rapidFunction contains=rapidBuildInFunction /\c\(\s*\(proc\|module\)\s\+\)\@1<![a-zA-Z_]\w\+ *(/me=e-1
   highlight default link rapidFunction Function
   " call by var: %"product"+NumToStr(nProductNumber)%;
   " call by var: if bBool %stString%;
@@ -302,7 +302,7 @@ else
   syn region rapidStructVal matchgroup=rapidDelimiter start=/\[/ end=/\]/ contains=ALLBUT,rapidString keepend extend conceal cchar=* 
 
 " Error {{{
-  if exists("g:rapidShowError") && g:rapidShowError==1
+  if get(g:,'rapidShowError',1)
     " some more or less common typos
     "
     " vars or funcs >32 chars are not possible in rapid. a234567890123456789012345
