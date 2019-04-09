@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.0.0
-" Last Change: 22. Feb 2018
+" Last Change: 09. Apr 2019
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -26,7 +26,9 @@ set cpo&vim
 
 " if rapidNoVerbose exists it's pushed to knopNoVerbose
 if exists("g:rapidNoVerbose")
-  let g:knopNoVerbose=g:rapidNoVerbose
+  if !exists("g:knopNoVerbose")
+    let g:knopNoVerbose=g:rapidNoVerbose
+  endif
   unlet g:rapidNoVerbose
 endif
 " if knopVerbose exists it overrides knopNoVerbose
@@ -39,12 +41,22 @@ if exists("g:knopNoVerbose")
   unlet g:knopNoVerbose
 endif
 if exists("g:rapidRhsQuickfix")
-  let g:knopRhsQuickfix = g:rapidRhsQuickfix
+  if !exists("g:knopRhsQuickfix")
+    let g:knopRhsQuickfix = g:rapidRhsQuickfix
+  endif
   unlet g:rapidRhsQuickfix
 endif
 if exists("g:rapidLhsQuickfix")
-  let g:knopLhsQuickfix = g:rapidLhsQuickfix
+  if !exists("g:knopLhsQuickfix")
+    let g:knopLhsQuickfix = g:rapidLhsQuickfix
+  endif
   unlet g:rapidLhsQuickfix
+endif
+if exists("g:rapidNoPath") 
+  if !exists("g:rapidPath")
+    let g:rapidPath = !g:rapidNoPath
+  endif
+  unlet g:rapidNoPath
 endif
 
 " }}} init
@@ -57,7 +69,7 @@ if !exists("*s:KnopVerboseEcho()")
   if get(g:,'knopVerbose',0)
     let g:knopVerboseMsgSet = 1
   endif
-  function s:KnopVerboseEcho(msg)
+  function s:KnopVerboseEcho(msg, ...)
     if get(g:,'knopVerbose',0)
       if exists('g:knopVerboseMsgSet')
         unlet g:knopVerboseMsgSet
@@ -65,6 +77,11 @@ if !exists("*s:KnopVerboseEcho()")
         echo " "
       endif
       echo a:msg
+      if exists('a:1')
+        " for some reason I don't understand this has to be present twice
+        call input("Hit enter> ") 
+        call input("Hit enter> ")
+      endif
     endif
   endfunction " s:KnopVerboseEcho()
 
@@ -122,15 +139,16 @@ if !exists("*s:KnopVerboseEcho()")
     let l:path = substitute(l:path, '\*\* ', '**/'.a:file.' ', "g") " append a / to **, . and ..
     let l:path = substitute(l:path, '\.\. ', '../'.a:file.' ', "g")
     let l:path = substitute(l:path, '\. ', './'.a:file.' ', "g")
+    call s:KnopVerboseEcho(l:path)
     return l:path
   endfunction " s:KnopPreparePath()
 
   function s:KnopQfCompatible()
     " check for qf.vim compatiblity
-    if exists('g:loaded_qf') && (!exists('g:qf_window_bottom') || g:qf_window_bottom!=0)
+    if exists('g:loaded_qf') && get(g:,'qf_window_bottom',1)
           \&& (get(g:,'knopRhsQuickfix',0)
           \||  get(g:,'knopLhsQuickfix',0))
-      call s:KnopVerboseEcho("NOTE: \nIf you use qf.vim then g:krlRhsQuickfix, g:krlLhsQuickfix, g:rapidRhsQuickfix and g:rapidLhsQuickfix will not work unless g:qf_window_bottom is 0 (Zero). \nTo use g:<foo>[RL]hsQuickfix put this in your .vimrc: \n  let g:qf_window_bottom = 0\n\n")
+      call s:KnopVerboseEcho("NOTE: \nIf you use qf.vim then g:knopRhsQuickfix and g:knopLhsQuickfix will not work unless g:qf_window_bottom is 0 (Zero). \nTo use g:knop[RL]hsQuickfix put this in your .vimrc: \n  let g:qf_window_bottom = 0\n\n",1)
       return 0
     endif
     return 1
@@ -146,7 +164,7 @@ if !exists("*s:KnopVerboseEcho()")
     endif
     if get(g:,'knopShortenQFPath',1)
       setlocal modifiable
-      silent! %substitute/\v\c^([^|]{50,})/\=pathshorten(submatch(1))/
+      silent! %substitute/\v\c^([^|]{40,})/\=pathshorten(submatch(1))/
       0
       if !exists("g:knopTmpFile")
         let g:knopTmpFile=tempname()
