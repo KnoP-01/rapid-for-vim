@@ -32,7 +32,8 @@ if exists("g:rapidNoHighlight")
   unlet g:rapidNoHighlight
 endif
 " if colorscheme is tortus rapidNoHighLink defaults to 1
-if get(g:,'colors_name'," ")=="tortus" && !exists("g:rapidNoHighLink")
+if (get(g:,'colors_name'," ")=="tortus" || get(g:,'colors_name'," ")=="tortusless") 
+      \&& !exists("g:rapidNoHighLink")
   let g:rapidNoHighLink=1 
 endif
 " rapidNoHighLink defaults to 0 if it's not initialized yet or 0
