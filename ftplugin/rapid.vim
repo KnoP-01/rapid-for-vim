@@ -369,6 +369,7 @@ if !exists("*s:KnopVerboseEcho()")
           \&& search('\v\c^\s*end(proc|func|trap)>','bcnW') < l:numProcStart
       "
       " search FOR loop local auto declaration
+      call s:KnopVerboseEcho("search FOR loop local auto declaration")
       let l:nFor = 0
       let l:nEndfor = 0
       let l:nSkipFor = 0
@@ -381,7 +382,7 @@ if !exists("*s:KnopVerboseEcho()")
           if      l:nFor>l:nEndfor && 
                 \ l:nSkipFor<=0 &&
                 \ search('\c\v\s+for\s+\zs'.a:currentWord.'>','cW',line("."))
-            call s:KnopVerboseEcho("Found FOR loop local auto declaration")
+            call s:KnopVerboseEcho("Found FOR loop local auto declaration",1)
             return 0
             "
           endif
@@ -392,24 +393,27 @@ if !exists("*s:KnopVerboseEcho()")
       endwhile " FOR loop local auto declaration
       "
       " search Proc/Func/Trap argument declaration
+      call s:KnopVerboseEcho("search Proc/Func/Trap argument declaration")
       call cursor(l:numProcStart,1)
       let l:noneCloseParen = '([^)]|\n)*'
       if search('\c\v^'.l:noneCloseParen.'\('.l:noneCloseParen.'\w(\s|\n)*\zs<'.a:currentWord.'>'.l:noneCloseParen.'\)','cW',line("."))
-        call s:KnopVerboseEcho("Found VARIABLE declaration in ARGUMENT list")
+        call s:KnopVerboseEcho("Found VARIABLE declaration in ARGUMENT list",1)
         return 0
         "
       endif " search Proc/Func/Trap argument declaration
       "
       " search Proc/Func/Trap local declaration
+      call s:KnopVerboseEcho("search Proc/Func/Trap local declaration")
       call cursor(l:numProcStart,1)
       if search(a:declPrefix.'\zs'.a:currentWord.'>','W',l:numProcEnd)
-        call s:KnopVerboseEcho("Found PROC, FUNC or TRAP local VARIABLE declaration")
+        call s:KnopVerboseEcho("Found PROC, FUNC or TRAP local VARIABLE declaration",1)
         return 0
         "
       endif
     endif " search inside Proc/Func/Trap for local declaration
     "
     " search Module local variable declaration
+    call s:KnopVerboseEcho("search Module local variable declaration")
     let l:numEndmodule=s:RapidPutCursorOnModuleAndReturnEndmoduleline()
     while search(a:declPrefix.'\zs'.a:currentWord.'>','W',l:numEndmodule)
       " found something, remember where
@@ -421,16 +425,17 @@ if !exists("*s:KnopVerboseEcho()")
             \|| expand("<cword>") =~ '\c\v^\s*endmodule>' 
             \)
         call cursor(l:numFoundLine,l:numFoundCol)
-        call s:KnopVerboseEcho("Found VARIABLE declaration in this MODULE")
+        call s:KnopVerboseEcho("Found VARIABLE declaration in this MODULE",1)
         return 0
         "
       endif
     endwhile " search Module local variable declaration
     " 
     " search Module local proc (et al) declaration
+    call s:KnopVerboseEcho("search Module local proc (et al) declaration")
     let l:numEndmodule=s:RapidPutCursorOnModuleAndReturnEndmoduleline()
     if search('\v\c^\s*((local|global|task)\s+)?(proc|func\s+\w+|trap|record)\s+\zs'.a:currentWord.'>','cW',l:numEndmodule)
-      call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in this MODULE")
+      call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in this MODULE",1)
       return 0
       "
     endif " search Module local proc (et al) declaration
@@ -439,6 +444,7 @@ if !exists("*s:KnopVerboseEcho()")
     call cursor(l:numSearchStartLine,l:numSearchStartColumn)
     "
     " search global declaration
+    call s:KnopVerboseEcho("search global declaration")
     for l:i in ['task', 'system']
       "
       " first fill location list with all (end)?(proc|func|trap|record) and variable
@@ -447,31 +453,32 @@ if !exists("*s:KnopVerboseEcho()")
       let l:suffix = '>|(end)?(proc|func|trap|record)>)/j' " since this finds all (not only global) ends, the previous must also list local
       if l:i =~ 'task'
         if has("win32")
-          let l:path = './*.prg '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys'
+          let l:path = './*.prg ./*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys'
         else
-          let l:path = './*.prg ./*.Prg ./*.PRG '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.SYS '
+          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.SYS '
         endif
       elseif l:i =~ 'system'
         if has("win32")
-          let l:path = './*.prg '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys'
+          let l:path = './*.prg ./*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys'
         else
-          let l:path = './*.prg ./*.Prg ./*.PRG '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
+          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
         endif
       endif
       let l:cmd = ':noautocmd lvimgrep '.l:prefix.a:currentWord.l:suffix.' '.l:path
       try
         execute l:cmd
       catch /^Vim\%((\a\+)\)\=:E480/
-        call s:KnopVerboseEcho(":lvimgrep stopped with E480!")
+        call s:KnopVerboseEcho(":lvimgrep stopped with E480!",1)
         return -1
         "
       catch /^Vim\%((\a\+)\)\=:E683/
-        call s:KnopVerboseEcho(":lvimgrep stopped with E683!")
+        call s:KnopVerboseEcho(":lvimgrep stopped with E683!",1)
         return -1
         "
       endtry
       "
       " search for global proc in loclist
+      call s:KnopVerboseEcho("search for global proc in loclist")
       if l:i =~ 'task'
         let l:procdecl = '\v\c^\s*(task\s+|global\s+)?(proc|func\s+\w+|trap|record)\s+'
       elseif l:i =~ 'system'
@@ -485,9 +492,9 @@ if !exists("*s:KnopVerboseEcho()")
           call add(l:qf,l:loc)
           call setqflist(l:qf)
           if l:i =~ 'task'
-            call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in this TASK")
+            call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in this TASK",1)
           elseif l:i =~ 'system'
-            call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in SYSTEM (other task)")
+            call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in SYSTEM (other task)",1)
           endif
           call s:KnopOpenQf('rapid')
           return 0
@@ -496,6 +503,7 @@ if !exists("*s:KnopVerboseEcho()")
       endfor
       "
       " then search for global variable in loc list
+      call s:KnopVerboseEcho("search for global variable in loc list")
       let l:procdecl = '\v\c^\s*(local\s+|task\s+|global\s+)?(proc|func\s+\w+|trap|record)\s+' " procdecl must also contain local, since all ends are present
       let l:endproc = '\v\c^\s*end(proc|func|trap|record)>'
       let l:skip = 0
@@ -514,9 +522,9 @@ if !exists("*s:KnopVerboseEcho()")
             call add(l:qf,l:loc)
             call setqflist(l:qf)
             if l:i =~ 'task'
-              call s:KnopVerboseEcho("Found VARIABLE declaration in this TASK")
+              call s:KnopVerboseEcho("Found VARIABLE declaration in this TASK",1)
             elseif l:i =~ 'system'
-              call s:KnopVerboseEcho("Found VARIABLE declaration in SYSTEM (other task)")
+              call s:KnopVerboseEcho("Found VARIABLE declaration in SYSTEM (other task)",1)
             endif
             call s:KnopOpenQf('rapid')
             return 0
@@ -531,6 +539,7 @@ if !exists("*s:KnopVerboseEcho()")
     endfor " search 'task' or 'system' global declaration
     "
     " search EIO.cfg
+    call s:KnopVerboseEcho("search EIO.cfg")
     if filereadable("./EIO.cfg")
       let l:path = './EIO.cfg'
     elseif filereadable("./EIO.Cfg")
@@ -550,18 +559,19 @@ if !exists("*s:KnopVerboseEcho()")
     elseif filereadable('./../../../SYSPAR/EIO.CFG')
       let l:path = './../../../SYSPAR/EIO.CFG'
     else
-      call s:KnopVerboseEcho("No EIO.cfg found!")
+      call s:KnopVerboseEcho("No EIO.cfg found!",1)
       return -1
       "
     endif
     let l:strPattern = '\c\v^\s*-name\s+"'.a:currentWord.'>'
     let l:searchResult = s:KnopSearchPathForPatternNTimes(l:strPattern,l:path,1,"rapid")
     if l:searchResult == 0
-      call s:KnopVerboseEcho("Found signal(?) in EIO.cfg. The quickfix window will open. See :he quickfix-window")
+      call s:KnopVerboseEcho("Found signal(?) in EIO.cfg. The quickfix window will open. See :he quickfix-window",1)
       return 0
       "
     endif
     "
+    call s:KnopVerboseEcho("rapid go definition failed",1)
     return -1
   endfunction " s:RapidSearchUserDefined()
 
