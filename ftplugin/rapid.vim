@@ -552,6 +552,12 @@ if !exists("*s:KnopVerboseEcho()")
       let l:path = './SYSPAR/EIO.Cfg'
     elseif filereadable("./SYSPAR/EIO.CFG")
       let l:path = './SYSPAR/EIO.CFG'
+    elseif filereadable("./../../SYSPAR/EIO.cfg")
+      let l:path = './../../SYSPAR/EIO.cfg'
+    elseif filereadable("./../../SYSPAR/EIO.Cfg")
+      let l:path = './../../SYSPAR/EIO.Cfg'
+    elseif filereadable("./../../SYSPAR/EIO.CFG")
+      let l:path = './../../SYSPAR/EIO.CFG'
     elseif filereadable('./../../../SYSPAR/EIO.cfg')
       let l:path = './../../../SYSPAR/EIO.cfg'
     elseif filereadable('./../../../SYSPAR/EIO.Cfg')
