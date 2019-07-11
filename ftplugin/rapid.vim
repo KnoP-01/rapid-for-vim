@@ -596,34 +596,34 @@ if !exists("*s:KnopVerboseEcho()")
         return s:RapidSearchUserDefined(l:declPrefix,l:currentWord)
         "
       elseif l:currentWord =~ '\v^(sys)?func.*'
-        let l:currentWord = substitute(l:currentWord,'\v^(sys)?func','','')
+        let l:currentWord = substitute(l:currentWord,'\v^%(sys)?func','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be a FUNCTION. Start search..."])
         return s:RapidSearchUserDefined(l:declPrefix,l:currentWord)
         "
-      elseif l:currentWord =~ '^num.*'
-        let l:currentWord = substitute(l:currentWord,'^num','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a NUMBER. No search performed."])
-      elseif l:currentWord =~ '^bool.*'
-        let l:currentWord = substitute(l:currentWord,'^bool','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. No search performed."])
-      elseif l:currentWord =~ '^string.*'
-        let l:currentWord = substitute(l:currentWord,'^string','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. No search performed."])
-      elseif l:currentWord =~ '^comment.*'
-        let l:currentWord = substitute(l:currentWord,'^comment','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a COMMENT. No search performed."])
       elseif l:currentWord =~ '^inst.*'
         let l:currentWord = substitute(l:currentWord,'^inst','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD. No search performed."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD. No search performed."],1)
+      elseif l:currentWord =~ '^num.*'
+        let l:currentWord = substitute(l:currentWord,'^num','','')
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a NUMBER. No search performed."],1)
+      elseif l:currentWord =~ '^bool.*'
+        let l:currentWord = substitute(l:currentWord,'^bool','','')
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. No search performed."],1)
+      elseif l:currentWord =~ '^string.*'
+        let l:currentWord = substitute(l:currentWord,'^string','','')
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. No search performed."],1)
+      elseif l:currentWord =~ '^comment.*'
+        let l:currentWord = substitute(l:currentWord,'^comment','','')
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a COMMENT. No search performed."],1)
       else
         let l:currentWord = substitute(l:currentWord,'^none','','')
-        call s:KnopVerboseEcho([l:currentWord,"Could not determine typ of current word. No search performed."])
+        call s:KnopVerboseEcho([l:currentWord,"Could not determine typ of current word. No search performed."],1)
       endif
       return -1
       "
     endif
     "
-    call s:KnopVerboseEcho("Nothing found at or after current cursor pos, which could have a declaration. No search performed.")
+    call s:KnopVerboseEcho("Unable to determine what to search for at current cursor position. No search performed.",1)
     return -1
     "
   endfunction " <SID>RapidGoDefinition()
@@ -633,7 +633,7 @@ if !exists("*s:KnopVerboseEcho()")
   " Auto Form {{{
 
   function s:RapidGetGlobal(sAction)
-    if a:sAction=~'^[gl]'
+    if a:sAction=~'^[lg]'
       let l:sGlobal = a:sAction
     else
       let l:sGlobal = substitute(input("\n[g]lobal or [l]ocal?\n> "),'\W*','','g')
@@ -1256,7 +1256,7 @@ endif
 
 " <PLUG> mappings {{{
 
-" gd mimic
+" Go Definition
 nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
 
 " list all PROCs of current file
