@@ -1001,9 +1001,33 @@ if !exists("*s:KnopVerboseEcho()")
 
   " }}} Function Text Object
 
+  " Comment Text Object {{{
+
+  if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
+    function <SID>RapidCommentTextObject(around)
+      if getline('.')!~'^\s*!' && !search('^\s*!',"sW")
+        return
+      endif
+      " starte innerhalb des oder nach dem kommentar
+      silent normal! j
+      silent normal [;
+      if getline(line('.')+1)!~'^\s*!'
+        silent normal! V
+      else
+        silent normal! V
+        silent normal ];
+      endif
+      if a:around && getline(line('.')+1)=~'^\s*$'
+        silent normal! j
+      endif
+    endfunction " RapidCommentTextObject()
+  endif
+
+  " }}} Comment Text Object
+
 endif " !exists("*s:KnopVerboseEcho()")
 
-" Vim Settings {{{ 
+" Vim Settings {{{
 
 " default on; no option
 setlocal commentstring=!%s
