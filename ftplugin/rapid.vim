@@ -1305,6 +1305,14 @@ if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
   onoremap <silent><buffer> <plug>RapidTxtObjInnerFunc        :<C-U>call <SID>RapidFunctionTextObject(1,0)<CR>
 endif
 
+" comment text objects
+if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
+  xnoremap <silent><buffer> <plug>RapidTxtObjAroundComment     :<C-U>call <SID>RapidCommentTextObject(1)<CR>
+  xnoremap <silent><buffer> <plug>RapidTxtObjInnerComment      :<C-U>call <SID>RapidCommentTextObject(0)<CR>
+  onoremap <silent><buffer> <plug>RapidTxtObjAroundComment     :<C-U>call <SID>RapidCommentTextObject(1)<CR>
+  onoremap <silent><buffer> <plug>RapidTxtObjInnerComment      :<C-U>call <SID>RapidCommentTextObject(0)<CR>
+endif
+
 " conceal all structure values
 nnoremap <silent><buffer> <plug>RapidConcealStructs     :call <SID>RapidConcealLevel(2)<CR>
 " conceal less structure values
