@@ -583,8 +583,6 @@ if !exists("*s:KnopVerboseEcho()")
 
   function <SID>RapidGoDefinition()
     "
-    " dont start from within qf or loc window
-    if getbufvar('%', "&buftype") == "quickfix" | return | endif
     let l:declPrefix = '\c\v^\s*(local\s+|task\s+|global\s+)?(var|pers|const|alias)\s+\w+\s+'
     "
     " suche das naechste wort
