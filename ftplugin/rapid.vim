@@ -453,15 +453,15 @@ if !exists("*s:KnopVerboseEcho()")
       let l:suffix = '>|(end)?(proc|func|trap|record)>)/j' " since this finds all (not only global) ends, the previous must also list local
       if l:i =~ 'task'
         if has("win32")
-          let l:path = './*.prg ./*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys'
+          let l:path = './*.prg ./*.mod ./*.sys '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys'
         else
-          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.SYS '
+          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.SYS '
         endif
       elseif l:i =~ 'system'
         if has("win32")
-          let l:path = './*.prg ./*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys'
+          let l:path = './*.prg ./*.mod ./*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys'
         else
-          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
+          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
         endif
       endif
       let l:cmd = ':noautocmd lvimgrep '.l:prefix.a:currentWord.l:suffix.' '.l:path
