@@ -352,7 +352,7 @@ else
     syn match rapidError0 /\c\v(^\s*((global\s+|task\s+|local\s+)?(var|pers|const)\s+\w+\s+)?\w+(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
     "
     " "for" missing "from"
-    syn match rapidError10 /\c\v^\s*for\s+(from)@!/
+    syn match rapidError10 /\c\v^\s*for\s+\w+\s+(from)@!/
     "
     " this one is tricky. Make sure this does not match trigger instructions
     " a = b and c or (int1=int2)
