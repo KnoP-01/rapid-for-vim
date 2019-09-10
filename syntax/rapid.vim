@@ -339,7 +339,7 @@ else
     "            ||
     syn match rapidError7 /\c\v(^\s*(return|waituntil|if|while)>[^!]+[^!<>])@<=\=[><]/
     "
-    " wait for a><b ok
+    " WaitUntil a><b ok
     "           ||
     syn match rapidError8 /\c\v(^\s*(return|waituntil|if|while)[^!]+)@<=\>\s*\</
     "
@@ -352,7 +352,7 @@ else
     syn match rapidError0 /\c\v(^\s*((global\s+|task\s+|local\s+)?(var|pers|const)\s+\w+\s+)?\w+(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
     "
     " "for" missing "from"
-    syn match rapidError10 /\c\v^\s*for\s+\w+\s+(from)@!/
+    syn match rapidError10 /\c\v^\s*for\s+(\w[0-9a-zA-Z_.{}]+\s+from)@!\S+\s+\S+/
     "
     " this one is tricky. Make sure this does not match trigger instructions
     " a = b and c or (int1=int2)
