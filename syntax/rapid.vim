@@ -173,7 +173,8 @@ else
   syn keyword rapidConditional IF THEN ELSEIF ELSE ENDIF TEST CASE DEFAULT ENDTEST
   highlight default link rapidConditional Conditional
   " Repeat
-  syn keyword rapidRepeat FOR FROM TO STEP ENDFOR WHILE ENDWHILE DO
+  syn keyword rapidRepeat FOR
+  syn keyword rapidRepeat FROM TO STEP ENDFOR WHILE ENDWHILE DO
   highlight default link rapidRepeat Repeat
   " Label
   syn keyword rapidLabel GOTO
@@ -350,6 +351,9 @@ else
     "   ||
     syn match rapidError0 /\c\v(^\s*((global\s+|task\s+|local\s+)?(var|pers|const)\s+\w+\s+)?\w+(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
     "
+    " "for" missing "from"
+    syn match rapidError10 /\c\v^\s*for\s+(from)@!/
+    "
     " this one is tricky. Make sure this does not match trigger instructions
     " a = b and c or (int1=int2)
     "                     |
@@ -366,6 +370,7 @@ else
     highlight default link rapidError7 Error
     highlight default link rapidError8 Error
     highlight default link rapidError9 Error
+    highlight default link rapidError10 Error
   endif
 " }}} Error
 endif
