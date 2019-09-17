@@ -1116,12 +1116,12 @@ endif " get(g:,'rapidConcealStructs',1)
 
 " matchit support
 if exists("loaded_matchit")
-  let b:match_words = '^\s*\<if\>\s[^!]\+\<then\>:^\s*\<elseif\>:^\s*\<else\>:^\s*\<endif\>,'
-         \.'^\s*\<for\>:^\s*\<endfor\>,'
-         \.'^\s*\<while\>:^\s*\<endwhile\>,'
-         \.'^\s*\<test\>:^\s*\<case\>:^\s*\<default\>:^\s*\<endtest\>,'
-         \.'^\s*\(global\s\+\|local\s\+\|task\s\+\)\?\<\(proc\|func\|trap\|record\)\>:\<raise\>:\<return\>:^\s*\<error\>:\<trynext\>:\<retry\>:^\s*\<undo\>:^\s*\<backward\>:^\s*\<end\(proc\|func\|trap\|record\)\>,'
-         \.'^\s*\<module\>:^\s*\<endmodule\>'
+  let b:match_words = '^\s*\<if\>[^!]\+\<then\>.*:^\s*\<elseif\>[^!]\+\<then\>.*:^\s*\<else\>.*:^\s*\<endif\>.*,'
+         \.'^\s*\<for\>[^!]\+\<do\>.*:^\s*\<endfor\>.*,'
+         \.'^\s*\<while\>[^!]\+\<do\>.*:^\s*\<endwhile\>.*,'
+         \.'^\s*\<test\>.*:^\s*\<case\>.*:^\s*\<default\>.*:^\s*\<endtest\>.*,'
+         \.'^\s*\(global\s\+\|local\s\+\|task\s\+\)\?\<\(proc\|func\|trap\|record\)\>.*:\<raise\>:\<return\>:^\s*\<error\>.*:\<trynext\>:\<retry\>:^\s*\<undo\>.*:^\s*\<backward\>.*:^\s*\<end\(proc\|func\|trap\|record\)\>.*,'
+         \.'^\s*\<module\>.*:^\s*\<endmodule\>.*'
   let b:match_ignorecase = 1 " Rapid does ignore case
 endif
 
