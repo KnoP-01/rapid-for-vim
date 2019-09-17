@@ -70,7 +70,7 @@ if bufname("%") =~ '\c\.cfg$'
   syn match rapidCharCode /[^\\]\zs\\\d{1,3}/ contained
   highlight default link rapidCharCode SpecialChar
   " String. Note: Don't rename group rapidString. Indent depend on this
-  syn region rapidString start=/"/ end=/"/ contains=rapidCharCode containedin=rapidStructVal
+  syn region rapidString start=/"/ end=/"/ contains=rapidCharCode
   highlight default link rapidString String
   " ---
 
