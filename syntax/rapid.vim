@@ -57,7 +57,7 @@ syn case ignore
 " }}} init
 
 if bufname("%") =~ '\c\.cfg$'
-  " highlighting for *.cfg
+  " {{{ highlighting for *.cfg
 
   " Constant values
   " Boolean
@@ -85,6 +85,7 @@ if bufname("%") =~ '\c\.cfg$'
   syn match rapidException /CFG\ze_/
   highlight default link rapidException Exception
   " ---
+  " }}} highlighting for *.cfg
 else
   " highlighting for *.mod, *.sys and *.prg
 
