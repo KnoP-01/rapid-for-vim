@@ -173,8 +173,9 @@ else
   syn keyword rapidConditional IF THEN ELSEIF ELSE ENDIF TEST CASE DEFAULT ENDTEST
   highlight default link rapidConditional Conditional
   " Repeat
-  syn keyword rapidRepeat FOR
-  syn keyword rapidRepeat FROM TO STEP ENDFOR WHILE ENDWHILE DO
+  syn keyword rapidRepeat DO
+  syn match rapidRepeat /\c\v^\s*(<while>|<for>)([^!]+<do>)@=/
+  syn keyword rapidRepeat FROM TO STEP ENDFOR ENDWHILE
   highlight default link rapidRepeat Repeat
   " Label
   syn keyword rapidLabel GOTO
