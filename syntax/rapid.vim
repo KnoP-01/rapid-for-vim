@@ -333,28 +333,28 @@ else
     "
     " WaitUntil a==b ok
     "            ||
-    syn match rapidError4 /\c\v(^\s*(return|waituntil)>[^!\\]+[^!<>])@<=(\=|:)\=/
-    syn match rapidError5 /\c\v(^\s*if>[^!\\]+[^!<>])@<=(\=|:)\=\ze[^!]*then/
-    syn match rapidError6 /\c\v(^\s*while>[^!\\]+[^!<>])@<=(\=|:)\=\ze[^!]*do/
+    syn match rapidError4 /\c\v%(^\s*%(return|waituntil)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    syn match rapidError5 /\c\v%(^\s*if>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!]*then/
+    syn match rapidError6 /\c\v%(^\s*while>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!]*do/
     "
     " WaitUntil a=>b ok
     "            ||
-    syn match rapidError7 /\c\v(^\s*(return|waituntil|if|while)>[^!]+[^!<>])@<=\=[><]/
+    syn match rapidError7 /\c\v%(^\s*%(return|waituntil|if|while)>[^!]+[^!<>])@<=\=[><]/
     "
     " WaitUntil a><b ok
     "           ||
-    syn match rapidError8 /\c\v(^\s*(return|waituntil|if|while)[^!]+)@<=\>\s*\</
+    syn match rapidError8 /\c\v%(^\s*%(return|waituntil|if|while)[^!]+)@<=\>\s*\</
     "
     " if (a==5) (b==6) ok
     "         |||
-    syn match rapidError9 /\c\v(^\s*(return|wait\s+for|if|while)[^!]+[^!])@<=\)\s*\(/
+    syn match rapidError9 /\c\v%(^\s*%(return|wait\s+for|if|while)[^!]+[^!])@<=\)\s*\(/
     "
     " a == b + 1 ok
     "   ||
-    syn match rapidError0 /\c\v(^\s*((global\s+|task\s+|local\s+)?(var|pers|const)\s+\w+\s+)?\w+(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
+    syn match rapidError0 /\c\v%(^\s*%(%(global\s+|task\s+|local\s+)?%(var|pers|const)\s+\w+\s+)?\w+%(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
     "
     " "for" missing "from"
-    syn match rapidError10 /\c\v^\s*for\s+(\w[0-9a-zA-Z_.{}]*\s+from)@!\S+\s+\S+/
+    syn match rapidError10 /\c\v^\s*for\s+%(\w[0-9a-zA-Z_.{}]*\s+from)@!\S+\s+\S+/
     "
     " this one is tricky. Make sure this does not match trigger instructions
     " a = b and c or (int1=int2)
