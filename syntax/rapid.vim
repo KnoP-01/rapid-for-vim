@@ -64,7 +64,7 @@ if bufname("%") =~ '\c\.cfg$'
   syn keyword rapidBoolean TRUE FALSE Edge High Low
   highlight default link rapidBoolean Boolean
   " Float (num)
-  syn match rapidFloat /\(\W\|_\)\@1<=[+-]\?\d\+\.\?\d*\([eE][+-]\?\d\+\)\?/
+  syn match rapidFloat /\%(\W\|_\)\@1<=[+-]\?\d\+\.\?\d*\%([eE][+-]\?\d\+\)\?/
   highlight default link rapidFloat Float
   " character code in string
   syn match rapidCharCode /[^\\]\zs\\\d{1,3}/ contained
@@ -111,7 +111,7 @@ else
   syn keyword rapidBoolean TRUE FALSE Edge High Low
   highlight default link rapidBoolean Boolean
   " Float (num)
-  syn match rapidFloat /\W\@1<=[+-]\?\d\+\.\?\d*\([eE][+-]\?\d\+\)\?/
+  syn match rapidFloat /\W\@1<=[+-]\?\d\+\.\?\d*\%([eE][+-]\?\d\+\)\?/
   highlight default link rapidFloat Float
   " character code in string
   syn match rapidCharCode /[^\\]\zs\\\d{1,3}/ contained
@@ -175,12 +175,12 @@ else
   highlight default link rapidConditional Conditional
   " Repeat
   syn keyword rapidRepeat DO
-  syn match rapidRepeat /\c\v^\s*(<while>|<for>)([^!]+<do>)@=/
+  syn match rapidRepeat /\c\v^\s*%(<while>|<for>)%([^!]+<do>)@=/
   syn keyword rapidRepeat FROM TO STEP ENDFOR ENDWHILE
   highlight default link rapidRepeat Repeat
   " Label
   syn keyword rapidLabel GOTO
-  syn match rapidLabel /\c\v^\s*\a\w*\:\ze([^=]|$)/ contains=rapidConditional,rapidOperator
+  syn match rapidLabel /\c\v^\s*\a\w*\:\ze%([^=]|$)/ contains=rapidConditional,rapidOperator
   highlight default link rapidLabel Label
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasIO AliasIOReset BitClear BitSet BookErrNo BrakeCheck
@@ -265,7 +265,7 @@ else
   syn match rapidNames /[a-zA-Z_][.a-zA-Z0-9_]*/
   highlight default link rapidNames None
   " Function
-  syn match rapidFunction contains=rapidBuildInFunction /\v\c(<(proc|module)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
+  syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<(proc|module)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
   highlight default link rapidFunction Function
   " call by var: %"product"+NumToStr(nProductNumber)%;
   " call by var: if bBool %stString%;
