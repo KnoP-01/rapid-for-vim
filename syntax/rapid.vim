@@ -64,7 +64,7 @@ if bufname("%") =~ '\c\.cfg$'
   syn keyword rapidBoolean TRUE FALSE Edge High Low
   highlight default link rapidBoolean Boolean
   " Float (num)
-  syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*\s*%([eE][+-]?\d+)?/
+  syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
   highlight default link rapidFloat Float
   " character code in string
   syn match rapidCharCode /[^\\]\zs\\\d{1,3}/ contained
@@ -111,7 +111,7 @@ else
   syn keyword rapidBoolean TRUE FALSE Edge High Low
   highlight default link rapidBoolean Boolean
   " Float (num)
-  syn match rapidFloat /\v\W@1<=[+-]?\d+\.?\d*\s*%([eE][+-]?\d+)?/
+  syn match rapidFloat /\v\W@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
   highlight default link rapidFloat Float
   " character code in string
   syn match rapidCharCode /[^\\]\zs\\\d{1,3}/ contained
