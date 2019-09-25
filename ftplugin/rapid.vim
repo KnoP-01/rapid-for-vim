@@ -921,6 +921,7 @@ if !exists("*s:KnopVerboseEcho()")
     "
     if search('\w','cW',line("."))
       let l:currentWord = s:RapidCurrentWordIs()
+      "
       if l:currentWord =~ '^userdefined.*'
         let l:currentWord = substitute(l:currentWord,'^userdefined','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be userdefined. Start search..."])
@@ -930,9 +931,6 @@ if !exists("*s:KnopVerboseEcho()")
       elseif l:currentWord =~ '^num.*'
         let l:currentWord = substitute(l:currentWord,'^num','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be a NUMBER. Start search..."])
-      elseif l:currentWord =~ '^bool.*'
-        let l:currentWord = substitute(l:currentWord,'^bool','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. Start search..."])
       elseif l:currentWord =~ '^string.*'
         let l:currentWord = substitute(l:currentWord,'^string','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. Start search..."])
@@ -942,6 +940,9 @@ if !exists("*s:KnopVerboseEcho()")
       elseif l:currentWord =~ '^inst.*'
         let l:currentWord = substitute(l:currentWord,'^inst','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD. Start search..."])
+      elseif l:currentWord =~ '^bool.*'
+        let l:currentWord = substitute(l:currentWord,'^bool','','')
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. Start search..."])
       else
         let l:currentWord = substitute(l:currentWord,'^none','','')
         call s:KnopVerboseEcho([l:currentWord,"Could not determine typ of current word. No search performed."])
@@ -964,7 +965,7 @@ if !exists("*s:KnopVerboseEcho()")
         call s:KnopOpenQf('rapid')
       endif
     else
-      call s:KnopVerboseEcho("Nothing found at or after current cursor pos, which could have a declaration. No search performed.")
+      call s:KnopVerboseEcho("Unable to determine what to search for at current cursor position. No search performed.",1)
     endif
   endfunction " <SID>RapidListUsage()
 
