@@ -956,6 +956,7 @@ if !exists("*s:KnopVerboseEcho()")
         for l:i in getqflist()
           if bufname(get(l:i,'bufnr')) !~ '\~$'
                 \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
+                \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
                 \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
                 \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
             call add(l:qfresult,l:i)
