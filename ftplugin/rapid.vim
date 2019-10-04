@@ -306,8 +306,7 @@ if !exists("*s:KnopVerboseEcho()")
         "
       elseif l:currentChar =~ '\d' && 
             \(  synIDattr(synID(line("."),col("."),0),"name")=="rapidFloat" 
-            \|| synIDattr(synID(line("."),col("."),0),"name")==""
-            \)
+            \|| synIDattr(synID(line("."),col("."),0),"name")=="")
         return ("num" . l:word)
         "
       elseif l:nextChar == "(" && 
@@ -945,7 +944,7 @@ if !exists("*s:KnopVerboseEcho()")
         call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. Start search..."])
       else
         let l:currentWord = substitute(l:currentWord,'^none','','')
-        call s:KnopVerboseEcho([l:currentWord,"Could not determine typ of current word. No search performed."])
+        call s:KnopVerboseEcho([l:currentWord,"Unable to determine what to search for at current cursor position. No search performed!"],1)
         return
         "
       endif
@@ -956,8 +955,8 @@ if !exists("*s:KnopVerboseEcho()")
         for l:i in getqflist()
           if bufname(get(l:i,'bufnr')) !~ '\~$'
                 \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
-                \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
                 \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
+                \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
                 \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
             call add(l:qfresult,l:i)
           endif
