@@ -257,6 +257,19 @@ if !exists("*s:KnopVerboseEcho()")
     if exists("g:rapidTmpFile")
       execute 'silent! bd! ' . substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
     endif
+    " also delete unnamed buffers, where the h*** they ever come from I have no
+    " idea. They are generated after the "silent save!" command
+    let l:b = {}
+    for l:b in getbufinfo()
+      " make sure only do delete those strange empty buffers
+      if        l:b["name"]==""       " not named
+            \&& l:b["windows"]==[]    " not shown in any window
+            \&& !l:b["hidden"]        " not hidden
+            \&& !l:b["changed"]       " not modified
+        let l:cmd = "silent bwipeout! " . l:b["bufnr"]
+        execute l:cmd
+      endif
+    endfor
   endfunction " <SID>RapidCleanBufferList()
 
   function s:RapidCurrentWordIs()
