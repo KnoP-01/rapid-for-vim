@@ -169,7 +169,6 @@ if !exists("*s:KnopVerboseEcho()")
       let l:getback=1
       copen
     endif
-    set nobuflisted " to be able to remove from buffer list after writing the temp file
     if get(g:,'knopShortenQFPath',1)
       setlocal modifiable
       silent! %substitute/\v\c^([^|]{40,})/\=pathshorten(submatch(1))/
@@ -184,6 +183,7 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       execute 'silent save! ' . g:knopTmpFile
       setlocal nomodifiable
+      setlocal nobuflisted " to be able to remove from buffer list after writing the temp file
     endif
     augroup KnopOpenQf
       au!
@@ -903,8 +903,6 @@ if !exists("*s:KnopVerboseEcho()")
   " List Def/Usage {{{ 
 
   function <SID>RapidListDefinition()
-    " dont start from within qf or loc window
-    if getbufvar('%', "&buftype")=="quickfix" | return | endif
     " list defs in qf
     if s:KnopSearchPathForPatternNTimes('\v\c^\s*(global\s+|task\s+|local\s+)?(proc|func|trap|record|module)>','%','','rapid')==0
       if getqflist()==[] | return | endif
@@ -915,7 +913,7 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       if getbufvar('%', "&buftype")!="quickfix" | return | endif
       setlocal modifiable
-      %substitute/\v\c^.*\|\s*((global\s+|task\s+|local\s+)?(proc|func|trap|record|module)>)/\1/
+      silent %substitute/\v\c^.*\|\s*((global\s+|task\s+|local\s+)?(proc|func|trap|record|module)>)/\1/
       0
       if !exists("g:rapidTmpFile")
         let g:rapidTmpFile=tempname()
@@ -927,6 +925,7 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       execute 'silent save! ' . g:rapidTmpFile
       setlocal nomodifiable
+      setlocal nobuflisted " to be able to remove from buffer list after writing the temp file
       if exists("l:getback")
         unlet l:getback
         wincmd p
