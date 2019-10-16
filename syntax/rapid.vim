@@ -33,23 +33,30 @@ endif
 let s:keepcpo= &cpo
 set cpo&vim
 
-" if rapidNoHighLink exists it overrides rapidNoHighlight
-if exists("g:rapidNoHighLink")
+" if rapidGroupName exists it overrides rapidNoHighlight and rapidNoHighLink
+if exists("g:rapidGroupName")
+  silent! unlet g:rapidNoHighLink
   silent! unlet g:rapidNoHighlight
 endif
-" if rapidNoHighlight still exists it's pushed to rapidNoHighLink
+" if rapidNoHighLink exists it overrides rapidNoHighlight and it's pushed to rapidGroupName
+if exists("g:rapidNoHighLink")
+  silent! unlet g:rapidNoHighlight
+  let g:rapidGroupName = g:rapidNoHighLink
+  unlet g:rapidNoHighLink
+endif
+" if rapidNoHighlight still exists it's pushed to rapidGroupName
 if exists("g:rapidNoHighlight")
-  let g:rapidNoHighLink = g:rapidNoHighlight
+  let g:rapidGroupName = g:rapidNoHighlight
   unlet g:rapidNoHighlight
 endif
 " if colorscheme is tortus rapidNoHighLink defaults to 1
 if (get(g:,'colors_name'," ")=="tortus" || get(g:,'colors_name'," ")=="tortusless") 
-      \&& !exists("g:rapidNoHighLink")
-  let g:rapidNoHighLink=1 
+      \&& !exists("g:rapidGroupName")
+  let g:rapidGroupName=1 
 endif
-" rapidNoHighLink defaults to 0 if it's not initialized yet or 0
-if !get(g:,"rapidNoHighLink",0)
-  let g:rapidNoHighLink=0 
+" rapidGroupName defaults to 0 if it's not initialized yet or 0
+if !get(g:,"rapidGroupName",0)
+  let g:rapidGroupName=0 
 endif
 
 "Rapid does ignore case
@@ -243,8 +250,7 @@ else
   syn keyword rapidMovement SMoveJ SMoveJDO SMoveJGO SMoveJSync SMoveL SMoveLDO SMoveLGO SMoveLSync SSearchL STriggJ STriggL
   syn keyword rapidMovement SearchC SearchExtJ SearchL
   syn keyword rapidMovement TriggC TriggJ TriggL TriggJIOs TriggLIOs
-  if exists("g:rapidNoHighlight") && g:rapidNoHighlight==1
-        \|| exists("g:rapidNoHighLink") && g:rapidNoHighLink==1
+  if g:rapidGroupName
     highlight default link rapidMovement Movement
   else
     highlight default link rapidMovement Special
@@ -305,8 +311,7 @@ else
   syn keyword rapidBuildInFunction contained ValidIO ValToStr Vectmagn
   " Spot functions
   syn keyword rapidBuildInFunction contained SwGetCurrTargetName SwGetCurrSpotName 
-  if exists("g:rapidNoHighlight") && g:rapidNoHighlight==1
-        \|| exists("g:rapidNoHighLink") && g:rapidNoHighLink==1
+  if g:rapidGroupName
     highlight default link rapidBuildInFunction BuildInFunction
   else
     highlight default link rapidBuildInFunction Function
