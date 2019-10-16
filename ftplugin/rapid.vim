@@ -1,7 +1,7 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.0.0
+" Version: 2.0.1
 " Last Change: 09. Apr 2019
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "
@@ -261,13 +261,23 @@ if !exists("*s:KnopVerboseEcho()")
     " idea. They are generated after the "silent save!" command
     let l:b = {}
     for l:b in getbufinfo()
-      " make sure only do delete those strange empty buffers
+      " delete temp file buffer
+      if exists("g:knopTmpFile")
+            \&& l:b["name"] =~ l:knopTmpFile . '$'
+            \&& !l:b["hidden"]
+        call setbufvar(l:b["bufnr"],"&buflisted",0)
+      endif
+      if exists("g:krlTmpFile")
+            \&& l:b["name"] =~ l:krlTmpFile . '$'
+            \&& !l:b["hidden"]
+        call setbufvar(l:b["bufnr"],"&buflisted",0)
+      endif
+      " delete those strange empty unnamed buffers
       if        l:b["name"]==""       " not named
             \&& l:b["windows"]==[]    " not shown in any window
             \&& !l:b["hidden"]        " not hidden
             \&& !l:b["changed"]       " not modified
-        let l:cmd = "silent bwipeout! " . l:b["bufnr"]
-        execute l:cmd
+        execute "silent bwipeout! " . l:b["bufnr"]
       endif
     endfor
   endfunction " <SID>RapidCleanBufferList()
