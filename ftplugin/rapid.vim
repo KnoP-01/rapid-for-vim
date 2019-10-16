@@ -252,13 +252,11 @@ if !exists("*s:KnopVerboseEcho()")
 
   function <SID>RapidCleanBufferList()
     if exists("g:knopTmpFile")
-      execute 'silent! bd! ' . substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+      let l:knopTmpFile = substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
     endif
     if exists("g:rapidTmpFile")
-      execute 'silent! bd! ' . substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
+      let l:rapidTmpFile = substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
     endif
-    " also delete unnamed buffers, where the h*** they ever come from I have no
-    " idea. They are generated after the "silent save!" command
     let l:b = {}
     for l:b in getbufinfo()
       " delete temp file buffer
@@ -267,8 +265,8 @@ if !exists("*s:KnopVerboseEcho()")
             \&& !l:b["hidden"]
         call setbufvar(l:b["bufnr"],"&buflisted",0)
       endif
-      if exists("g:krlTmpFile")
-            \&& l:b["name"] =~ l:krlTmpFile . '$'
+      if exists("g:rapidTmpFile")
+            \&& l:b["name"] =~ l:rapidTmpFile . '$'
             \&& !l:b["hidden"]
         call setbufvar(l:b["bufnr"],"&buflisted",0)
       endif
