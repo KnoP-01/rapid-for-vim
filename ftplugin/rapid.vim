@@ -38,6 +38,12 @@ if exists("g:rapidNoVerbose")
   endif
   unlet g:rapidNoVerbose
 endif
+if exists("g:rapidVerbose")
+  if !exists("g:knopVerbose")
+    let g:knopVerbose=get(g:,'rapidVerbose')
+  endif
+  unlet g:rapidVerbose
+endif
 " if knopVerbose exists it overrides knopNoVerbose
 if exists("g:knopVerbose")
   silent! unlet g:knopNoVerbose
