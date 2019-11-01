@@ -645,7 +645,9 @@ if !exists("*s:KnopVerboseEcho()")
         call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. No search performed."],1)
       elseif l:currentWord =~ '^string.*'
         let l:currentWord = substitute(l:currentWord,'^string','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. No search performed."],1)
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. Start search..."],1)
+        return s:RapidSearchUserDefined(l:declPrefix,l:currentWord)
+        "
       elseif l:currentWord =~ '^comment.*'
         let l:currentWord = substitute(l:currentWord,'^comment','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be a COMMENT. No search performed."],1)
