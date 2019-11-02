@@ -279,7 +279,7 @@ else
   " nicht schoen, aber num muss nach rapidNames folgen
   " TODO optimier das (nicht gefolgt von : und nicht vorneangestellter \
   " syn match rapidType /\c\<num\>\s\+\ze\w\+/ " avoid false highlighting if its a \num:= argument
-  syn match rapidType /\c\v%(%(var|pers|const)\s+)@<=<num>/
+  syn match rapidType /\c\v%(%(alias|var|pers|const)\s+)@<=<num>/
   highlight default link rapidType Type
   " rapid structrure values. added to be able to conceal them
   syn region rapidConcealableString start=/"/ end=/"/ contained contains=rapidCharCode conceal 
