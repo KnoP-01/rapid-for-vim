@@ -195,12 +195,10 @@ if !exists("*s:KnopVerboseEcho()")
     augroup KnopOpenQf
       au!
       " reposition after closing
-      let l:cmd = 'au BufWinLeave <buffer='.bufnr('%').'> let g:knopPositionQf=1'
-      execute l:cmd
+      execute 'au BufWinLeave <buffer='.bufnr('%').'> let g:knopPositionQf=1'
     augroup END
     if a:useSyntax!='' 
-      let l:cmd = 'set syntax='.a:useSyntax 
-      execute l:cmd
+      execute 'set syntax='.a:useSyntax 
     endif
     if exists('g:knopPositionQf') && s:KnopQfCompatible() 
       unlet g:knopPositionQf
@@ -218,9 +216,8 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:KnopOpenQf()
 
   function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax)
-    let l:cmd = ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
     try
-      execute l:cmd
+      execute ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
     catch /^Vim\%((\a\+)\)\=:E303/
       call s:KnopVerboseEcho(":vimgrep stopped with E303. No match found")
       return -1
@@ -370,10 +367,6 @@ if !exists("*s:KnopVerboseEcho()")
     return "none"
   endfunction " s:RapidCurrentWordIs()
 
-  " }}} Rapid Helper
-
-  " Go Definition {{{
-
   function s:RapidPutCursorOnModuleAndReturnEndmoduleline()
     if search('\c^\s*module\s','bcW')
       let l:numEndmodule = search('\v\c^\s*endmodule>','nW')
@@ -389,6 +382,10 @@ if !exists("*s:KnopVerboseEcho()")
     endif
     return l:numEndmodule
   endfunction
+
+  " }}} Rapid Helper
+
+  " Go Definition {{{
 
   function s:RapidSearchUserDefined(declPrefix,currentWord)
     "
@@ -498,9 +495,8 @@ if !exists("*s:KnopVerboseEcho()")
           let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
         endif
       endif
-      let l:cmd = ':noautocmd lvimgrep '.l:prefix.a:currentWord.l:suffix.' '.l:path
       try
-        execute l:cmd
+        execute ':noautocmd lvimgrep '.l:prefix.a:currentWord.l:suffix.' '.l:path
       catch /^Vim\%((\a\+)\)\=:E480/
         call s:KnopVerboseEcho(":lvimgrep stopped with E480!",1)
         return -1
@@ -812,8 +808,7 @@ if !exists("*s:KnopVerboseEcho()")
     endif
     " read body
     call s:RapidPositionForRead()
-    let l:cmd = "silent .-1read ".glob(l:sBodyFile)
-    execute l:cmd
+    execute "silent .-1read ".glob(l:sBodyFile)
     " set marks
     let l:start = line('.')
     let l:end = search('\v\c^\s*end(proc|trap|record|func)?>','cnW')
@@ -828,8 +823,7 @@ if !exists("*s:KnopVerboseEcho()")
     " indent
     if exists("b:did_indent")
       if l:start>0 && l:end>l:start
-        let l:cmd = "silent normal! " . (l:end-l:start+1) . "=="
-        execute l:cmd
+        execute "silent normal! " . (l:end-l:start+1) . "=="
       endif
     endif
     " position cursor
@@ -867,8 +861,7 @@ if !exists("*s:KnopVerboseEcho()")
     let l:start = search(a:sType,'bW')
     if exists("b:did_indent")
       if l:start>0 && l:end>l:start
-        let l:cmd = "silent normal! " . (l:end-l:start+1) . "=="
-        execute l:cmd
+        execute "silent normal! " . (l:end-l:start+1) . "=="
       endif
     endif
     call search('^\s*!','eW',l:end)
