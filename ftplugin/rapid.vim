@@ -997,18 +997,18 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       if s:KnopSearchPathForPatternNTimes('\c\v^[^!]*<'.l:currentWord.'>',s:KnopPreparePath(&path,'*'),'','rapid')==0
         call setqflist(s:KnopUniqueListItems(getqflist()))
-        " rule out if l:currentWord is part of a strings except in *.cfg files
-        let l:qfresult = []
-        for l:i in getqflist()
-          if bufname(get(l:i,'bufnr')) !~ '\~$'
-                \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
-                \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
-                \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
-                \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
-            call add(l:qfresult,l:i)
-          endif
-        endfor
-        call setqflist(l:qfresult)
+        " " rule out if l:currentWord is part of a strings except in *.cfg files
+        " let l:qfresult = []
+        " for l:i in getqflist()
+        "   if bufname(get(l:i,'bufnr')) !~ '\~$'
+        "         \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
+        "         \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
+        "         \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
+        "         \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
+        "     call add(l:qfresult,l:i)
+        "   endif
+        " endfor
+        " call setqflist(l:qfresult)
         call s:KnopOpenQf('rapid')
       endif
       call s:KnopVerboseEcho("Search performed.",1)
