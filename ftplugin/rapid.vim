@@ -641,7 +641,7 @@ if !exists("*s:KnopVerboseEcho()")
         call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. No search performed."],1)
       elseif l:currentWord =~ '^string.*'
         let l:currentWord = substitute(l:currentWord,'^string','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. Start search..."],1)
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. Start search..."])
         return s:RapidSearchUserDefined(l:declPrefix,l:currentWord)
         "
       elseif l:currentWord =~ '^comment.*'
@@ -815,7 +815,7 @@ if !exists("*s:KnopVerboseEcho()")
   function s:RapidReadBody(sBodyFile,sType,sName,sGlobal,sDataType,sReturnVar)
     let l:sBodyFile = glob(fnameescape(g:rapidPathToBodyFiles)).a:sBodyFile
     if !filereadable(glob(l:sBodyFile))
-      call s:KnopVerboseEcho([l:sBodyFile,": Body file not readable."])
+      call s:KnopVerboseEcho([l:sBodyFile,": Body file not readable."],1)
       return
     endif
     " read body
@@ -911,8 +911,14 @@ if !exists("*s:KnopVerboseEcho()")
           \|| l:sType =~ 'RECORD' && filereadable(glob(fnameescape(g:rapidPathToBodyFiles)).'RECORD.mod')
           \|| l:sType =~ 'FUNC' && filereadable(glob(fnameescape(g:rapidPathToBodyFiles)).'FUNC.mod') )
       call s:RapidReadBody(l:sType.'.mod',l:sType,l:sName,l:sGlobal,l:sDataType,l:sReturnVar)
+      call s:KnopVerboseEcho(g:rapidPathToBodyFiles . l:sType . '.mod body inserted.',1)
     else
       call s:RapidDefaultBody(l:sType,l:sName,l:sGlobal,l:sDataType,l:sReturnVar)
+      if exists("g:rapidPathToBodyFiles")
+        call s:KnopVerboseEcho(g:rapidPathToBodyFiles . l:sType . '.mod is not readable. Fallback to default body.',1)
+      else
+        call s:KnopVerboseEcho('Default body inserted.',1)
+      endif
     endif
     "
     normal! zz
@@ -1005,6 +1011,7 @@ if !exists("*s:KnopVerboseEcho()")
         call setqflist(l:qfresult)
         call s:KnopOpenQf('rapid')
       endif
+      call s:KnopVerboseEcho("Search performed.",1)
     else
       call s:KnopVerboseEcho("Unable to determine what to search for at current cursor position. No search performed.",1)
     endif
