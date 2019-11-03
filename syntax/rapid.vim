@@ -138,7 +138,7 @@ else
   syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum errstr errtype event_type exec_level extjoint handler_type
   syn keyword rapidType icondata identno intnum iodev iounit_state jointtarget
   syn keyword rapidType listitem loaddata loadidnum loadsession mecunit motsetdata
-  " num, siehe unten
+  syn keyword rapidType num
   syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pos pose progdisp
   syn keyword rapidType rawbytes restartdata rmqheader rmqmessage rmqslot robjoint robtarget
   syn keyword rapidType sensor sensorstate shapedata signalorigin signalai signalao signaldi signaldo signalgi signalgo socketdev socketstatus speeddata stoppointdata string stringdig switch symnum syncident 
@@ -276,11 +276,6 @@ else
 " Structure value {{{
   syn match rapidNames /[a-zA-Z_][.a-zA-Z0-9_]*/
   " highlight default link rapidNames None
-  " nicht schoen, aber num muss nach rapidNames folgen
-  " TODO optimier das (nicht gefolgt von : und nicht vorneangestellter \
-  " syn match rapidType /\c\<num\>\s\+\ze\w\+/ " avoid false highlighting if its a \num:= argument
-  syn match rapidType /\c\v%(%(^\s*|alias|var|pers|const)\s+)@<=<num>/
-  highlight default link rapidType Type
   " rapid structrure values. added to be able to conceal them
   syn region rapidConcealableString start=/"/ end=/"/ contained contains=rapidCharCode conceal 
   highlight default link rapidConcealableString String
