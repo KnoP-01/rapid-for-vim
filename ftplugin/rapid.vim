@@ -779,7 +779,7 @@ if !exists("*s:KnopVerboseEcho()")
         return
       endif
     else " position for RECORD close to top of module
-      if search('\c^module\s','bcsW') || search('\c^module\s','csW')
+      if search('\c^\s*module\s','bcsW') || search('\c^\s*module\s','csW')
         execute "normal " . nextnonblank(line('.')+1) . "gg"
         let l:nextline = getline(line('.')+1)
         while l:nextline=~l:commentline
