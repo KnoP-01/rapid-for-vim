@@ -760,40 +760,52 @@ if !exists("*s:KnopVerboseEcho()")
     return substitute(a:sDataType,'^\(..\).*','\l\1','')."Result"
   endfunction " s:RapidGetReturnVar()
 
-  function s:RapidPositionForEdit()
+  function s:RapidPositionForEdit(sType)
     let l:commentline = '^\s*!'
     " empty file
     if line('$')==1 && getline('.')=='' | return | endif
-    " proc, func, trap or record
-    if search('\v\c^\s*(local\s+)?(proc|func|trap|record|endmodule)>','csW')
-      let l:prevline = getline(line('.')-1)
-      while l:prevline=~l:commentline
-        normal! k
+    if a:sType =~ '\v(PROC|FUNC|TRAP)' " position for PROC, FUNC or TRAP
+      if search('\v\c^\s*(local\s+)?(proc|func|trap|endmodule)>','csW')
         let l:prevline = getline(line('.')-1)
-      endwhile
-      normal! O
-      normal! O
-      if getline(line('.')-1) != ''
-        normal! o
+        while l:prevline=~l:commentline
+          normal! k
+          let l:prevline = getline(line('.')-1)
+        endwhile
+        normal! O
+        normal! O
+        if getline(line('.')-1) != ''
+          normal! o
+        endif
+        return
       endif
-    elseif search('\v\c^\s*endmodule>','csW')
-      normal! O
-      if getline(line('.')-1) != ''
+    else " position for RECORD close to top of module
+      if search('^module\s','bcsW') || search('^module\s','csW')
+        execute "normal " . nextnonblank(line('.')+1) . "gg"
+        let l:nextline = getline(line('.')+1)
+        while l:nextline=~l:commentline
+          normal! j
+          let l:nextline = getline(line('.')+1)
+        endwhile
         normal! o
-      endif
-    else
-      normal! G
-      if getline('.') != ''
         normal! o
+        if getline(line('.')+1) != ''
+          normal! O
+        endif
+        return
       endif
-      if getline(line('.')-1) != ''
-        normal! o
-      endif
+    endif
+    " default positioning for PROC, FUNC, TRAP and RECORD if no ancor was found
+    normal! G
+    if getline('.') != ''
+      normal! o
+    endif
+    if getline(line('.')-1) != ''
+      normal! o
     endif
   endfunction " s:RapidPositionForEdit()
 
-  function s:RapidPositionForRead()
-    call s:RapidPositionForEdit()
+  function s:RapidPositionForRead(sType)
+    call s:RapidPositionForEdit(a:sType)
     if getline('.')=~'^\s*$'
           \&& line('.')!=line('$')
       delete
@@ -807,7 +819,7 @@ if !exists("*s:KnopVerboseEcho()")
       return
     endif
     " read body
-    call s:RapidPositionForRead()
+    call s:RapidPositionForRead(a:sType)
     execute "silent .-1read ".glob(l:sBodyFile)
     " set marks
     let l:start = line('.')
@@ -834,7 +846,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:RapidReadBody()
 
   function s:RapidDefaultBody(sType,sName,sGlobal,sDataType,sReturnVar)
-    call s:RapidPositionForEdit()
+    call s:RapidPositionForEdit(a:sType)
     call setline('.',a:sGlobal . a:sType . " " . a:sDataType . " " . a:sName . '()')
     if a:sType =~ '\v\c(trap|record)' | silent substitute/()// | endif
     if a:sType =~ '\v\c(proc|trap|record)' | silent substitute/  / / | endif
