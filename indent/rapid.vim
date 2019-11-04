@@ -1,8 +1,8 @@
 " ABB Rapid Command indent file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 0.1.1
-" Last Change: 24. June 2017
+" Version: 2.0.0
+" Last Change: 04. Nov 2019
 " Credits: Based on indent/vim.vim
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -10,13 +10,17 @@
 " Known bugs: ../doc/rapid.txt
 "
 " TODO
-" * avoid false indention of calls like Endbedingungen(), CaseHandling1() or
-"     DefaultValues() ect in insert mode
-" * either indent wrapped lines which start with \ (is this a good idea?!)
-" * or indent wrapped lines which do not end with an ; or special key word,
+" * indent wrapped lines which do not end with an ; or special key word,
 "     maybe this is a better idea, but then () and [] has to be changed as
 "     well
 "
+
+if exists("g:rapidNoSpaceIndent")
+  if !exists("g:rapidSpaceIndent")
+    let g:rapidSpaceIndent = !g:rapidNoSpaceIndent
+  endif
+  unlet g:rapidNoSpaceIndent
+endif
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent") || exists("g:rapidNoIndent") && g:rapidNoIndent==1
@@ -31,7 +35,7 @@ setlocal indentexpr=GetRapidIndent()
 setlocal indentkeys=!^F,o,O,0=~endmodule,0=~error,0=~undo,0=~backward,0=~endproc,0=~endrecord,0=~endtrap,0=~endfunc,0=~else,0=~endif,0=~endtest,0=~endfor,0=~endwhile,:
 let b:undo_indent="setlocal lisp< si< ai< inde< indk<"
 
-if !exists("g:rapidNoSpaceIndent") || g:rapidNoSpaceIndent!=1
+if get(g:,'rapidSpaceIndent',1)
   " use spaces for indention, 2 is enough, more or even tabs are looking awful
   " on the teach pendant
   setlocal softtabstop=2
@@ -61,7 +65,7 @@ endfunction
 
 function s:GetRapidIndentIntern()
   let l:currentLine = getline(v:lnum)
-  if  l:currentLine =~ '^!' && g:rapidNoCommentIndent
+  if  l:currentLine =~ '^!' && !get(g:,'rapidCommentIndent',0)
     " if first char is ! line comment, do not change indent
     " this may be usefull if code did get commented out at the first column
     return 0
@@ -240,6 +244,7 @@ function s:RapidPreNoneBlank(lnum)
           \|(!.*)?$
           \)'
       let nPreNoneBlank = prevnonblank(nPreNoneBlank - 1)
+      " At the start of the file use zero indent.
       if nPreNoneBlank == 0
         return 0
       endif
