@@ -1090,14 +1090,14 @@ endif
 let b:undo_ftplugin = "setlocal com< cms< sua<"
 
 " auto insert comment char when i_<CR>, o or O on a comment line
-if exists("g:rapidAutoComment") && g:rapidAutoComment==1
+if get(g:,'rapidAutoComment',1)
   setlocal formatoptions+=r
   setlocal formatoptions+=o
   let b:undo_ftplugin = b:undo_ftplugin." fo<"
 endif
 
 " format comments
-if exists("g:rapidFormatComments") && g:rapidFormatComments==1
+if get(g:,'rapidFormatComments',1)
   if &textwidth ==# 0
     " 78 Chars 
     setlocal textwidth=78
@@ -1109,10 +1109,11 @@ if exists("g:rapidFormatComments") && g:rapidFormatComments==1
   if stridx(b:undo_ftplugin, " fo<")==(-1)
     let b:undo_ftplugin = b:undo_ftplugin." fo<"
   endif
-endif
+endif " format comments
 
-" set vims path
-if !exists("g:rapidNoPath") || g:rapidNoPath!=1
+" path for gf, :find etc
+if get(g:,'rapidPath',1)
+
   let s:rapidpath=&path.'./**,'
   let s:rapidpath=substitute(s:rapidpath,'\/usr\/include,','','g')
   " if finddir('../PROGMOD')          !='' | let s:rapidpath.='../PROGMOD/**,'            | endif
@@ -1130,7 +1131,7 @@ if !exists("g:rapidNoPath") || g:rapidNoPath!=1
   " if finddir('./SYSPAR')            !='' | let s:rapidpath.='./SYSPAR/**,'              | endif
   execute "setlocal path=".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
-endif
+endif " get(g:,'rapidPath',1)
 
 " conceal structure values (for MoveJ * v2500,z100...)
 if get(g:,'rapidConcealStructs',1)
