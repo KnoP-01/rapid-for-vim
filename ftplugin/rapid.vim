@@ -771,7 +771,8 @@ if !exists("*s:KnopVerboseEcho()")
           normal! k
           let l:prevline = getline(line('.')-1)
         endwhile
-        normal! O
+        normal! k
+        normal! o
         normal! O
         if getline(line('.')-1) != ''
           normal! o
