@@ -1230,9 +1230,9 @@ endif
 " if the mapping does not exist and there is no plug-mapping just map it,
 " otherwise look for the config variable
 
-if get(g:,'rapidGoDefinitionKeyMap',0)
-      \|| mapcheck("gd","n")=="" && !hasmapto('<plug>RapidGoDef','n')
-  " Go Definition
+if get(g:,'rapidGoDefinitionKeyMap',1)
+      \&& !hasmapto('<plug>RapidGoDef','n')
+  " Go Definition; The condition is different because gd is a vim command
   nmap <silent><buffer> gd <plug>RapidGoDef
 endif
 if get(g:,'rapidListDefKeyMap',0)
@@ -1247,6 +1247,7 @@ if get(g:,'rapidListUsageKeyMap',0)
 endif
 
 if get(g:,'rapidAutoFormKeyMap',0)
+      \|| mapcheck("<leader>n","n")=="" && !hasmapto('<plug>RapidAutoForm','n')
   nnoremap <silent><buffer> <leader>n    :call <SID>RapidAutoForm("   ")<cr>
   nnoremap <silent><buffer> <leader>nn   :call <SID>RapidAutoForm("   ")<cr>
   "
