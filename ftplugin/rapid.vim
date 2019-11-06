@@ -1130,6 +1130,8 @@ if get(g:,'rapidPath',1)
   if finddir('../CS')               !='' | let s:rapidpath.='../CS/**,'                 | endif
   " if finddir('./SYSPAR')            !='' | let s:rapidpath.='./SYSPAR/**,'              | endif
   execute "setlocal path=".s:rapidpath
+  setlocal path-=/usr/include
+
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 endif " get(g:,'rapidPath',1)
 
@@ -1408,9 +1410,7 @@ endif
 
 " conceal all structure values
 nnoremap <silent><buffer> <plug>RapidConcealStructs     :call <SID>RapidConcealLevel(2)<CR>
-" conceal less structure values
 nnoremap <silent><buffer> <plug>RapidPartConcealStructs :call <SID>RapidConcealLevel(1)<CR>
-" conceal no structure values
 nnoremap <silent><buffer> <plug>RapidShowStructs        :call <SID>RapidConcealLevel(0)<CR>
 
 " }}} <plug> mappings
