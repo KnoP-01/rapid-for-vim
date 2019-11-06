@@ -1221,6 +1221,23 @@ if get(g:,'rapidMoveAroundKeyMap',1)
         \|| mapcheck("if","o")=="" && !hasmapto('<plug>RapidTxtObjInnerFunc','o')
     omap <silent><buffer> if <plug>RapidTxtObjInnerFunc
   endif
+  " inner and around comment text objects
+  if get(g:,'rapidCommentTextObject',0)
+        \|| mapcheck("ac","x")=="" && !hasmapto('<plug>RapidTxtObjAroundComment','x')
+    xmap <silent><buffer> ac <plug>RapidTxtObjAroundComment
+  endif
+  if get(g:,'rapidCommentTextObject',0)
+        \|| mapcheck("ic","x")=="" && !hasmapto('<plug>RapidTxtObjInnerComment','x')
+    xmap <silent><buffer> ic <plug>RapidTxtObjInnerComment
+  endif
+  if get(g:,'rapidCommentTextObject',0)
+        \|| mapcheck("ac","o")=="" && !hasmapto('<plug>RapidTxtObjAroundComment','o')
+    omap <silent><buffer> ac <plug>RapidTxtObjAroundComment
+  endif
+  if get(g:,'rapidCommentTextObject',0)
+        \|| mapcheck("ic","o")=="" && !hasmapto('<plug>RapidTxtObjInnerComment','o')
+    omap <silent><buffer> ic <plug>RapidTxtObjInnerComment
+  endif
 endif
 
 " }}} Move Around and Function Text Object key mappings
