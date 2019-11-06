@@ -883,9 +883,7 @@ if !exists("*s:KnopVerboseEcho()")
   function <SID>RapidAutoForm(sAction)
     " check input
     if a:sAction !~ '^[ gl][ pftr][ bndsprjtw]$' | return | endif
-    if getbufvar('%', "&buftype") == "quickfix" | return | endif
     "
-    " get global/local
     let l:sGlobal = s:RapidGetGlobal(a:sAction)
     if l:sGlobal == '' | return | endif " return if empty string was entered by user
     let l:sGlobal = substitute(l:sGlobal,'g','','g')
@@ -963,8 +961,6 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " <SID>RapidListDefinition()
 
   function <SID>RapidListUsage()
-    " dont start from within qf or loc window
-    if getbufvar('%', "&buftype")=="quickfix" | return | endif
     "
     if search('\w','cW',line("."))
       let l:currentWord = s:RapidCurrentWordIs()
