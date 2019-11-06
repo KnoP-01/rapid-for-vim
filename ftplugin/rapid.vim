@@ -1197,27 +1197,27 @@ if get(g:,'rapidMoveAroundKeyMap',1)
   onoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1<Bar>:                     call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n(\s*[^!\t ]\|$)', 'seW')<Bar>normal! ==<Bar>:unlet b:knopCount<cr>
   xnoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1<Bar>:exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n\ze\s*([^!\t ]\|$)', 'seW')<Bar>:unlet b:knopCount<cr>
   " inner and around function text objects
-  if get(g:,'rapidMoveAroundKeyMap',0)
+  if get(g:,'rapidFunctionTextObject',0)
         \|| mapcheck("aF","x")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncInclCo','x')
     xmap <silent><buffer> aF <plug>RapidTxtObjAroundFuncInclCo
   endif
-  if get(g:,'rapidMoveAroundKeyMap',0)
+  if get(g:,'rapidFunctionTextObject',0)
         \|| mapcheck("af","x")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncExclCo','x')
     xmap <silent><buffer> af <plug>RapidTxtObjAroundFuncExclCo
   endif
-  if get(g:,'rapidMoveAroundKeyMap',0)
+  if get(g:,'rapidFunctionTextObject',0)
         \|| mapcheck("if","x")=="" && !hasmapto('<plug>RapidTxtObjInnerFunc','x')
     xmap <silent><buffer> if <plug>RapidTxtObjInnerFunc
   endif
-  if get(g:,'rapidMoveAroundKeyMap',0)
+  if get(g:,'rapidFunctionTextObject',0)
         \|| mapcheck("aF","o")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncInclCo','o')
     omap <silent><buffer> aF <plug>RapidTxtObjAroundFuncInclCo
   endif
-  if get(g:,'rapidMoveAroundKeyMap',0)
+  if get(g:,'rapidFunctionTextObject',0)
         \|| mapcheck("af","o")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncExclCo','o')
     omap <silent><buffer> af <plug>RapidTxtObjAroundFuncExclCo
   endif
-  if get(g:,'rapidMoveAroundKeyMap',0)
+  if get(g:,'rapidFunctionTextObject',0)
         \|| mapcheck("if","o")=="" && !hasmapto('<plug>RapidTxtObjInnerFunc','o')
     omap <silent><buffer> if <plug>RapidTxtObjInnerFunc
   endif
