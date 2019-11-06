@@ -1023,7 +1023,7 @@ if !exists("*s:KnopVerboseEcho()")
   " Function Text Object {{{
 
   if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
-    function s:RapidFunctionTextObject(inner,withcomment)
+    function <SID>RapidFunctionTextObject(inner,withcomment)
       if a:inner==1
         let l:n = 1
       else
