@@ -969,25 +969,25 @@ if !exists("*s:KnopVerboseEcho()")
       "
       if l:currentWord =~ '^userdefined.*'
         let l:currentWord = substitute(l:currentWord,'^userdefined','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be userdefined. Start search..."])
-      elseif l:currentWord =~ '\v^(sys)?func.*'
-        let l:currentWord = substitute(l:currentWord,'\v^(sys)?func','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a FUNCTION. Start search..."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be userdefined"])
+      elseif l:currentWord =~ '\v^%(sys)?func.*'
+        let l:currentWord = substitute(l:currentWord,'\v^%(sys)?func','','')
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a FUNCTION"])
       elseif l:currentWord =~ '^num.*'
         let l:currentWord = substitute(l:currentWord,'^num','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a NUMBER. Start search..."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a NUMBER"])
       elseif l:currentWord =~ '^string.*'
         let l:currentWord = substitute(l:currentWord,'^string','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING. Start search..."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a STRING"])
       elseif l:currentWord =~ '^comment.*'
         let l:currentWord = substitute(l:currentWord,'^comment','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a COMMENT. Start search..."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a COMMENT"])
       elseif l:currentWord =~ '^inst.*'
         let l:currentWord = substitute(l:currentWord,'^inst','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD. Start search..."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD"])
       elseif l:currentWord =~ '^bool.*'
         let l:currentWord = substitute(l:currentWord,'^bool','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOLEAN VALUE. Start search..."])
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a BOOL VALUE"])
       else
         let l:currentWord = substitute(l:currentWord,'^none','','')
         call s:KnopVerboseEcho([l:currentWord,"Unable to determine what to search for at current cursor position. No search performed!"],1)
@@ -996,21 +996,23 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       if s:KnopSearchPathForPatternNTimes('\c\v^[^!]*<'.l:currentWord.'>',s:KnopPreparePath(&path,'*'),'','rapid')==0
         call setqflist(s:KnopUniqueListItems(getqflist()))
-        " " rule out if l:currentWord is part of a strings except in *.cfg files
-        " let l:qfresult = []
-        " for l:i in getqflist()
-        "   if bufname(get(l:i,'bufnr')) !~ '\~$'
+        " rule out l:currentWord inside a backup file
+        let l:qfresult = []
+        for l:i in getqflist()
+          if bufname(get(l:i,'bufnr')) !~ '\~$'
         "         \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
         "         \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
         "         \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
         "         \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
-        "     call add(l:qfresult,l:i)
-        "   endif
-        " endfor
-        " call setqflist(l:qfresult)
+            call add(l:qfresult,l:i)
+          endif
+        endfor
+        call setqflist(l:qfresult)
+        call s:KnopVerboseEcho("Opening quickfix with results.",1)
         call s:KnopOpenQf('rapid')
+      else
+        call s:KnopVerboseEcho("Nothing found.",1)
       endif
-      call s:KnopVerboseEcho("Search performed.",1)
     else
       call s:KnopVerboseEcho("Unable to determine what to search for at current cursor position. No search performed.",1)
     endif
