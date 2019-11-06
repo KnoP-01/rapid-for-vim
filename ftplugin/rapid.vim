@@ -1308,6 +1308,7 @@ endif " g:rapidAutoFormKeyMap
 if get(g:,'rapidConcealStructKeyMap',0)
         \|| mapcheck("<F2>","n")=="" && mapcheck("<F3>","n")=="" && mapcheck("<F4>","n")==""
         \&& !hasmapto('<plug>RapidConcealStructs','n') && !hasmapto('<plug>RapidPartConcealStructs','n') && !hasmapto('<plug>RapidShowStructs','n')
+        \&& !exists("g:rapidConcealStructsKeyMap")
   " conceal all structure values
   nmap <silent><buffer> <F4> <plug>RapidConcealStructs
   " conceal less structure values
@@ -1317,7 +1318,6 @@ if get(g:,'rapidConcealStructKeyMap',0)
 elseif get(g:,'rapidConcealStructsKeyMap',0)
   " deprecated
   " compatiblity
-  " conceal struct values, usefull for * robtargets
   nmap <silent><buffer> <F2> <plug>RapidConcealStructs
   nmap <silent><buffer> <F3> <plug>RapidShowStructs
 endif
