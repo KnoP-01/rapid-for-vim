@@ -104,8 +104,9 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
         let g:rapidConcealStructKeyMap = 1
 
     gd Go to or show definition of variable or func, proc et al.
-            Override existing mapping with
-        let g:rapidGoDefinitionKeyMap = 1
+            Does override existing mappings and Vim's default.
+            Disable override existing mapping and Vim's default with
+        let g:rapidGoDefinitionKeyMap = 0
 
     <leader>u List all significant appearances of word under cursor.
             Override existing mapping with
@@ -121,8 +122,8 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
     ][ Move around functions. Takes a count.
     [; Move around comments. Takes a count.
     ]; Move around comments. Takes a count.
-            Will override existing mappings!
-            Prevent overriding of existing mapping with
+            Does override existing mappings and overshadow Vim's default.
+            Disable override existing mapping and Vim's default with
         let g:rapidMoveAroundKeyMap = 0
 
     if Inner function text object.
