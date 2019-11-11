@@ -13,6 +13,7 @@ It provides
 * syntax highlighting,
 * indenting,
 * concealing of structure values (e.g. MoveJ \* v2500...),
+* completion of words from EIO.cfg or custom files,
 * support for commentary [vimscript #3695][7], matchit [vimscript #39][8] and
   matchup [vimscript #5624][11],
 * mappings and settings to navigate through code in a backup folder structure,
@@ -35,10 +36,6 @@ Put this in your .vimrc:  >
     call plug#begin('~/.vim/plugged')
       Plug 'KnoP-01/rapid-for-vim'
     call plug#end()
-    syntax off                 " undo what plug#begin() did to syntax
-    filetype plugin indent off " undo what plug#begin() did to filetype
-    syntax on                  " if you want
-    filetype plugin indent on  " you may either choose indent or plugin if you want
 
 For the first installation run: >
 
@@ -102,8 +99,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Override existing mapping with
         let g:rapidConcealStructKeyMap = 1
 
-    gd Go to or show definition of variable or def/deffct.
-            Does work on fold lines for SPSMAKRO, UP, bin, binin and Marker.
+    gd Go to or show definition of variable or func, proc et al.
             Override existing mapping with
         let g:rapidGoDefinitionKeyMap = 1
 
