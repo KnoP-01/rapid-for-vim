@@ -147,7 +147,7 @@ A: No, but you may put the following in your .vimrc or
 Q: Scrolling feels sluggish. What can I do?  
 A: Switch error highlighting off: >
 
-    let g:krlShowError = 0        " better performance
+    let g:rapidShowError = 0        " better performance
 
 Q: Still sluggish!  
 A: Switch syntax off or jump instead of scroll!  
