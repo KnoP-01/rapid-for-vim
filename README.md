@@ -1,42 +1,64 @@
 # rapid-for-vim
 
+**READ [TL:DR][2] FIRST** if you want more than just syntax highlight and 
+automatic indenting. It is a quick overview over the most important options and
+mappings provided by Rapid for Vim. For more details see the [help][3] file.
+
 ## Introduction:
 
-Have a look at [tl:dr][2] to get a very quick overview over the most important
-options provided by Rapid for Vim. For more details see the [help][3] file.
-
-Rapid for Vim (7.4 or later) is a collection of Vim scripts to help programing
-ABB industrial robots. 
+Rapid for [Vim][10] (7.4 or later) is a collection of Vim scripts to help
+programing [ABB industrial robots][9]. 
 
 It provides
-
-* syntax highlighting, 
-* auto indention,
+* syntax highlighting,
+* indenting,
 * concealing of structure values (e.g. MoveJ \* v2500...),
-* mappings and settings to navigate through code in a backup folder structure
-  and 
+* support for commentary [vimscript #3695][7], matchit [vimscript #39][8] and
+  matchup [vimscript #5624][11],
+* mappings and settings to navigate through code in a backup folder structure,
+* text objects for functions,
 * mappings to insert a body of a new PROC, FUNC, TRAP et al based on user
-  defined templates or hopefully sane defaults. 
-
-Most of this is optional, though some things are default on. Have a look in
-the [rapid-options][6] section in the help for more details.
+  defined templates or hopefully sane defaults.
 
 **Note:** Keep your files to be edited in one folder or in a regular robot
-backup folder structure. Rapid for Vim modifies 'path' by default accordingly.
+backup folder structure. Rapid for Vim modifies 'path' accordingly.
+**Note to Linux users:** Keep your files to be edited on a FAT file system. 
+Some features need the case insensitive file system to work properly.
+
 
 ## Installation:
+
+### Installation with vim-plug:  ~  
+
+Put this in your .vimrc:  >
+
+    call plug#begin('~/.vim/plugged')
+      Plug 'KnoP-01/rapid-for-vim'
+    call plug#end()
+    syntax off                 " undo what plug#begin() did to syntax
+    filetype plugin indent off " undo what plug#begin() did to filetype
+    syntax on                  " if you want
+    filetype plugin indent on  " you may either choose indent or plugin if you want
+
+For the first installation run: >
+
+    :PlugInstall
+
+Update every once in a while with: >
+
+    :PlugUpdate
+
+### Manual installation:  ~  
 
 Extract the most recent [release][1] and copy the folders 
 `/doc`, `/ftdetect`, `/ftplugin`, `/indent` and `/syntax` 
 into your `~/.vim/` or `%USERPROFILE%\vimfiles\` directory. 
 Overwrite rapid.\* files from older installation. 
 
-To fully use these plugins put >
+Put the following in your .vimrc: >
 
-    filetype plugin indent on
     syntax on
-
-in your .vimrc
+    filetype plugin indent on
 
 You may have to run >
 
@@ -50,105 +72,106 @@ to use the help within Vim after installation. >
 
     :help rapid
 
-Or just open the file .../doc/rapid.txt
 
-## Content description
-
-    ~/.vim/doc/rapid.txt
-    ~/.vim/ftdetect/rapid.vim
-    ~/.vim/ftplugin/rapid.vim
-    ~/.vim/indent/rapid.vim
-    ~/.vim/syntax/rapid.vim
-
-You may use all these independently from one another. Just don't mix versions
-of different releases. Some features may work better when all files are loaded.
-
-#### ~/.vim/doc/rapid.txt
-Help file. This should help you to use these plugins to your best advantage.
-You may want to look into the [help][3] prior to installation.  
-Requires >
-
-    :helptags ~/.vim/doc
-  
-  
-#### ~/.vim/ftdetect/rapid.vim
-Detects Rapid files based on their file name and content. Rapid files are
-checked for the presence of a MODULE line or any %%% HEADER. In case of an
-empty file you need to `:set filetype=rapid` manually.  
-.../ftdetect/rapid.vim also corrects mixed line endings (unix/dos-mix to unix)
-in \*.cfg files if |g:rapidAutoCorrCfgLineEnd| is set to 1.  
-Requires >
-
-    :filetype on
-  
-  
-#### ~/.vim/ftplugin/rapid.vim
-Sets various vim options and provides key mappings and concealing. It supports
-commentary [vimscript #3695][7] and matchit [vimscript #39][8]. All key
-mappings are optional.  
-Requires >
-
-    :filetype plugin on
-  
-  
-#### ~/.vim/indent/rapid.vim
-Sets indent related vim options. Sets indention to 2 spaces by default,
-optional.  
-Requires >
-
-    :filetype indent on
-  
-  
-#### ~/.vim/syntax/rapid.vim
-Does make life more colorful. Unfortunately some features of the other files
-may work better with syntax on. This should not stop you from trying syntax
-off if you like.  
-Requires >
-
-    :syntax on
-  
-  
 ## tl:dr
 
-Q: Why so many options?  
-A: I try not to interfere with user settings to much. So I made most of the
-   settings that get changed optional.
+Q: Since version 2.0.0 everything's weird. How so?  
+A: Most optional features are enabled by default now.  
 
-Q: I'm here to feed my kids, not to read. Do you have a quick suggestion on
-   rapid settings for my |.vimrc|?  
-A: Yes: >
+Q: I'm here to feed my kids, not to read. How do I get rid of stuff?  
+A: Disable stuff in your `vimrc`, see [rapid-options][6] for details: >
 
-    let g:rapidMoveAroundKeyMap=1 " [[, ]], [] and ][ jumps around PROC/FUNC..
-    " let g:rapidMoveAroundKeyMap=2 " adds also textobjects af, aF and if
-    let g:rapidGoDefinitionKeyMap=1 " gd shows the declaration of curr. word
-    let g:rapidListDefKeyMap=1 " <leader>f shows all PROC/FUNC.. in curr. file
-    let g:rapidListUsageKeyMap=1 " <leader>u shows all appearance of curr. word
-    let g:rapidAutoFormKeyMap=1 " <leader>n inserts a body for a new PROC etc
-    let g:rapidConcealStructsKeyMap=1 " <F2>/<F3> to conceal/show struct values
-    let g:rapidShowError=1 " shows some syntax errors
-    let g:rapidRhsQuickfix=1 " open quickfix window on the right hand side
-    let g:qf_window_bottom=0 " if qf.vim exists and you use g:rapidRhsQuickfix
-    let g:rapidAutoCorrCfgLineEnd=1 " auto correct \*.cfg line terminator
-    " if you use colorscheme tortus use:
-    " let g:rapidNoHighLink=1 " even more colors
-    " don't forget
-    " filetype plugin indent on
+    let g:rapidFormatComments = 0 " don't break comment lines automatically
+    let g:rapidCommentIndent = 1 " indent comments starting in 1st column too
+    let g:rapidShortenQFPath = 0 " don't shorten paths in quickfix
+    let g:rapidAutoComment = 0 " don't continue comments with o, O or Enter
+    let g:rapidSpaceIndent = 0 " don't change 'sts', 'sw', 'et' and 'sr'
+
+Q: Which keys get mapped to what? Will that override my own mappings?  
+A: rapid-for-vim will not override existing mappings unless the corresponding
+   option is explicitly set. To use different key bindings use the
+   \<PLUG\>mapping. Otherwise rapid-for-vim create the followin mappings: >
+
+    <F2> Switch concealing structure values off
+    <F3> Switch concealing structure values on except for cursorline
+    <F4> Switch concealing structure values on
+            Depend on g:rapidConcealStructs not existing or >=1.
+            Override existing mapping with
+        let g:rapidConcealStructKeyMap = 1
+
+    gd Go to or show definition of variable or def/deffct.
+            Does work on fold lines for SPSMAKRO, UP, bin, binin and Marker.
+            Override existing mapping with
+        let g:rapidGoDefinitionKeyMap = 1
+
+    <leader>u List all significant appearances of word under cursor.
+            Override existing mapping with
+        let g:rapidListUsageKeyMap = 1
+
+    <leader>f List all def/deffct of the current file.
+            Override existing mapping with
+        let g:rapidListDefKeyMap = 1
+
+    [[ Move around functions. Takes a count.
+    ]] Move around functions. Takes a count.
+    [] Move around functions. Takes a count.
+    ][ Move around functions. Takes a count.
+    [; Move around comments. Takes a count.
+    ]; Move around comments. Takes a count.
+            Will override existing mappings!
+            Prevent overriding of existing mapping with
+        let g:rapidMoveAroundKeyMap = 0
+
+    if Inner function text object.
+    af Around function text object.
+    aF Around function text object including preceding comments.
+            Depend on g:rapidMoveAroundKeyMap not existing or >=1.
+            Override existing mapping with
+        let g:rapidFunctionTextObject = 1
+
+    ic Inner comment text object.
+    ac Around comment text object.
+            Depend on g:rapidMoveAroundKeyMap not existing or =1.
+            Override existing mapping with
+        let g:rapidCommentTextObject = 1
+
+    <leader>n Inserts a new def/deffct.
+            Override existing mapping with
+        let g:rapidAutoFormKeyMap = 1
+
+Q: Does rapid-for-vim provide a mapping for indenting a complete file?  
+A: No, but you may put the following in your .vimrc or
+   ~/.vim/after/ftplugin/rapid.vim: >
+
+    nnoremap ANYKEY gg=G``zz
+
+Q: Scrolling feels sluggish. What can I do?  
+A: Switch error highlighting off: >
+
+    let g:krlShowError = 0        " better performance
+
+Q: Still sluggish!  
+A: Switch syntax off or jump instead of scroll!  
+
+Q: Where are the nice and informative messages?  
+A: `:let g:knopVerbose=1` any time.  
 
 ## Self promotion
 
 If you like this plugin please rate it on [vim.org][4]. If you don't but you
 think it could be useful if this or that would be different, don't hesitate to
 email me or even better open an [issue][5]. With a little luck and good
-timing you may find me on irc://irc.freenode.net/#vim as KnoP if you have any
-questions.  
-If you need assistance with your robot project [visit us][9].
+timing you may find me on irc://irc.freenode.net/#vim as KnoP in case you have
+any questions.  
 
 [1]: https://github.com/KnoP-01/rapid-for-vim/releases/latest
 [2]: https://github.com/KnoP-01/rapid-for-vim#tldr
 [3]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L154
-[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
-[4]: https://vim.sourceforge.io/scripts/script.php?script_id=5348
+[4]: https://www.vim.org/scripts/script.php?script_id=5348
 [5]: https://github.com/KnoP-01/rapid-for-vim/issues
-[7]: https://vim.sourceforge.io/scripts/script.php?script_id=3695
-[8]: https://vim.sourceforge.io/scripts/script.php?script_id=39
-[9]: http://www.graeff.de
+[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
+[7]: https://www.vim.org/scripts/script.php?script_id=3695
+[8]: https://www.vim.org/scripts/script.php?script_id=39
+[9]: https://new.abb.com/products/robotics
+[10]: https://www.vim.org/
+[11]: https://www.vim.org/scripts/script.php?script_id=5624
