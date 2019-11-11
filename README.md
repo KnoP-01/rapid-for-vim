@@ -86,15 +86,18 @@ A: Disable stuff in your `vimrc`, see [rapid-options][6] for details: >
     let g:rapidShortenQFPath = 0 " don't shorten paths in quickfix
     let g:rapidAutoComment = 0 " don't continue comments with o, O or Enter
     let g:rapidSpaceIndent = 0 " don't change 'sts', 'sw', 'et' and 'sr'
+    "let g:rapidConcealStructs = 0 " switch concealing off completely
+    "let g:rapidConcealStructs = 1 " show structure values at cursorline (default)
+    let g:rapidConcealStructs = 2 " conceal all structure values
 
 Q: Which keys get mapped to what? Will that override my own mappings?  
 A: rapid-for-vim will not override existing mappings unless the corresponding
    option is explicitly set. To use different key bindings use the
    \<PLUG\>mapping. Otherwise rapid-for-vim create the followin mappings: >
 
-    <F2> Switch concealing structure values off
-    <F3> Switch concealing structure values on except for cursorline
-    <F4> Switch concealing structure values on
+    <F2> Show all structure values
+    <F3> Show structure values at cursorline
+    <F4> Conceal all structure values
             Depend on g:rapidConcealStructs not existing or >=1.
             Override existing mapping with
         let g:rapidConcealStructKeyMap = 1
