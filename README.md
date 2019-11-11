@@ -36,6 +36,10 @@ Put this in your .vimrc:  >
     call plug#begin('~/.vim/plugged')
       Plug 'KnoP-01/rapid-for-vim'
     call plug#end()
+    syntax off                 " undo what plug#begin() did to syntax
+    filetype plugin indent off " undo what plug#begin() did to filetype
+    syntax on                  " syntax and filetype on in that order
+    filetype plugin indent on  " syntax and filetype on in that order
 
 For the first installation run: >
 
@@ -54,8 +58,8 @@ Overwrite rapid.\* files from older installation.
 
 Put the following in your .vimrc: >
 
-    syntax on
-    filetype plugin indent on
+    syntax on                  " syntax and filetype on in that order
+    filetype plugin indent on  " syntax and filetype on in that order
 
 You may have to run >
 
