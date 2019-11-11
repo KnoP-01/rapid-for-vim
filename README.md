@@ -17,7 +17,7 @@ It provides
 * support for commentary [vimscript #3695][7], matchit [vimscript #39][8] and
   matchup [vimscript #5624][11],
 * mappings and settings to navigate through code in a backup folder structure,
-* text objects for functions,
+* text objects for functions and
 * mappings to insert a body of a new PROC, FUNC, TRAP et al based on user
   defined templates or hopefully sane defaults.
 
@@ -171,6 +171,6 @@ any questions.
 [6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
 [7]: https://www.vim.org/scripts/script.php?script_id=3695
 [8]: https://www.vim.org/scripts/script.php?script_id=39
-[9]: https://new.abb.com/products/robotics
+[9]: https://new.abb.com/products/robotics/industrial-robots
 [10]: https://www.vim.org/
 [11]: https://www.vim.org/scripts/script.php?script_id=5624
