@@ -5,8 +5,8 @@
 Have a look at [tl:dr][2] to get a very quick overview over the most important
 options provided by Rapid for Vim. For more details see the [help][3] file.
 
-Rapid for Vim (7.4 or later) is a collection of Vim scripts to help programing
-ABB industrial robots. 
+Rapid for [Vim][10] (7.4 or later) is a collection of Vim scripts to help
+programing [ABB industrial robots][9]. 
 
 It provides
 
@@ -139,16 +139,16 @@ A: Yes: >
 If you like this plugin please rate it on [vim.org][4]. If you don't but you
 think it could be useful if this or that would be different, don't hesitate to
 email me or even better open an [issue][5]. With a little luck and good
-timing you may find me on irc://irc.freenode.net/#vim as KnoP if you have any
-questions.  
-If you need assistance with your robot project [visit us][9].
+timing you may find me on irc://irc.freenode.net/#vim as KnoP in case you have
+any questions.  
 
 [1]: https://github.com/KnoP-01/rapid-for-vim/releases/latest
 [2]: https://github.com/KnoP-01/rapid-for-vim#tldr
 [3]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L154
-[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
-[4]: https://vim.sourceforge.io/scripts/script.php?script_id=5348
+[4]: https://www.vim.org/scripts/script.php?script_id=5348
 [5]: https://github.com/KnoP-01/rapid-for-vim/issues
-[7]: https://vim.sourceforge.io/scripts/script.php?script_id=3695
-[8]: https://vim.sourceforge.io/scripts/script.php?script_id=39
-[9]: http://www.graeff.de
+[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
+[7]: https://www.vim.org/scripts/script.php?script_id=3695
+[8]: https://www.vim.org/scripts/script.php?script_id=39
+[9]: https://new.abb.com/products/robotics/industrial-robots
+[10]: https://www.vim.org/
