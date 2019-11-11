@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 2018 Feb 22
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 2019 Nov 11
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -998,15 +998,15 @@ for help on this. See also http://www.vim.org/scripts/script.php?script_id=39
 
 If |matchit| is loaded you can use |%| to not only jump between (), [] and {}
 but also between >
-    PROC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDPROC,
-    FUNC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDFUNC,
-    TRAP -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDTRAP,
-    RECORD -> ENDRECORD,
-    MODULE -> ENDMODULE,
-    IF -> ELSEIF -> ELSE -> ENDIF, 
-    FOR -> ENDFOR, 
-    WHILE -> ENDWHILE and 
-    TEST -> CASE -> DEFAULT -> ENDTEST.
+  PROC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDPROC,
+  FUNC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDFUNC,
+  TRAP -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDTRAP,
+  RECORD -> ENDRECORD,
+  MODULE -> ENDMODULE,
+  IF -> ELSEIF -> ELSE -> ENDIF, 
+  FOR -> ENDFOR, 
+  WHILE -> ENDWHILE and 
+  TEST -> CASE -> DEFAULT -> ENDTEST.
 
 If matchit is installed already, see |matchit| for more information. If 
 matchit is not insalled yet have a look into $VIMRUNTIME/macros/matchit.txt.
