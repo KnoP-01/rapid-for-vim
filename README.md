@@ -13,11 +13,11 @@ It provides
 * syntax highlighting,
 * indenting,
 * concealing of structure values (e.g. MoveJ \* v2500...),
-* completion of words from EIO.cfg or custom files,
 * support for commentary [vimscript #3695][7], matchit [vimscript #39][8] and
   matchup [vimscript #5624][11],
 * mappings and settings to navigate through code in a backup folder structure,
 * text objects for functions and
+* completion of words from known or custom global files like EIO.cfg,
 * mappings to insert a body of a new PROC, FUNC, TRAP et al based on user
   defined templates or hopefully sane defaults.
 
