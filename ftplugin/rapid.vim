@@ -1144,22 +1144,27 @@ if get(g:,'rapidConcealStructs',1)
     function <SID>RapidConcealLevel(lvl)
       " g:rapidConcealStructs may be used as input for a:lvl
 
+
       if a:lvl == 2
         " conceal all structure values
         setlocal conceallevel=2 concealcursor=nc
         return
+
       elseif a:lvl == 1
         " conceal less structure values
         setlocal conceallevel=2 concealcursor=
         return
+
       endif
+
         " conceal no structure values
       setlocal conceallevel=0 concealcursor=
 
     endfunction " <SID>RapidConcealLevel(lvl)
+
   endif " !exists("*<SID>RapidConcealLevel")
 
-  call <SID>RapidConcealLevel(get(g:,'rapidConcealStructs',0))
+  call <SID>RapidConcealLevel(get(g:,'rapidConcealStructs',1))
 
   let b:undo_ftplugin = b:undo_ftplugin." cole< cocu<"
 
@@ -1334,12 +1339,12 @@ endif " g:rapidAutoFormKeyMap
 
 if get(g:,'rapidConcealStructKeyMap',0)
         \|| mapcheck("<F2>","n")=="" && mapcheck("<F3>","n")=="" && mapcheck("<F4>","n")==""
-        \&& !hasmapto('<plug>RapidConcealStructs','n') && !hasmapto('<plug>RapidPartConcealStructs','n') && !hasmapto('<plug>RapidShowStructs','n')
+        \&& !hasmapto('<plug>RapidConcealStructs','n') && !hasmapto('<plug>RapidShowStructsAtCursor','n') && !hasmapto('<plug>RapidShowStructs','n')
         \&& !exists("g:rapidConcealStructsKeyMap")
   " conceal all structure values
   nmap <silent><buffer> <F4> <plug>RapidConcealStructs
   " conceal less structure values
-  nmap <silent><buffer> <F3> <plug>RapidPartConcealStructs
+  nmap <silent><buffer> <F3> <plug>RapidShowStructsAtCursor
   " conceal no structure values
   nmap <silent><buffer> <F2> <plug>RapidShowStructs
 elseif get(g:,'rapidConcealStructsKeyMap',0)
@@ -1411,9 +1416,9 @@ if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
 endif
 
 " conceal all structure values
-nnoremap <silent><buffer> <plug>RapidConcealStructs     :call <SID>RapidConcealLevel(2)<CR>
-nnoremap <silent><buffer> <plug>RapidPartConcealStructs :call <SID>RapidConcealLevel(1)<CR>
-nnoremap <silent><buffer> <plug>RapidShowStructs        :call <SID>RapidConcealLevel(0)<CR>
+nnoremap <silent><buffer> <plug>RapidConcealStructs       :call <SID>RapidConcealLevel(2)<CR>
+nnoremap <silent><buffer> <plug>RapidShowStructsAtCursor  :call <SID>RapidConcealLevel(1)<CR>
+nnoremap <silent><buffer> <plug>RapidShowStructs          :call <SID>RapidConcealLevel(0)<CR>
 
 " }}} <plug> mappings
 
