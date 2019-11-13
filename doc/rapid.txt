@@ -183,11 +183,11 @@ A: `:let g:knopVerbose=1` any time.
 |rapid-options|       List of all options and <plug> mappings
 |rapid-highlighting|
 |rapid-indent|
-|rapid-conceal|                   TODO chapter erstellen
+|rapid-conceal|
 |rapid-jump-quickly|
     |rapid-matchit-support|
-    |rapid-text-objects|         TODO chapter erstellen
-|rapid-complete|                 TODO chapter erstellen
+    |rapid-text-objects|
+|rapid-complete|
 |rapid-formatting-comments|
 |rapid-auto-form|
 
@@ -203,21 +203,21 @@ have no effect.
 
 *rapid-key-mappings*
 Also see these options for alternative <PLUG> mappings.
-|g:rapidConcealStructKeyMap| `<F2>`-`<F4>` changes concealing of structure values
+|g:rapidConcealStructKeyMap| `<F2>`-`<F4>` chang concealing of structure values
 |g:rapidGoDefinitionKeyMap|  `gd` to see declaration of word under cursor
 |g:rapidListUsageKeyMap|     `<leader>u` lists all appearances of current word
 |g:rapidListDefKeyMap|       `<leader>f` lists PROC/TRAP/... of current file
 |g:rapidMoveAroundKeyMap|    `[[`, ]]` ... jumps around PROC/TRAP/...
-|g:rapidFunctionTextObject|  `if`, `af` and `aF` def/deffct text objects TODO kapitel erstellen
-|g:rapidCommentTextObject|   `ic` and `ac` comment text objects TODO kapitel erstellen
+|g:rapidFunctionTextObject|  `if`, `af` and `aF` def/deffct text objects
+|g:rapidCommentTextObject|   `ic` and `ac` comment text objects
 |g:rapidAutoFormKeyMap|      `<leader>n` inserts body for PROC/TRAP/...
 
 *rapid-highlight-options*
-|g:rapidGroupName|          Enable/Disable rapid specific |group-name|s TODO kapitel umbenennen und nachbearbeiten
+|g:rapidGroupName|          Enable/Disable rapid specific |group-name|s
 |g:rapidShowError|          Disable error highlight, increase performance
 
 *rapid-indent-options*
-|g:rapidSpaceIndent|        Disable 'sts', 'sw', 'et' and 'sr' settings TODO kapitel umbenbennen und nachbearbeiten
+|g:rapidSpaceIndent|        Disable 'sts', 'sw', 'et' and 'sr' settings
 |g:rapidCommentIndent|      Enable indent of first column comments
 
 *rapid-concealing-options*
@@ -234,7 +234,7 @@ Also see these options for alternative <PLUG> mappings.
 |g:rapidShortenQFPath|      Disable shortening of paths in quickfix
 |g:rapidRhsQuickfix|        Open quickfix right hand side
 |g:rapidLhsQuickfix|        Open quickfix left hand side
-|g:rapidPath|               Disable 'path' setting  TODO kapitel umbenennen und nachbearbeiten
+|g:rapidPath|               Disable 'path' setting
 
 *rapid-complete-options*
 |g:rapidComplete|           Disable 'complete' setting
@@ -358,7 +358,8 @@ Set this option to 2 to have all structure values concealed on opening a file:  
 Set this option to 0 to switch concealing off completely: >
    let g:rapidConcealStructs = 0
 
-If omitted or set to 1 structure values get concealed except on cursorline after opening a file: 
+If omitted or set to 1 structure values get concealed except on cursorline
+after opening a file: 
     MoveJ * v2500,...
 
 Switch quickly between conceal level with |g:rapidConcealStructKeyMap|.
@@ -366,8 +367,8 @@ See also |conceal|.
 
 
 Index: |rapid-index|
-                        *g:rapidConcealStructKeyMap*     *<Plug>RapidConcealStructs*
-                        *<Plug>RapidShowStructsAtCursor* *<Plug>RapidShowStructs*
+                      *g:rapidConcealStructKeyMap*     *<Plug>RapidConcealStructs*
+                      *<Plug>RapidShowStructsAtCursor* *<Plug>RapidShowStructs*
 g:rapidConcealStructKeyMap:
 ---------------------------
 
@@ -381,12 +382,12 @@ To force these mappings if your F-Keys are already mapped: >
     let g:rapidConcealStructKeyMap = 1
 
 Alternativ <plug> mapping: >
-    augroup RapidConcealStructs
-    au!
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidConcealStructs
-    au FileType rapid nmap <silent><buffer> SOMEKEY <Plug>RapidShowStructsAtCursor
-    au FileType rapid nmap <silent><buffer> OTHERKEY <Plug>RapidShowStructs
-    augroup END
+  augroup RapidConcealStructs
+  au!
+  au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidConcealStructs
+  au FileType rapid nmap <silent><buffer> SOMEKEY <Plug>RapidShowStructsAtCursor
+  au FileType rapid nmap <silent><buffer> OTHERKEY <Plug>RapidShowStructs
+  augroup END
 
 
 Index: |rapid-index|
@@ -580,9 +581,9 @@ See also https://www.vim.org/scripts/script.php?script_id=5624
 
 If |matchit| or |matchup| is loaded you can use |%| to not only jump between
 (), [] and {} but also between >
-  PROC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDPROC,
-  FUNC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDFUNC,
-  TRAP -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDTRAP,
+  PROC -> RETURN -> ERROR -> RAISE -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDPROC,
+  FUNC -> RETURN -> ERROR -> RAISE -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDFUNC,
+  TRAP -> RETURN -> ERROR -> RAISE -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDTRAP,
   RECORD -> ENDRECORD,
   MODULE -> ENDMODULE,
   IF -> ELSEIF -> ELSE -> ENDIF, 
@@ -598,8 +599,8 @@ Index: |rapid-index|
 Can't remember if the name of that signal was `diGrp1_Opn` or `diGripper1Open`?
 No problem! Just insert `diG` and hit |i_CTRL-P| or |i_CTRL-N|. 
 
-rapid-complete adds the `EIO.cfg` and `user.sys` file to 'complete' as
-{dict}. You may add your own files, see |g:rapidCompleteAdditions|.
+rapid-complete adds the `EIO.cfg` and `user.sys` file to 'complete' as {dict}.
+You may add your own files, see |g:rapidCompleteAdditions|.
 The syntax file will also be added, so you can complete known Raid functions
 and keywords.
 
@@ -696,12 +697,12 @@ To force these text objects if `if`, `af` and/or `aF` is already mapped: >
 Alternativ <plug> mappings: >
   augroup RapidFuncTextObj
   au!
-  au FileType rapid xmap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundFuncInclCo
-  au FileType rapid omap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundFuncInclCo
-  au FileType rapid xmap <silent><buffer> SOMEKEY <Plug>RapidTxtObjAroundFuncExclCo
-  au FileType rapid omap <silent><buffer> SOMEKEY <Plug>RapidTxtObjAroundFuncExclCo
-  au FileType rapid xmap <silent><buffer> OTHERKEY <Plug>RapidTxtObjInnerFunc
-  au FileType rapid omap <silent><buffer> OTHERKEY <Plug>RapidTxtObjInnerFunc
+  au FileType rapid xmap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundFuncInclCo
+  au FileType rapid omap <silent><buffer> KEY2 <Plug>RapidTxtObjAroundFuncInclCo
+  au FileType rapid xmap <silent><buffer> KEY3 <Plug>RapidTxtObjAroundFuncExclCo
+  au FileType rapid omap <silent><buffer> KEY4 <Plug>RapidTxtObjAroundFuncExclCo
+  au FileType rapid xmap <silent><buffer> KEY5 <Plug>RapidTxtObjInnerFunc
+  au FileType rapid omap <silent><buffer> KEY6 <Plug>RapidTxtObjInnerFunc
   augroup END
 
 
@@ -722,10 +723,10 @@ To force these text objects if `ic` and/or `ac` is already mapped: >
 Alternativ <plug> mappings: >
     augroup RapidCommentTextObj
     au!
-    au FileType rapid xmap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundComment
-    au FileType rapid omap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundComment
-    au FileType rapid xmap <silent><buffer> SOMEKEY <Plug>RapidTxtObjInnerComment
-    au FileType rapid omap <silent><buffer> SOMEKEY <Plug>RapidTxtObjInnerComment
+    au FileType rapid xmap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundComment
+    au FileType rapid omap <silent><buffer> KEY2 <Plug>RapidTxtObjAroundComment
+    au FileType rapid xmap <silent><buffer> KEY3 <Plug>RapidTxtObjInnerComment
+    au FileType rapid omap <silent><buffer> KEY4 <Plug>RapidTxtObjInnerComment
     augroup END
 
 
