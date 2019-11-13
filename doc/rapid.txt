@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 2019 Nov 11
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 13. Nov 2019
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -6,20 +6,41 @@
 
 
 
+==============================================================================
 Installation:
 -------------
+
+Installation with vim-plug:  ~
+
+Put this in your .vimrc:  >
+
+    call plug#begin('~/.vim/plugged')
+      Plug 'KnoP-01/rapid-for-vim'
+    call plug#end()
+    syntax off                 " undo what plug#begin() did to syntax
+    filetype plugin indent off " undo what plug#begin() did to filetype
+    syntax on                  " syntax and filetype on in that order
+    filetype plugin indent on  " syntax and filetype on in that order
+
+For the first installation run: >
+
+    :PlugInstall
+
+Update every once in a while with: >
+
+    :PlugUpdate
+
+Manual installation:  ~
 
 Extract the most recent release and copy the folders 
 `/doc`, `/ftdetect`, `/ftplugin`, `/indent` and `/syntax` 
 into your `~/.vim/` or `%USERPROFILE%\vimfiles\` directory. 
 Overwrite rapid.* files from older installation. 
 
-To fully use these plugins put >
+Put the following in your .vimrc: >
 
-    filetype plugin indent on
-    syntax on
-
-in your .vimrc
+    syntax on                  " syntax and filetype on in that order
+    filetype plugin indent on  " syntax and filetype on in that order
 
 You may have to run >
 
@@ -33,257 +54,374 @@ to use the help within Vim after installation. >
 
     :help rapid
 
-Or just open the file .../doc/rapid.txt
 
-
-
-==============================================================================
-                        *rapid*
-Introducion:
-------------
 Index: |rapid-index|
+==============================================================================
+                        *rapid-Introduction*
 
-Have a look at |rapid-tl:dr| to get a very quick overview over the most important
-options provided by Rapid for Vim.
+**READ |tl:dr| FIRST** if you want more than just syntax highlight and 
+automatic indenting. It is a quick overview over the most important options and
+mappings provided by Rapid for Vim.
 
 Rapid for Vim (7.4 or later) is a collection of Vim scripts to help programing
 ABB industrial robots. 
 
 It provides
-
-* syntax highlighting, (see |rapid-highlighting|)
-* auto indention, (see |rapid-indent|)
-* concealing of structure values (e.g. MoveJ \* v2500...), (see |g:rapidConcealStructs|)
-* mappings and settings to navigate through code in a backup folder structure
-  (see |rapid-jump-quickly|) and
+* syntax highlighting,
+* indenting,
+* concealing of structure values (e.g. MoveJ \* v2500...),
+* support for commentary [vimscript #3695], matchit [vimscript #39] and
+  matchup [vimscript #5624],
+* mappings and settings to navigate through code in a backup folder structure,
+* text objects for functions and
+* completion of words from known or custom global files like EIO.cfg,
 * mappings to insert a body of a new PROC, FUNC, TRAP et al based on user
-  defined templates or hopefully sane defaults. (see |rapid-auto-form|)
+  defined templates or hopefully sane defaults.
 
-Most of this is optional, though some things are default on. Have a look in
-the |rapid-options| section for more details.
+Note: Keep your files to be edited in one folder or in a regular robot
+backup folder structure. Rapid for Vim modifies 'path' accordingly.
+Note to Linux users: Keep your files to be edited on a FAT file system. 
+Some features need the case insensitive file system to work properly.
 
-**Note:** Keep your files to be edited in one folder or in a regular robot
-backup folder structure. Rapid for Vim modifies 'path' by default accordingly.
 
-
+Index: |rapid-index|
+==============================================================================
                         *rapid-tl:dr*
-Quick options description:
---------------------------
-Q: Why so many options?  
-A: I try not to interfere with user settings to much. So I made most of the
-   settings that get changed optional.
+Short description:
+------------------
+Q: Since version 2.0.0 everything's weird. How so?  
+A: Most optional features are enabled by default now.  
 
-Q: I'm here to feed my kids, not to read. Do you have a quick suggestion on
-   rapid settings for my |.vimrc|?  
-A: Yes: >
+Q: I'm here to feed my kids, not to read. How do I get rid of stuff?  
+A: Disable stuff in your |vimrc|, see |rapid-options| for details: >
 
-    let g:rapidMoveAroundKeyMap=1 " [[, ]], [] and ][ jumps around PROC/FUNC..
-    " let g:rapidMoveAroundKeyMap=2 " also add textobjects af, aF and if 
-    let g:rapidGoDefinitionKeyMap=1 " gd shows the declaration of curr. word
-    let g:rapidListDefKeyMap=1 " <leader>f shows all PROC/FUNC.. in curr. file
-    let g:rapidListUsageKeyMap=1 " <leader>u shows all appearance of curr. word
-    let g:rapidAutoFormKeyMap=1 " <leader>n inserts a body for a new PROC etc
-    let g:rapidConcealStructsKeyMap=1 " <F2>/<F3> to conceal/show struct values
-    let g:rapidShowError=1 " shows some syntax errors
-    let g:rapidRhsQuickfix=1 " open quickfix window on the right hand side
-    let g:qf_window_bottom=0 " if qf.vim exists and you use g:rapidRhsQuickfix
-    let g:rapidAutoCorrCfgLineEnd=1 " auto correct *.cfg line terminator
-    " if you use colorscheme tortus use:
-    " let g:rapidNoHighLink=1 " even more colors
-    " don't forget
-    " filetype plugin indent on
+    let g:rapidFormatComments = 0 " don't break comment lines automatically
+    let g:rapidCommentIndent = 1 " indent comments starting in 1st column too
+    let g:rapidShortenQFPath = 0 " don't shorten paths in quickfix
+    let g:rapidAutoComment = 0 " don't continue comments with o, O or Enter
+    let g:rapidSpaceIndent = 0 " don't change 'sts', 'sw', 'et' and 'sr'
+    "let g:rapidConcealStructs = 0 " switch concealing off completely
+    "let g:rapidConcealStructs = 1 " show structure values at cursorline, default
+    let g:rapidConcealStructs = 2 " conceal all structure values
 
+Q: Which keys get mapped to what? Will that override my own mappings?  
+A: rapid-for-vim will not override existing mappings unless the corresponding
+   option is explicitly set. To use different key bindings use the
+   <PLUG>mapping. Otherwise rapid-for-vim create the followin mappings: >
 
-Content description:
---------------------
->
-    ~/.vim/doc/rapid.txt
-    ~/.vim/ftdetect/rapid.vim
-    ~/.vim/ftplugin/rapid.vim
-    ~/.vim/indent/rapid.vim
-    ~/.vim/syntax/rapid.vim
+    <F2> Show all structure values
+    <F3> Show structure values at cursorline
+    <F4> Conceal all structure values
+            Depend on g:rapidConcealStructs not existing or >=1.
+            Override existing mapping with
+        let g:rapidConcealStructKeyMap = 1
 
-You may use all these independently from one another. Just don't mix versions
-of different releases. Some features may work better when all files are loaded.
+    gd Go to or show definition of variable or func, proc et al.
+            Does override existing mappings and Vim's default.
+            Disable override existing mapping and Vim's default with
+        let g:rapidGoDefinitionKeyMap = 0
 
-~/.vim/doc/rapid.txt
-Help file. This should help you to use these plugins to your best advantage.
-Requires >
+    <leader>u List all significant appearances of word under cursor.
+            Override existing mapping with
+        let g:rapidListUsageKeyMap = 1
 
-    :helptags ~/.vim/doc
-  
-  
-~/.vim/ftdetect/rapid.vim
-Detects Rapid files based on their file name and content. Rapid files are
-checked for the presence of a MODULE line or any %%% HEADER. In case of an
-empty file you need to `:set filetype=rapid` manually.  
-.../ftdetect/rapid.vim also corrects mixed line endings (unix/dos-mix to unix)
-in *.cfg files if |g:rapidAutoCorrCfgLineEnd| is set to 1.  
-Requires >
+    <leader>f List all def/deffct of the current file.
+            Override existing mapping with
+        let g:rapidListDefKeyMap = 1
 
-    :filetype on
-  
-  
-~/.vim/ftplugin/rapid.vim
-Sets various vim options and provides key mappings and concealing. It supports
-commentary (vimscript #3695) and matchit (vimscript #39). All key mappings are 
-optional.  
-Requires >
+    [[ Move around functions. Takes a count.
+    ]] Move around functions. Takes a count.
+    [] Move around functions. Takes a count.
+    ][ Move around functions. Takes a count.
+    [; Move around comments. Takes a count.
+    ]; Move around comments. Takes a count.
+            Does override existing mappings and overshadow Vim's default.
+            Disable override existing mapping and Vim's default with
+        let g:rapidMoveAroundKeyMap = 0
 
-    :filetype plugin on
-  
-  
-~/.vim/indent/rapid.vim
-Sets indent related vim options. Sets indention to 2 spaces by default,
-optional.  
-Requires >
+    if Inner function text object.
+    af Around function text object.
+    aF Around function text object including preceding comments.
+            Depend on g:rapidMoveAroundKeyMap not existing or >=1.
+            Override existing mapping with
+        let g:rapidFunctionTextObject = 1
 
-    :filetype indent on
-  
-  
-~/.vim/syntax/rapid.vim
-Does make life more colorful. Unfortunately some features of the other files
-may work better with syntax on. This should not stop you from trying syntax
-off if you like.  
-Requires >
+    ic Inner comment text object.
+    ac Around comment text object.
+            Depend on g:rapidMoveAroundKeyMap not existing or =1.
+            Override existing mapping with
+        let g:rapidCommentTextObject = 1
 
-    :syntax on
+    <leader>n Inserts a new def/deffct.
+            Override existing mapping with
+        let g:rapidAutoFormKeyMap = 1
 
+Q: Does rapid-for-vim provide a mapping for indenting a complete file?  
+A: No, but you may put the following in your .vimrc or
+   `~/.vim/after/ftplugin/rapid.vim`: >
+
+    nnoremap ANYKEY gg=G``zz
+
+Q: Scrolling feels sluggish. What can I do?  
+A: Switch error highlighting off: >
+
+    let g:rapidShowError = 0        " better performance
+
+Q: Still sluggish!  
+A: Switch syntax off or jump instead of scroll!  
+
+Q: Where are the nice and informative messages?  
+A: `:let g:knopVerbose=1` any time.  
 
 
 ==============================================================================
-                        *rapid-index*
-rapid help index:
------------------
-|rapid| Introduction
-|rapid-options|
+                        *rapid* *rapid-index* *rapid-for-vim*
+==============================================================================
+
+|rapid-Introduction|
+    |rapid-tl:dr|     Short overview
+|rapid-options|       List of all options and <plug> mappings
 |rapid-highlighting|
 |rapid-indent|
-|rapid-auto-form|
+|rapid-conceal|                   TODO chapter erstellen
 |rapid-jump-quickly|
-|rapid-matchit-support|
+    |rapid-matchit-support|
+    |rapid-text-objects|         TODO chapter erstellen
+|rapid-complete|                 TODO chapter erstellen
 |rapid-formatting-comments|
-|rapid-known-bugs|
-  |rapid-indent-bugs|
-
+|rapid-auto-form|
 
 
 ==============================================================================
                         *rapid-options*
-rapid options:
---------------
 
-Note: 
-Any rapid-option set to 1 (or noted other integer) changes the default
-behavior. Omitting it or setting it to any value not mentioned will set to
-default.
+Set or reset options in your .vimrc. Except |g:rapidCommentIndent| and
+|g:knopVerbose| changeing a rapid option during an editing session will 
+have no effect.
 
-Copy text which looks like below into your |.vimrc| if you want to use the
-option: >
-    " Copy this into ~/.vimrc
+==============================================================================
 
-Have a look at the |rapid-tl:dr| section to get a very quick overview over the
-most important options provided by Rapid for Vim.
+*rapid-key-mappings*
+Also see these options for alternative <PLUG> mappings.
+|g:rapidConcealStructKeyMap| `<F2>`-`<F4>` changes concealing of structure values
+|g:rapidGoDefinitionKeyMap|  `gd` to see declaration of word under cursor
+|g:rapidListUsageKeyMap|     `<leader>u` lists all appearances of current word
+|g:rapidListDefKeyMap|       `<leader>f` lists PROC/TRAP/... of current file
+|g:rapidMoveAroundKeyMap|    `[[`, ]]` ... jumps around PROC/TRAP/...
+|g:rapidFunctionTextObject|  `if`, `af` and `aF` def/deffct text objects TODO kapitel erstellen
+|g:rapidCommentTextObject|   `ic` and `ac` comment text objects TODO kapitel erstellen
+|g:rapidAutoFormKeyMap|      `<leader>n` inserts body for PROC/TRAP/...
 
-Options to enable key mappings:
-Also see those options for alternative <PLUG> mappings
-|g:rapidMoveAroundKeyMap|    [[, ]] ... jumps around PROC/TRAP/...
-|g:rapidListDefKeyMap|       <leader>f lists PROC/TRAP/... of current file
-|g:rapidGoDefinitionKeyMap|  gd to see declaration of current word
-|g:rapidListUsageKeyMap|     <leader>u lists all appearances of curr. word
-|g:rapidConcealStructsKeyMap|  <F2>/<F3> to conceal/show structure values
-|g:rapidAutoFormKeyMap|      <leader>n inserts body for PROC/TRAP/...
-Options to enable things:
-|g:rapidConcealStructs|      Conceal struct values by default (MoveL * ..)
-|g:rapidPathToBodyFiles|     Enables custom body files for auto form
-|g:rapidAutoCorrCfgLineEnd|  Auto correct mixed unix/dos line endings in *.cfg
-|g:rapidNoHighLink|          Adds rapid secific |group-name|s
-|g:rapidShowError|           Enables the highlight of some syntax errors
-|g:rapidFormatComments|      Change format settings 'tw' and 'fo'
-|g:rapidAutoComment|         Auto insert ! when hitting <CR> , |o| or |O|
-Options to change things:
-|g:rapidRhsQuickfix|         Change where the |quickfix-window| will open
-|g:rapidLhsQuickfix|         Change where the |quickfix-window| will open
-Options to disable things:
-|g:rapidNoIndent|            Leave 'inde', 'indk', 'si', 'ai' untouched
-|g:rapidNoSpaceIndent|       Leave 'sts', 'sw', 'et' and 'sr' untouched
-|g:rapidNoPath|              Leave 'pa' untouched
-|g:rapidNoVerbose|           Switch off verbose messages
+*rapid-highlight-options*
+|g:rapidGroupName|          Enable/Disable rapid specific |group-name|s TODO kapitel umbenennen und nachbearbeiten
+|g:rapidShowError|          Disable error highlight, increase performance
 
+*rapid-indent-options*
+|g:rapidSpaceIndent|        Disable 'sts', 'sw', 'et' and 'sr' settings TODO kapitel umbenbennen und nachbearbeiten
+|g:rapidCommentIndent|      Enable indent of first column comments
 
-Index: |rapid-index|
-                        *g:rapidMoveAroundKeyMap*
-g:rapidMoveAroundKeyMap:
-------------------------
-Used in ~/.vim/ftplugin/rapid.vim
+*rapid-concealing-options*
+|g:rapidConcealStructs|     Change how/if struct values get concealed at start
 
-Note: This option changes the default vim commands |[[|, |]]|, |[]| and |][|!
+*rapid-comment-options*
+|g:rapidAutoComment|        Disable auto insert of comment char `!`
+|g:rapidFormatComments|     Disable auto break comment lines
 
-This option adds the following key mappings for [[, ]], [], ][, [! and ]! >
-    let g:rapidMoveAroundKeyMap = 1
+*rapid-auto-form-options*
+|g:rapidPathToBodyFiles|    Enable custom body files for auto form
 
-[count][[    Jumps backward to the next MODULE, PROC, FUNC, TRAP or RECORD.
-             If [count] is given jumps [count] times. Works in |normal-mode|
-             and in |Visual|-mode. This does respect 'wrapscan' unless started
-             in Visual-mode. 
+*rapid-jump-quickly-options*
+|g:rapidShortenQFPath|      Disable shortening of paths in quickfix
+|g:rapidRhsQuickfix|        Open quickfix right hand side
+|g:rapidLhsQuickfix|        Open quickfix left hand side
+|g:rapidPath|               Disable 'path' setting  TODO kapitel umbenennen und nachbearbeiten
 
-[count]]]    Like [[ but jumps forward to the next PROC, ...
+*rapid-complete-options*
+|g:rapidComplete|           Disable 'complete' setting
+|g:rapidCompleteAdditions|  Add custom files to 'complete' setting
 
-[count][]    Like [[ but jumps backward to the next ENDPROC, ...
+*rapid-auto-correct-cfg*
+|g:rapidAutoCorrCfgLineEnd| Auto correct mixed unix/dos line endings in *.cfg
 
-[count]][    Like [[ but jumps forward to the next ENDPROC, ...
-
-[count][!    Like [[ but jumps backward to the start of current or previous
-             comment.
-
-[count]]!    Like [[ but jumps forward to the end of the current or the
-             next comment.
-
-Default is no mapping. See also |rapid-jump-quickly|.
+*rapid-debug-options*
+|g:rapidVerbose|            Enable verbose messages
 
 
 Index: |rapid-index|
-                        *g:rapidListDefKeyMap*    *<Plug>RapidListDef*
-g:rapidListDefKeyMap:
+==============================================================================
+                        *rapid-highlighting*
+==============================================================================
+                        *g:rapidShowError*
+g:rapidShowError:
+-----------------
+
+Disable error highlighting:  >
+    let g:rapidShowError = 0
+
+If omitted or set to 1 a few syntax errors, mainly false usages of =, :=, <=
+and >=, get highlighted. 
+Note that this is not a syntax check.
+
+
+Index: |rapid-index|
+                        *g:rapidGroupName* 
+g:rapidGroupName:
+-----------------
+
+Note: This option must be set before the colorscheme.
+
+With this option reset rapid-for-vim does |hi-link| 
+rapidBuildInFunction to |group-name| `Function`, 
+rapidMovement to `Special` and
+rapidSysvars to nothing: >
+    let g:rapidGroupName = 0
+
+With this option set rapid-for-vim does |hi-link| 
+rapidBuildInFunction to |group-name| `BuildInFunction`, 
+rapidMovement to `Movement` and 
+rapidSysvars to `Sysvars`: >
+    let g:rapidGroupName = 1
+
+If omitted this option is automatically set if you use colorscheme
+tortus or tortusless and reset for any other colorscheme. 
+
+This is usefull if you want to set your own colors for Sysvars, Movement
+and/or BuildInFunction:  >
+    highlight Sysvars           guibg=Black     guifg=white
+    highlight BuildInFunction   guibg=Black     guifg=#00d5d5
+    highlight Movement          guibg=black     guifg=green
+
+`rapidBuildInFunction`    contains Rapid functions.
+`rapidSysvars`            nothing yet, maybe predefined Rapid constants someday.
+`rapidMovement`           contains movement instructions like MoveJ, MoveJ .
+
+If you like it colorful and dark background you may try the 
+colorscheme tortus or tortusless which makes use of these groups:
+    https://github.com/KnoP-01/tortus
+
+
+Index: |rapid-index|
+==============================================================================
+                        *rapid-indent*
+==============================================================================
+                        *g:rapidSpaceIndent*
+g:rapidSpaceIndent:
+-------------------
+
+Disables the modification of 'softtabstop', 'expandtab', 'shiftwidth' 
+and 'shiftround':  >
+    let g:rapidSpaceIndent = 0
+
+If omitted or set to 1 the following Vim options get set:
+    'softtabstop'   = 2
+    'shiftwidth'    = 2
+    'expandtab'
+    'shiftround'
+
+Keep in mind that space is rare and tabs look really awful on the teach
+pendant.
+
+
+Index: |rapid-index|
+                        *g:rapidCommentIndent*
+g:rapidCommentIndent:
 ---------------------
-Used in ~/.vim/ftplugin/rapid.vim
 
-This option adds a mapping to <leader>f to list all MODULEs, PROCs, TRAPs,
-RECORDs and FUNCs of the current file in the |qickfix|-list. >
-    let g:rapidListDefKeyMap = 1
+Enable indent of line comments which start in the first column: >
+    let g:rapidCommentIndent = 1
 
-Mnemonic: List Functions
+This is default off for commented code like this: 
+    WaitUntil di_blubb;
+!    WaitUntil di_bla or di_blubb;
+!    if di_bla then
+!      do_bla;
+!    endif
+    do_blubb;
+
+If omitted or set to 0 comments which start in the first column are not
+indented.
+
+This option may be changed any time and will take effect immediately.
+
+
+Index: |rapid-index|
+==============================================================================
+                        *rapid-concealing*
+==============================================================================
+                        *g:rapidConcealStructs* 
+g:rapidConcealStructs:
+----------------------
+
+Set this option to 2 to have all structure values concealed on opening a file:  >
+    let g:rapidConcealStructs = 2
+
+Set this option to 0 to switch concealing off completely: >
+   let g:rapidConcealStructs = 0
+
+If omitted or set to 1 structure values get concealed except on cursorline after opening a file: 
+    MoveJ * v2500,...
+
+Switch quickly between conceal level with |g:rapidConcealStructKeyMap|.
+See also |conceal|.
+
+
+Index: |rapid-index|
+                        *g:rapidConcealStructKeyMap*     *<Plug>RapidConcealStructs*
+                        *<Plug>RapidShowStructsAtCursor* *<Plug>RapidShowStructs*
+g:rapidConcealStructKeyMap:
+---------------------------
+
+Note: These mappings depend on |g:rapidConcealStructs| >= 1 or omitted.
+
+    `<F2>`: Show all structure values
+    `<F3>`: Show structure values at cursorline	
+    `<F4>`: Conceal all structure values
+
+To force these mappings if your F-Keys are already mapped: >
+    let g:rapidConcealStructKeyMap = 1
 
 Alternativ <plug> mapping: >
-    augroup RapidListDefMapping
+    augroup RapidConcealStructs
     au!
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidListDef
+    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidConcealStructs
+    au FileType rapid nmap <silent><buffer> SOMEKEY <Plug>RapidShowStructsAtCursor
+    au FileType rapid nmap <silent><buffer> OTHERKEY <Plug>RapidShowStructs
     augroup END
-
-Default is no mapping. See also |rapid-jump-quickly|.
 
 
 Index: |rapid-index|
+==============================================================================
+                        *rapid-jump-quickly*
+
+Vim by itself provides a lot of nice features to get around quickly. Some of
+those features depend on proper 'path' setting. Fortunatly rapid-for-vim takes
+care about that and more for you.
+
+For the best experience keep your files below `RAPID/` and `SYSPAR/` folder.
+
+Note to unix/linux users: Keep your files on a filesystem which ingores case
+(e.g. FAT) or some of the following features may not work correctly.
+
+ftplugin/rapid.vim does set 'path', 'suffixes' and 'suffixesadd' to find files
+within a regular ABB backup folder structure. This is not only usefull for
+commands like |:find|, |gf|, |^Wf| and the like but also necessary for some of
+the following features.
+
+You may instruct rapid-for-vim not to change 'path' if you reset |g:rapidPath|.
+'suffixes' and 'suffixesadd' get their values unconditionally. 
+
+Index: |rapid-index|
+==============================================================================
                         *g:rapidGoDefinitionKeyMap*   *<Plug>RapidGoDef*
 g:rapidGoDefinitionKeyMap:
 --------------------------
-Used in ~/.vim/ftplugin/rapid.vim
 
-Note: This option changes the default vim command |gd|.
+Note: This mapping overshadows the default Vim command |gd|.
 
-This option adds a key mapping to the sequence |gd| to jump quickly to
-variable- or PROC/FUNC-declarations. >
-    let g:rapidGoDefinitionKeyMap = 1
+    `gd`: Jump to or shows variable or Proc/Func... declarations.
 
-Mnemonic: Go Definition
-
-If the declaration is outside the current file the |qickfix|-list will open. 
-
-To find global declarations, your current file must lives in a regular backup
-folder structure and 'path' must be set properly. ftplugin/rapid.vim does set
-'path' for you, unless you set |g:rapidNoPath|.
-
-Works best with :syntax on and |g:rapidNoPath| omitted or 0.
+To force this mapping off and make Vims default available: >
+    let g:rapidGoDefinitionKeyMap = 0
 
 Alternativ <plug> mapping: >
     augroup RapidGoDefMapping
@@ -291,20 +429,23 @@ Alternativ <plug> mapping: >
     au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidGoDef
     augroup END
 
-Default is no mapping. See also |rapid-jump-quickly|.
+A succesful search for a file local declaration jumps there right away. Get
+back where you were with |''|. A succesful search for a global declaration
+opens the |quickfix-window|. 
+
+Works best with `:syntax on` and both |g:rapidPath| omitted.
 
 
 Index: |rapid-index|
                         *g:rapidListUsageKeyMap*  *<Plug>RapidListUse*
 g:rapidListUsageKeyMap:
 -----------------------
-Used in ~/.vim/ftplugin/rapid.vim
 
-This option adds a mapping to <leader>u to list all appearances (outside of
-strings) of the word under the cursor in the |qickfix|-list. >
+    `<leader>u`: List all appearances, outside of enum declarations and comments 
+                 of the word under the cursor in the |quickfix-window|.
+
+To force this mapping if `<leader>u` is already mapped: >
     let g:rapidListUsageKeyMap = 1
-
-Mnemonic: List Usage
 
 Alternativ <plug> mapping: >
     augroup RapidListUseMapping
@@ -312,533 +453,462 @@ Alternativ <plug> mapping: >
     au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidListUse
     augroup END
 
-Default is no mapping. See also |rapid-jump-quickly|.
-
 
 Index: |rapid-index|
-                        *g:rapidConcealStructs* 
-g:rapidConcealStructs:
-----------------------
-Used in ~/.vim/ftplugin/rapid.vim
+                        *g:rapidListDefKeyMap*    *<Plug>RapidListDef*
+g:rapidListDefKeyMap:
+---------------------
 
-With this option set rapid files will be opend with concealed structure
-values: >
-    let g:rapidConcealStructs = 1
+    `<leader>f`: List Proc/Func... of the current file in the |quickfix-window|. >
 
-Default is no concealing of structure values on opening rapid files. 
-See |g:rapidConcealStructsKeyMap| for more details.
-
-
-Index: |rapid-index|
-                        *g:rapidConcealStructsKeyMap* 
-                        *<Plug>RapidConcealStructs*  *<Plug>RapidShowStructs*
-g:rapidConcealStructsKeyMap:
-----------------------------
-Used in ~/.vim/ftplugin/rapid.vim
-
-This option adds a mapping to <F2> to conceal structure values and <F3> to
-show them, by changeing the value of 'conceallevel': >
-    let g:rapidConcealStructsKeyMap = 1
+To force this mapping if `<leader>f` is already mapped: >
+    let g:rapidListDefKeyMap = 1
 
 Alternativ <plug> mapping: >
-    augroup RapidConcealStructs
+    augroup RapidListDefMapping
     au!
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidConcealStructs
-    au FileType rapid nmap <silent><buffer> OTHERKEY <Plug>RapidShowStructs
-    " I also use the following to toggle my prefered 'concealcursor' settings 
-    " au FileType rapid nnoremap <silent><buffer> <F4> :if &concealcursor=='' <bar> setlocal concealcursor=nc <bar> else <bar> setlocal concealcursor= <bar> endif<cr>
+    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidListDef
     augroup END
-
-Default is no mapping. 
-See also |g:rapidConcealStructs|, 'conceallevel' and 'concealcursor'.
 
 
 Index: |rapid-index|
-                        *g:rapidAutoFormKeyMap*   *<Plug>RapidAutoForm*
-g:rapidAutoFormKeyMap:
-----------------------
-Used in ~/.vim/ftplugin/rapid.vim
+                        *g:rapidMoveAroundKeyMap*
+g:rapidMoveAroundKeyMap:
+------------------------
 
-This option adds several mappings starting with <leader>n to insert a body for
-a new PROC, FUNC, TRAP or RECORD into the current file. >
-    let g:rapidAutoFormKeyMap = 1
+Note: These mappings overshadow the default Vim commands 
+|[[|, |]]|, |[]| and |][|!
 
-Mappings marked with * will have a little delay until they trigger.
+[count]`[[`    Jumps backward to the next PROC/FUNC... [count] times. Works in
+            |Normal|-, |Visual|- and |Operator-pending|-mode, see |operator|. 
+            In Normal-mode it respects 'wrapscan'.
 
-  <leader>n     New prompted body *
-  <leader>nn    New prompted body
+[count]`]]`    Like [[ but jumps forward to the next PROC/FUNC...
 
-The following list may seem overwhelming, but those mappings are quite logical
-and can be used to skip the first few promps. After <leader>n just continue
-like you would answer the promps for "[g]lobal or [l]ocal?", "[p]roc, [f]unc,
-[t]rap or defd[a]t?" and "Datatype? [b]ool, [n]um, [d]num..."
+[count]`[]`    Like [[ but jumps backward to the next ENDPROC/ENDFUNC...
 
-  <leader>nl    New Local prompted body *
-  <leader>nll   New Local prompted body
-  
-  <leader>nlp   New Local PROC body
-  <leader>nlt   New Local TRAP body
-  <leader>nlr   New Local RECORD body
-  <leader>nlf   New Local FUNC of prompted type *
-  <leader>nlfu  New Local FUNC of prompted type
-  
-  <leader>nlfb  New Local FUNC of type Bool
-  <leader>nlfn  New Local FUNC of type Num
-  <leader>nlfd  New Local FUNC of type DNum
-  <leader>nlfs  New Local FUNC of type String
-  <leader>nlfp  New Local FUNC of type Pose
-  <leader>nlfr  New Local FUNC of type Robtarget
-  <leader>nlfj  New Local FUNC of type Jointtarget
-  <leader>nlft  New Local FUNC of type Tooldata
-  <leader>nlfw  New Local FUNC of type Wobjdata
-  
-  <leader>np    New local PROC body
-  <leader>nt    New local TRAP body
-  <leader>nr    New local RECORD body
-  <leader>nf    New local FUNC of prompted type *
-  <leader>nfu   New local FUNC of prompted type
-  
-  <leader>nfb   New local FUNC of type Bool
-  <leader>nfn   New local FUNC of type Num
-  <leader>nfd   New local FUNC of type DNum
-  <leader>nfs   New local FUNC of type String
-  <leader>nfp   New local FUNC of type Pose
-  <leader>nfr   New local FUNC of type Robtarget
-  <leader>nfj   New local FUNC of type Jointtarget
-  <leader>nft   New local FUNC of type Tooldata
-  <leader>nfw   New local FUNC of type Wobjdata
-  
-  <leader>ng    New Global prompted body *
-  <leader>ngg   New Global prompted body
-  
-  <leader>ngp   New Global PROC body
-  <leader>ngt   New Global TRAP body
-  <leader>ngr   New Global RECORD body
-  <leader>ngf   New Global FUNC of prompted type *
-  <leader>ngfu  New Global FUNC of prompted type
-  
-  <leader>ngfb   New Global FUNC of type Bool
-  <leader>ngfn   New Global FUNC of type Num
-  <leader>ngfd   New Global FUNC of type DNum
-  <leader>ngfs   New Global FUNC of type String
-  <leader>ngfp   New Global FUNC of type Pose
-  <leader>ngfr   New Global FUNC of type Robtarget
-  <leader>ngfj   New Global FUNC of type Jointtarget
-  <leader>ngft   New Global FUNC of type Tooldata
-  <leader>ngfw   New Global FUNC of type Wobjdata
+[count]`][`    Like [[ but jumps forward to the next ENDPROC/ENDFUNC...
 
-Alternativ <plug> mappings: >
-    augroup RapidAutoFormMapping
-    au!
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoForm
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalProc       
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalTrap       
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalRecord     
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFunc       
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncBool   
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncNum    
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncDNum   
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncString 
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncPose   
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncRobt   
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncJointt 
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncToold  
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormLocalFuncWobj   
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalProc      
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalTrap      
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalRecord    
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFunc      
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncBool  
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncNum   
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncDNum  
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncString
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncPose  
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncRobt  
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncJointt
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncToold 
-    au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidAutoFormGlobalFuncWobj  
-    augroup END
+[count]`[;`   Like [[ but jumps backward to the start of current or, if in
+            between, previous comment.
 
-Default is no mapping. See also |rapid-auto-form|.
+[count]`];`   Like [[ but jumps forward to the end of the current or, if in
+            between, next comment.
+
+To force these mappings off and make Vims default available: >
+    let g:rapidMoveAroundKeyMap = 0
+
+Note that |g:rapidFunctionTextObject| depend on these mappings.
 
 
 Index: |rapid-index|
-                        *g:rapidPathToBodyFiles*
-g:rapidPathToBodyFiles:
------------------------
-Used in ~/.vim/ftplugin/rapid.vim
+                        *g:rapidShortenQFPath*
+g:knopShortenQFPath:
+--------------------
 
-Set this option to a valid path to a folder with copys of your body files. >
-    let g:rapidPathToBodyFiles='~/.vim/myrapidresource/'
-    let g:rapidPathToBodyFiles='c:\user\me\rapidresource\'
-    let g:rapidPathToBodyFiles='$USERPROFILE\rapid_skel\'
+Note: g:rapidShortenQFPath is synonym for `g:knopShortenQFPath`.
+Use the g:knop* variable!
 
-You may put one or more of the following files into this folder: >
-    PROC.mod
-    TRAP.mod
-    RECORD.mod
-    FUNC.mod
+Disable shortening of paths in quickfix-window, thus always show full paths: >
+    let g:knopShortenQFPath = 0
 
-Default is no use of custom body files. See also |rapid-auto-form|.
+If omitted or set to 1 paths longer than 40 characters in quickfix-window are
+shortened with |pathshorten()|.
 
 
 Index: |rapid-index|
                         *g:rapidRhsQuickfix*  *g:rapidLhsQuickfix*
-g:rapidRhsQuickfix and g:rapidLhsQuickfix:
-------------------------------------------
-Used in ~/.vim/ftplugin/rapid.vim
+g:knop[RL]hsQuickfix:
+---------------------
 
-These options changes where ftplugin/rapid.vim opens the |quickfix-window| the
-first time, when using a mapping from |rapid-jump-quickly|.
+Note: g:rapid[RL]hsQuickfix is synonym for `g:knop[RL]hsQuickfix`.
+Use the g:knop* variable!
+
+Where to open the |quickfix-window| the first time.
 
 Open quickfix-window right hand side: >
-    let g:rapidRhsQuickfix = 1
+    let g:knopRhsQuickfix = 1
 
 Open quickfix-window left hand side: >
-    let g:rapidLhsQuickfix = 1
+    let g:knopLhsQuickfix = 1
 
-These two options are a synonym for g:knopRhsQuickfix and g:knopLhsQuickfix.
-You may use g:knop[RL]hsQuickfix instead, if you want the same behavior in
-krl.vim (vimscript #5344) as well.
-
-NOTE: If you use |vim-qf|.vim (vimscript #5211) then these options will not work
+If you use |vim-qf|.vim (vimscript #5211) these options will not work
 unless g:|qf_window_bottom| is 0: >
     let g:qf_window_bottom = 0
 
-Default is vim default position of quickfix-window. See also
-|rapid-jump-quickly|.
-
 
 Index: |rapid-index|
-                        *g:rapidNoHighlight*    *g:rapidNoHighLink*
-g:rapidNoHighLink:
-------------------
-Used in ~/.vim/syntax/rapid.vim
+                        *g:rapidPath*
+g:rapidPath:
+------------
 
-With this option set rapid.vim does not |hi-link| rapidBuildInFunction to
-|group-name| Function and rapidMovement to Special.  >
-    let g:rapidNoHighLink = 1
+Disables the modification of 'path': >
+    let g:rapidPath = 0
 
-This is usefull if you want to set your own colors for the colorscheme groups
-Movement and/or BuildInFunction. With this option set you may use your own
-colors for movement instructions and/or Rapid functions like this:  >
-    highlight Sysvars           guibg=Black     guifg=white
-    highlight BuildInFunction   guibg=Black     guifg=#00d5d5
-    highlight Movement          guibg=black     guifg=green
+If omitted or set to 1 rapid-for-vim tries to set 'path' to the root
+`.../KRC/**` of a kuka backup.
 
-Set this option to 1 if you use colorscheme tortus.vim.  
+Note: Many features of rapid-for-vim depend on a proper 'path' setting.
 
-Default is: >
-  highlight link rapidBuildInFunction Function
-  highlight link rapidMovement Special
-  highlight link rapidSysvars Sysvars
-
-See also |rapid-highlighting|.
-
-
-Index: |rapid-index|
-                        *g:rapidShowError*
-g:rapidShowError:
------------------
-Used in ~/.vim/syntax/rapid.vim
-
-This option enables the highlighting for some more or less common typos.  >
-    let g:rapidShowError = 1
-
-If enabled a few false usages of =, :=, <= and >= are highlighted as
-|group-name| Error. Note that this is not a syntax check. I have found no 
-occurrence of false positives, but it's disabled by default just in case.
-
-|g:rapidShowError| has no effect if |syntax| is off.
-
-Default is no highlighting of syntax errors. See also |rapid-highlighting|.
-
-
-Index: |rapid-index|
-                        *g:rapidFormatComments*
-g:rapidFormatComments:
-----------------------
-Used in ~/.vim/ftplugin/rapid.vim
-
-This option changes 'formatoptions' and 'textwidth' so that lines starting
-with "!" get wrapped to match on a teach pendant screen when entered. >
-    let g:rapidFormatComments = 1
-
-Note: If 'textwidth' already has a value unequal 0, only 'formatoptions' is
-changed and textwidth is left untouched. 
-
-Default settings are no change of textwidth and formatoptions. Changed values
-are: >
-    setlocal textwidth=78
-    setlocal formatoptions-=t
-    setlocal formatoptions+=l
-    setlocal formatoptions+=j
-
-See also |fo-table| and |rapid-formatting-comments|.
-
-
-Index: |rapid-index|
-                        *g:rapidAutoComment*
-g:rapidAutoComment:
--------------------
-Used in ~/.vim/ftplugin/rapid.vim
-
-This option changes 'formatoptions'. It enables automatic insertion of line 
-comment char "!" after hitting i_<CR> , |o| or |O| on a comment line.  >
-    let g:rapidAutoComment = 1
-
-Default settings are no change of 'formatoptions'. Changed values are: >
-    setlocal formatoptions+=r
-    setlocal formatoptions+=o
-
-See also |fo-table| and |rapid-formatting-comments|.
-
-
-Index: |rapid-index|
-                        *g:rapidNoIndent*
-g:rapidNoIndent:
-----------------
-Used in ~/.vim/indent/rapid.vim
-
-This option stopps ~/.vim/indent/rapid.vim from being loaded and will disable
-rapid indent. >
-    let g:rapidNoIndent = 1
-
-This does work the same as |b:did_indent| |30.3|.
-
-Default is indention enabled. See also |rapid-indent|.
-
-
-Index: |rapid-index|
-                        *g:rapidNoSpaceIndent*
-g:rapidNoSpaceIndent:
----------------------
-Used in ~/.vim/indent/rapid.vim
-
-This option disables the modification of 'softtabstop', 'expandtab', 
-'shiftwidth' and 'shiftround'.  >
-    let g:rapidNoSpaceIndent = 1
-
-Keep in mind that space is rare and tabs look really awful on the teach
-pendant.
-
-Default settings are: >
-    setlocal softtabstop = 2
-    setlocal shiftwidth = 2
-    setlocal expandtab
-    setlocal shiftround
-
-See also |rapid-indent|.
-
-
-Index: |rapid-index|
-                        *g:rapidNoPath*
-g:rapidNoPath:
---------------
-Used in ~/.vim/ftplugin/rapid.vim
-
-This option disables the modification of 'path'. >
-    let g:rapidNoPath = 1
-
-By default rapid.vim does set 'path' to find files in a regular ABB backup
-folder structure.
+Expected folder structure:
 
 BACKINFO/
+CS/
 HOME/
 RAPID/
-    |-TASK*/
-          |-PROGMOD/
+    +-TASK*/
+          +-PROGMOD/
           |-SYSMOD/
 SYSPAR/
 
-rapid.vim does set 'path' based on the default setting. See 'path' for details.
-rapid.vim adds './**' to this. See |starstar|.
-Furthermore rapid.vim looks one level upward for PROGMOD/ and SYSMOD/ folders
-and 3 levels upward for RAPID/, SYSPAR/, HOME/ and BACKINFO/ folders. If found
-the folders do get added to path with ** appended.
-It also looks one level upward for RAPID/, SYSPAR/, HOME/ and BACKINFO/
-folders. If found the folders do get added to path with ** appended.
+rapid-for-vim does looks 1 or 3 levels upward for a `BACKINFO/`, `CS`, 
+`HOME`, `RAPID/` and `SYSPAR/` folders. If found those get added to 
+'path' with ** appended See |starstar|.
 In case you work with a .prg file, put your SYSPAR/ folder parallel to that
-file. In this case rapid.vim will add ./SYSPAR/**.
+file.
 
-See also |rapid-jump-quickly|.
+
+Index: |rapid-index|
+                        *rapid-matchit-support* *rapid-matchup-support*
+Match it support:
+-----------------
+You may have to install the matchit plugin to use this. See |matchit-install|
+for help on this. 
+for help on this. See also http://www.vim.org/scripts/script.php?script_id=39
+An alternative for matchit is |matchup|. 
+See also https://www.vim.org/scripts/script.php?script_id=5624
+
+If |matchit| or |matchup| is loaded you can use |%| to not only jump between
+(), [] and {} but also between >
+  PROC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDPROC,
+  FUNC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDFUNC,
+  TRAP -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDTRAP,
+  RECORD -> ENDRECORD,
+  MODULE -> ENDMODULE,
+  IF -> ELSEIF -> ELSE -> ENDIF, 
+  FOR -> ENDFOR, 
+  WHILE -> ENDWHILE and 
+  TEST -> CASE -> DEFAULT -> ENDTEST.
+
+
+Index: |rapid-index|
+==============================================================================
+                        *rapid-complete*  
+
+Can't remember if the name of that signal was `diGrp1_Opn` or `diGripper1Open`?
+No problem! Just insert `diG` and hit |i_CTRL-P| or |i_CTRL-N|. 
+
+rapid-complete adds the `EIO.cfg` and `user.sys` file to 'complete' as
+{dict}. You may add your own files, see |g:rapidCompleteAdditions|.
+The syntax file will also be added, so you can complete known Raid functions
+and keywords.
+
+==============================================================================
+                        *g:rapidComplete*
+g:rapidComplete:
+----------------
+
+Disables the modification of 'complete': >
+    let g:rapidComplete = 0
+
+If omitted or set to 1 rapid-for-vim will attempt to add the following files 
+to 'complete' as {dict}. >
+    RAPID/TASK[1-7]/SYSMOD/user.sys
+    SYSPAR/EIO.cfg
+    'runtimepath'/syntax/rapid.vim
+
+For this feature to work you need to start your edit inside a backup-folder 
+or have all files you need in the same directory as the current file.
+
+Enable |g:rapidVerbose| to see what files are actually added.
+
+
+Index: |rapid-index|
+                        *g:rapidCompleteAdditions*
+g:rapidCompleteAdditions:
+-------------------------
+
+Note: This feature depend on |g:rapidComplete| ommited or set to 1.
+
+Add custom files to 'complete': >
+    let g:rapidCompleteAdditions = [
+      \'TASK1/PROGMOD/advR1_MainMod.mod',
+      \'TASK1/SYSMOD/DAI_System_R1.sys', 
+      \'TASK1/SYSMOD/DAI_IntertaskDefinitions.sys', 
+      \'ApplSys/ROB1/BE_User.sys']
+
+Make sure to use forward slashes (`/`) as path separator, also on Windows!
+
+You should add the path relative to `RAPID/`. `HOME/`, `CS/` etc. Even if you 
+put all the files you edit are in the same directory, they will be found. You 
+may also add just a file name, However, in that case the file will only be 
+found if present in the same directory as the current file. 
+
+Enable |g:rapidVerbose| to see what files are actually added.
+
+See also |rapid-complete|.
+
+If omitted or set to 0 no custom files get added to complete.
+
+
+Index: |rapid-index|
+==============================================================================
+                        *rapid-debug*  
+==============================================================================
+                        *g:rapidVerbose*
+g:rapidVerbose:
+---------------
+
+Note: `g:rapidVerbose` is synonym for `g:knopVerbose`. Use the g:knop* variable!
+
+Enable verbose messages: >
+    let g:knopVerbose = 1
+
+If omitted or set to 0 no messages are generate by rapid-for-vim.
+
+This option may be changed any time and will take effect immediately.
+
+
+Index: |rapid-index|
+==============================================================================
+                        *rapid-text-objects*  
+
+rapid-for-vim text objects work similar as other Vim |text-objects|.
+They can be used in |Visual|- and |Operator-pending|-mode, see |operator|. 
+
+==============================================================================
+                  *g:rapidFunctionTextObject* *<plug>RapidTxtObjInnerFunc*
+                                            *<plug>RapidTxtObjAroundFuncExclCo*
+                                            *<plug>RapidTxtObjAroundFuncInclCo*
+g:rapidFunctionTextObject:
+--------------------------
+
+Note: These text objects depend on |g:rapidMoveAroundKeyMap| = 1 or omitted.
+
+    [count]`if`: inner part of FUNC/PROC....
+    [count]`af`: outer part of FUNC/PROC....
+    [count]`aF`: outer part of FUNC/PROC... including, if present, one empty
+            following line and directly preceding comments.
+
+To force these text objects if `if`, `af` and/or `aF` is already mapped: >
+    let g:rapidFunctionTextObject = 1
+
+Alternativ <plug> mappings: >
+  augroup RapidFuncTextObj
+  au!
+  au FileType rapid xmap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundFuncInclCo
+  au FileType rapid omap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundFuncInclCo
+  au FileType rapid xmap <silent><buffer> SOMEKEY <Plug>RapidTxtObjAroundFuncExclCo
+  au FileType rapid omap <silent><buffer> SOMEKEY <Plug>RapidTxtObjAroundFuncExclCo
+  au FileType rapid xmap <silent><buffer> OTHERKEY <Plug>RapidTxtObjInnerFunc
+  au FileType rapid omap <silent><buffer> OTHERKEY <Plug>RapidTxtObjInnerFunc
+  augroup END
+
+
+Index: |rapid-index|
+                    *g:rapidCommentTextObject*  *<plug>RapidTxtObjInnerComment*
+                                              *<plug>RapidTxtObjAroundComment*
+g:rapidCommentTextObject:
+-------------------------
+
+Note: These text objects depend on |g:rapidMoveAroundKeyMap| = 1 or omitted.
+
+    `ic`: comment block.
+    `ac`: comment block including one followng empty line.
+
+To force these text objects if `ic` and/or `ac` is already mapped: >
+    let g:rapidCommentTextObject = 1
+
+Alternativ <plug> mappings: >
+    augroup RapidCommentTextObj
+    au!
+    au FileType rapid xmap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundComment
+    au FileType rapid omap <silent><buffer> ANYKEY <Plug>RapidTxtObjAroundComment
+    au FileType rapid xmap <silent><buffer> SOMEKEY <Plug>RapidTxtObjInnerComment
+    au FileType rapid omap <silent><buffer> SOMEKEY <Plug>RapidTxtObjInnerComment
+    augroup END
 
 
 Index: |rapid-index|
                         *g:rapidAutoCorrCfgLineEnd*
 g:rapidAutoCorrCfgLineEnd:
 --------------------------
-Used in ~/.vim/ftdetect/rapid.vim
 
 Since robotware 5.something or 6.something the robot safes *.cfg files with a
-mix of <CR><NL> and <NL> line termitators.
-This option automaticaly correct those to unix file format.  >
-    let g:rapidAutoCorrCfgLineEnd = 1
-
-I had to put this function into ftdetect. I did not get it to work from
-within the ftplugin/rapid.vim.
-
-Default is no change of line terminator. See also |file-formats|.
-
-
-Index: |rapid-index|
-                        *g:rapidNoVerbose*
-g:rapidNoVerbose:
------------------
-Used in ~/.vim/ftplugin/rapid.vim
-
-This option disables all verbose messages generated by ftplugin/rapid.vim. >
-    let g:rapidNoVerbose = 1
-
-This option is a synonym for g:knopNoVerbose. You may use g:knopNoVerbose 
-instead, if you want the same behavior in krl.vim (vimscript #5344) as well.
-
-Default is messages on. See also |rapid-jump-quickly|.
-
+mix of <CR><NL> and <NL> line termitators. rapid-for-vim does automatically 
+correct this unless: >
+    let g:rapidAutoCorrCfgLineEnd = 0
 
 
 Index: |rapid-index|
 ==============================================================================
-                                                *rapid-highlighting*
-rapid highlighting:
+                        *rapid-formatting-comments*
+==============================================================================
+                        *g:rapidAutoComment*
+g:rapidAutoComment:
 -------------------
-You may have to put >
-    syntax on
-into your .vimrc to use rapid highlighting.
 
-Related rapid options:
-  |g:rapidNoHighLink|
-  |g:rapidShowError|
-  |g:rapidConcealStructs|
-  |g:rapidConcealStructsKeyMap|
+Disable 'formatoptions' += ro. See |fo-table|: >
+    let g:rapidAutoComment = 0
 
-Rapid.vim highlighting adds the following |group-name| specialy for Abb
-industrial robots:
-    `Sysvars`: for future expansion. Maybe I group up stuff like ERRNO
-              constants or so.
-    `BuildInFunction`: rapid functions
-    `Movement`: rapid movement commands like "MoveJ" and "SearchL" ect.
-
-By default 
-    `Sysvars` do look like any other variable, 
-    `BuildInFunction` is |hi-link| to |group-name| Function 
-    `Movement` is hi-link to group-name Special. 
-
-You may change this by setting |g:rapidNoHighLink| to 1, to use your own 
-linking or highlighting. But the default should be ok for most users and
-colorschemes. 
-
-If you like it colorful and the colorscheme torte or motus, you may try the 
-colorscheme tortus, which makes use of the rapid groups:
-  http://www.vim.org/scripts/script.php?script_id=5390
-I suggest setting |g:rapidNoHighLink| to 1 for using tortus.vim.
+If omitted or set to 1 the comment char `!` is automatically added after
+hitting |i_<CR>|, |o| or |O| on a comment line.  
 
 
-Set |g:rapidConcealStructs| to have structure values concealed on opening a
-rapid file. Set |g:rapidConcealStructsKeyMap| to quickly switch between
-concealed/shown (<F2>/<F3>) structure values. This is usefull for programs
-with lots of Move[JL] with *-robtargets.
+Index: |rapid-index|
+                        *g:rapidFormatComments*
+g:rapidFormatComments:
+----------------------
 
-For example >
-    MoveL [[2088.18,287.29,678.90],[0.200427,0.759941,-0.529872,0.318676],[-1,0,-2,0],[34.3166,9E+09,9E+09,9E+09,9E+09,9E+09]], vmax, z200, GunRobA;
-will be shown as >
-    MoveL *****, vmax, z200, GunRobA;
+Disable 'formatoptions' -= t and += lj. See |fo-table|. >
+    let g:rapidFormatComments = 0
 
-You are still able to edit the structure values if those are concealed. See
-'concealcursor'.
-
-Note that all structure values, not only those of move instructions, will get
-concealed, but string values inside those are still shown. This may look
-wierd, especially if the structure values are divided up into multiple lines.
-
-
-You may enable highlighting of some misuses of =, :=, <=, >= and some
-more or less common typos by setting |g:rapidShowError|.
-
-
-If you wish to switch off highlighting completely put >
-    syntax off
-into your |.vimrc| 
-
+If omitted or set to 1 comments get wrapped at 'textwidth'. If 'textwidth' is
+0 it's set to 78. You may also use |gq| to format comments.
 
 
 Index: |rapid-index|
 ==============================================================================
-                        *rapid-indent*  
-rapid indent:
--------------
-You may have to put >
-    filetype indent on
-into your |.vimrc| to use rapid indention.
+                        *rapid-auto-form*
 
-Related rapid options:
-  |g:rapidNoIndent|
-  |g:rapidNoSpaceIndent|
+With rapid-for-vim you can quickly create a new PROC/FUNC... after your
+liking. 
 
-Note: 
-- Tabs are converted to 2 spaces by default.
-- A CASE gets the same level of indention as the corrosponding TEST and 
-    ENDTEST.
-- For lines with opening ( or [, with no matching closing one, the line are
-    considered continuing until the matching closing braket. The lines in
-    between get extra indention. This ist usual for long array values or long
-    argument lists.
-- Wrapped lines without brakets do not get extra indention (yet?).
+Type `<leader>n` anywhere in a *.mod, *.sys or *.prg file. You will get prompted
+on some details for the new body. The last prompt is the name. The name prompt
+is mandatory, all others may be typed quickly after `<leader>n`. Hit <esc> or
+enter an empty string at any prompt to abort.
 
-Hint: |=| can be combined with movement commands. Example: gg=G will indent
-the complete file. To get back where you stopped editing you can use |``|. So
-this makes a nice mapping: >
-    nnoremap ANYKEY gg=G``zz
-
-See also i_CTRL-F 
-
-Note that rapid indent partly depends on rapid syntax!
-If syntax is off you may get false indention. Don't get too scared, indention 
-still works OK if syntax is off. Only in very rare occasions you may get 
-false indention.
-This happens if you have a none matching (, [, ), ] or an ! within a string. 
-If syntax is off and you get false indention try setting syntax on or indent 
-your file selectivly instead of gg=G. 
-Or maybe use the mapping >
-    :nnoremap ANYKEY :syntax on<CR>gg=G``zz:syntax off<CR>
-
-You may switch off rapid indention completely by setting |g:rapidNoIndent| 
-to 1.
-
-If you really want a different indention than 2 spaces set |g:rapidNoSpaceIndent| 
-to 1. Keep in mind that space is rare and tabs look really awful on the teach
-pendant.
-
-
-
-Index: |rapid-index|
-==============================================================================
-                        *rapid-auto-form*  
-rapid auto form:
-----------------
-You may have to put >
-    filetype plugin on
-into your .vimrc to use rapid auto form.
-
-Related rapid options:
-  |g:rapidAutoFormKeyMap|
-  |g:rapidPathToBodyFiles|
-  |g:rapidNoVerbose|
-
-Set |g:rapidAutoFormKeyMap| to quickly create a new PROC, FUNC, TRAP or RECORD
-after your liking. 
-
-You may type <leader>n anywhere in a *.mod, *.sys or *.prg file. You will get
-prompted on some details for the new body. The last prompt is the name. The
-name prompt is mandatory, all others may be typed quickly after <leader>n. Hit
-<esc> or enter an empty string at any prompt to abort.
-
-Example: <leader>ngfb will insert a body for a new global function of type
+Example: `<leader>ngfb` will insert a body for a new global function of type
 bool.
 Mnemonic: New Global Function of type Bool
 
-You may decide what content will be inserted by setting
-|g:rapidPathToBodyFiles|, when you use one of those mappings. 
+The |User| group |autocmd-event| `RapidAutoFormPost` will be triggered after the
+insertion is finished and may be used for further customization: >
+    augroup RapidAutoForm
+    au!
+    au User RapidAutoFormPost call MyAutoFormPostFunc()
+    augroup END
+
+Index: |rapid-index|
+==============================================================================
+                        *g:rapidAutoFormKeyMap*
+g:rapidAutoFormKeyMap:
+----------------------
+
+To force these mappings if `<leader>n` is already mapped: >
+    let g:rapidAutoFormKeyMap = 1
+
+This list may seem overwhelming, but those mappings are quite logical and can
+be used to skip the first few promps. After <leader>n just continue like you
+would answer the prompts for "[g]lobal or [l]ocal?", "[p]roc, [f]unc, [t]rap or
+[r]ecord?" and "Datatype? [b]ool, [n]um, [d]num...".
+
+Note: Mappings marked with * will have a little delay until they trigger.
+
+  `<leader>n`     New prompted body *
+  `<leader>nn`    New prompted body
+   
+  `<leader>nl`    New Local prompted body *
+  `<leader>nll`   New Local prompted body
+   
+  `<leader>nlp`   New Local PROC body
+  `<leader>nlt`   New Local TRAP body
+  `<leader>nlr`   New Local RECORD body
+  `<leader>nlf`   New Local FUNC of prompted type *
+  `<leader>nlfu`  New Local FUNC of prompted type
+   
+  `<leader>nlfb`  New Local FUNC of type Bool
+  `<leader>nlfn`  New Local FUNC of type Num
+  `<leader>nlfd`  New Local FUNC of type DNum
+  `<leader>nlfs`  New Local FUNC of type String
+  `<leader>nlfp`  New Local FUNC of type Pose
+  `<leader>nlfr`  New Local FUNC of type Robtarget
+  `<leader>nlfj`  New Local FUNC of type Jointtarget
+  `<leader>nlft`  New Local FUNC of type Tooldata
+  `<leader>nlfw`  New Local FUNC of type Wobjdata
+   
+  `<leader>np`    New local PROC body
+  `<leader>nt`    New local TRAP body
+  `<leader>nr`    New local RECORD body
+  `<leader>nf`    New local FUNC of prompted type *
+  `<leader>nfu`   New local FUNC of prompted type
+   
+  `<leader>nfb`   New local FUNC of type Bool
+  `<leader>nfn`   New local FUNC of type Num
+  `<leader>nfd`   New local FUNC of type DNum
+  `<leader>nfs`   New local FUNC of type String
+  `<leader>nfp`   New local FUNC of type Pose
+  `<leader>nfr`   New local FUNC of type Robtarget
+  `<leader>nfj`   New local FUNC of type Jointtarget
+  `<leader>nft`   New local FUNC of type Tooldata
+  `<leader>nfw`   New local FUNC of type Wobjdata
+   
+  `<leader>ng`    New Global prompted body *
+  `<leader>ngg`   New Global prompted body
+   
+  `<leader>ngp`   New Global PROC body
+  `<leader>ngt`   New Global TRAP body
+  `<leader>ngr`   New Global RECORD body
+  `<leader>ngf`   New Global FUNC of prompted type *
+  `<leader>ngfu`  New Global FUNC of prompted type
+   
+  `<leader>ngfb`   New Global FUNC of type Bool
+  `<leader>ngfn`   New Global FUNC of type Num
+  `<leader>ngfd`   New Global FUNC of type DNum
+  `<leader>ngfs`   New Global FUNC of type String
+  `<leader>ngfp`   New Global FUNC of type Pose
+  `<leader>ngfr`   New Global FUNC of type Robtarget
+  `<leader>ngfj`   New Global FUNC of type Jointtarget
+  `<leader>ngft`   New Global FUNC of type Tooldata
+  `<leader>ngfw`   New Global FUNC of type Wobjdata
+
+                        *<Plug>RapidAutoForm*
+Alternativ <plug> mappings: >
+  augroup RapidAutoFormMapping
+  au!
+  au FileType rapid nmap <silent><buffer> KEY01 <Plug>RapidAutoForm
+  au FileType rapid nmap <silent><buffer> KEY02 <Plug>RapidAutoFormLocalProc       
+  au FileType rapid nmap <silent><buffer> KEY03 <Plug>RapidAutoFormLocalTrap       
+  au FileType rapid nmap <silent><buffer> KEY04 <Plug>RapidAutoFormLocalRecord     
+  au FileType rapid nmap <silent><buffer> KEY05 <Plug>RapidAutoFormLocalFunc       
+  au FileType rapid nmap <silent><buffer> KEY06 <Plug>RapidAutoFormLocalFuncBool   
+  au FileType rapid nmap <silent><buffer> KEY07 <Plug>RapidAutoFormLocalFuncNum    
+  au FileType rapid nmap <silent><buffer> KEY08 <Plug>RapidAutoFormLocalFuncDNum   
+  au FileType rapid nmap <silent><buffer> KEY09 <Plug>RapidAutoFormLocalFuncString 
+  au FileType rapid nmap <silent><buffer> KEY10 <Plug>RapidAutoFormLocalFuncPose   
+  au FileType rapid nmap <silent><buffer> KEY11 <Plug>RapidAutoFormLocalFuncRobt   
+  au FileType rapid nmap <silent><buffer> KEY12 <Plug>RapidAutoFormLocalFuncJointt 
+  au FileType rapid nmap <silent><buffer> KEY13 <Plug>RapidAutoFormLocalFuncToold  
+  au FileType rapid nmap <silent><buffer> KEY14 <Plug>RapidAutoFormLocalFuncWobj   
+  au FileType rapid nmap <silent><buffer> KEY15 <Plug>RapidAutoFormGlobalProc      
+  au FileType rapid nmap <silent><buffer> KEY16 <Plug>RapidAutoFormGlobalTrap      
+  au FileType rapid nmap <silent><buffer> KEY17 <Plug>RapidAutoFormGlobalRecord    
+  au FileType rapid nmap <silent><buffer> KEY18 <Plug>RapidAutoFormGlobalFunc      
+  au FileType rapid nmap <silent><buffer> KEY19 <Plug>RapidAutoFormGlobalFuncBool  
+  au FileType rapid nmap <silent><buffer> KEY20 <Plug>RapidAutoFormGlobalFuncNum   
+  au FileType rapid nmap <silent><buffer> KEY21 <Plug>RapidAutoFormGlobalFuncDNum  
+  au FileType rapid nmap <silent><buffer> KEY22 <Plug>RapidAutoFormGlobalFuncString
+  au FileType rapid nmap <silent><buffer> KEY23 <Plug>RapidAutoFormGlobalFuncPose  
+  au FileType rapid nmap <silent><buffer> KEY24 <Plug>RapidAutoFormGlobalFuncRobt  
+  au FileType rapid nmap <silent><buffer> KEY25 <Plug>RapidAutoFormGlobalFuncJointt
+  au FileType rapid nmap <silent><buffer> KEY26 <Plug>RapidAutoFormGlobalFuncToold 
+  au FileType rapid nmap <silent><buffer> KEY27 <Plug>RapidAutoFormGlobalFuncWobj  
+  augroup END
+
+
+Index: |rapid-index|
+                        *g:rapidPathToBodyFiles*
+g:rapidPathToBodyFiles:
+-----------------------
+
+Enable use of custom body files. Set to a valid path, e.g.: >
+    let g:rapidPathToBodyFiles='~/.vim/myrapidresource/'
+    let g:rapidPathToBodyFiles='c:\user\me\rapidresource\'
+    let g:rapidPathToBodyFiles='$USERPROFILE\rapid_skel\'
+
+If omitted or no file were found in the given path a default bodies will be
+inserted.
 
 You may put one or more of the following files into this folder: >
     PROC.mod
@@ -846,8 +916,7 @@ You may put one or more of the following files into this folder: >
     RECORD.mod
     FUNC.mod
 
-Those files should contain your custom body for a PROC, TRAP, RECORD and/or
-FUNC.
+Those files should contain your custom body for a PROC/FUNC...
 
 Example PROC.mod:  >
     ! ===========================================================
@@ -915,167 +984,6 @@ Markers:  global    substituted by "LOCAL " or ""
 Note that comments or anything below the END line is not supported and may
 have unexpected results!
 
-The User group |autocmd-event| RapidAutoFormPost will be triggered after the
-insertion is finished and may be used for further customization: >
-    augroup RapidAutoForm
-    au!
-    au User RapidAutoFormPost call MyAutoFormPostFunc()
-    augroup END
-
-
 
 Index: |rapid-index|
-==============================================================================
-                        *rapid-jump-quickly*  
-Move around quickly:
---------------------
-You may have to put >
-    filetype plugin on
-into your .vimrc
-
-Related rapid options:
-  |g:rapidMoveAroundKeyMap|
-  |g:rapidGoDefinitionKeyMap|
-  |g:rapidListUsageKeyMap|
-  |g:rapidListDefKeyMap|
-  |g:rapidRhsQuickfix|
-  |g:rapidLhsQuickfix|
-  |g:rapidNoVerbose|
-  |g:rapidNoPath|
-
-
-File local features:
-
-Set |g:rapidMoveAroundKeyMap| to jump quickly between PROC, FUNC et al. and
-comments with modified "|]]|", "|][|", "|[[|", "|[]|", "|[!|" and "|]!|" commands. 
-Those take a [count], but things like "d2][" do not work. Use |Visual|-mode in
-this case: "V2][d". 
-
-Set |g:rapidListDefKeyMap| to map <leader>f to populate the quickfix window
-with all PROC/TRAP/FUNC... declarations of the current file.
-
-See also |rapid-matchit-support|.
-
-
-Backup wide features:
-
-ftplugin/rapid.vim does set 'path' and 'suffixes' to find files within a
-regular ABB backup folder structure. You may instruct rapid.vim not to change
-'path' if you set |g:rapidNoPath|. 'suffixes' get its values unconditional.
-This is not only usefull for commands like |:find|, |gf|, |^Wf| and the like
-but also necessary for some of the following features.
-
-For the best experience keep your files below the RAPID/ folder and a parallel
-SYSPAR/ folder.
-See |g:rapidNoPath| for details on how rapid.vim does generate 'path'.
-
-Set |g:rapidGoDefinitionKeyMap| to use a modified |gd| with the cursor on a
-variable or proc/func-call in command mode. A succesful search for a file
-local declaration jumps there right away. Get back where you were with |''|. A
-succesful search for a more global declaration opens the |quickfix| window.
-
-Set |g:rapidListUsageKeyMap| to see quickly where a variable or function or even
-an instruction or data type is used. <leader>u shows all appearances of the word
-under the cursor, independet of the scope.
-
-|g:rapidRhsQuickfix| and |g:rapidLhsQuickfix| influence where the
-|quickfix-window| will be opened by rapid.vim.
-
-In the quickfix window hit <CR> to jump to the line or |gf| to jump to
-the file. Get back to where you came from with |CTRL-6|.
-
-Some of those commands causes verbose messages. Switch those off with
-|g:rapidNoVerbose|.
-
-
-Index: |rapid-index|
-==============================================================================
-                        *rapid-matchit-support*  
-Match it support:
------------------
-You may have to install the matchit plugin to use this. See |matchit-install|
-for help on this. See also http://www.vim.org/scripts/script.php?script_id=39
-
-If |matchit| is loaded you can use |%| to not only jump between (), [] and {}
-but also between >
-  PROC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDPROC,
-  FUNC -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDFUNC,
-  TRAP -> RETURN -> RAISE -> ERROR -> TRYNEXT -> RETRY -> UNDO -> BACKWARD -> ENDTRAP,
-  RECORD -> ENDRECORD,
-  MODULE -> ENDMODULE,
-  IF -> ELSEIF -> ELSE -> ENDIF, 
-  FOR -> ENDFOR, 
-  WHILE -> ENDWHILE and 
-  TEST -> CASE -> DEFAULT -> ENDTEST.
-
-If matchit is installed already, see |matchit| for more information. If 
-matchit is not insalled yet have a look into $VIMRUNTIME/macros/matchit.txt.
-
-
-
-Index: |rapid-index|
-==============================================================================
-                        *rapid-formatting-comments*  
-Formatting comments:
---------------------
-You may have to put >
-    filetype plugin on
-into your .vimrc
-
-Related rapid options:
-  |g:rapidFormatComments|
-  |g:rapidAutoComment|
-
-Set |g:rapidFormatComments| to format comments automatically when entered,
-with |gq| or with |:call| rapidFormatComments() .
-
-The function rapidFormatComments() formats all comments in the whole file. Use
-or map to your need: >
-    :call rapidFormatComments()
-    :nnoremap <leader>Q :call rapidFormatComments()<CR>
-
-This function may not be overly useful, but since it's there I will not delete
-it.
-
-Set |g:rapidAutoComment| to continue a comment automatically after hitting
-i_<CR> , |o| or |O| on a comment line.
-
-
-
-Index: |rapid-index|
-==============================================================================
-                        *rapid-known-bugs*  
-Are these really bugs? If your programs and/or frame variables do get proper
-names, everything works fine. See below.
-
-
-Index: |rapid-index|
-                        *rapid-indent-bugs*
-Known bugs in |rapid-indent|:
----------------------------
-1. If a subroutine is named so that it starts with a keyword that will
-    decrease the level of indention, then the call is indeted accordingly.
-    You can fix this quickly by hitting i_CTRL-F while still in |insert| mode 
-    after you finished the complete call, or use i_CTRL-P or i_CTRL-N before 
-    the keyword is complete which causes the indention.
-
-    Keywords that decrease the level of indention are: 
-    end*, else, elseif, undo and error.
-
-    Example: If a subroutine is called ErrorHandling; you must either type:
-    ErrorHandling;^F
-    or:
-    Erro^P
-    The latter only works if the name already exist anywhere in the
-    files you have in buffer.
-
-    Once the call ErrorHandling; is fully present and you are back in
-    |Normal| mode you can use |=| to fix the indention.
-
-    Another work around: Give your PROCs, FUNCs and TRAPs proper names ;)
-
-
-
-Index: |rapid-index|
-
 vim:tw=78:ts=4:et:sw=4:ft=help:norl:
