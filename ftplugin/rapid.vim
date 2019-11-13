@@ -347,6 +347,10 @@ if !exists("*s:KnopVerboseEcho()")
         execute "silent bwipeout! " . l:b["bufnr"]
       endif
     endfor
+    augroup RapidCleanBufferList
+      " work around where buffer list is not cleaned if knopVerbose is enabled
+      autocmd!
+    augroup END
   endfunction " <SID>RapidCleanBufferList()
 
   function s:RapidCurrentWordIs()
@@ -677,6 +681,11 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:RapidSearchUserDefined()
 
   function <SID>RapidGoDefinition()
+    augroup RapidCleanBufferList
+      " work around where buffer list is not cleaned if knopVerbose is enabled
+      autocmd!
+      autocmd CursorMoved * call <SID>RapidCleanBufferList()
+    augroup END
     "
     let l:declPrefix = '\c\v^\s*(local\s+|task\s+|global\s+)?(var|pers|const|alias)\s+\w+\s+'
     "
@@ -997,6 +1006,11 @@ if !exists("*s:KnopVerboseEcho()")
   " List Def/Usage {{{
 
   function <SID>RapidListDefinition()
+    augroup RapidCleanBufferList
+      " work around where buffer list is not cleaned if knopVerbose is enabled
+      autocmd!
+      autocmd CursorMoved * call <SID>RapidCleanBufferList()
+    augroup END
     " list defs in qf
     if s:KnopSearchPathForPatternNTimes('\v\c^\s*(global\s+|task\s+|local\s+)?(proc|func|trap|record|module)>','%','','rapid')==0
       if getqflist()==[] | return | endif
@@ -1030,6 +1044,11 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " <SID>RapidListDefinition()
 
   function <SID>RapidListUsage()
+    augroup RapidCleanBufferList
+      " work around where buffer list is not cleaned if knopVerbose is enabled
+      autocmd!
+      autocmd CursorMoved * call <SID>RapidCleanBufferList()
+    augroup END
     "
     if search('\w','cW',line("."))
       let l:currentWord = s:RapidCurrentWordIs()
