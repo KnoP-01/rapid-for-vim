@@ -836,6 +836,7 @@ if !exists("*s:KnopVerboseEcho()")
     " indent
     if exists("b:did_indent")
       if l:start>0 && l:end>l:start
+        execute l:start.','.l:end."substitute/^/ /"
         execute "silent normal! " . (l:end-l:start+1) . "=="
       endif
     endif
@@ -874,6 +875,7 @@ if !exists("*s:KnopVerboseEcho()")
     let l:start = search(a:sType,'bW')
     if exists("b:did_indent")
       if l:start>0 && l:end>l:start
+        execute l:start.','.l:end."substitute/^/ /"
         execute "silent normal! " . (l:end-l:start+1) . "=="
       endif
     endif
@@ -925,9 +927,9 @@ if !exists("*s:KnopVerboseEcho()")
     "
   endfunction " <SID>RapidAutoForm()
 
-  " }}} Auto Form 
+  " }}} Auto Form
 
-  " List Def/Usage {{{ 
+  " List Def/Usage {{{
 
   function <SID>RapidListDefinition()
     " list defs in qf
