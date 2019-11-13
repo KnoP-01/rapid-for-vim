@@ -170,10 +170,10 @@ any questions.
 
 [1]: https://github.com/KnoP-01/rapid-for-vim/releases/latest
 [2]: https://github.com/KnoP-01/rapid-for-vim#tldr
-[3]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L154
+[3]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L177
 [4]: https://www.vim.org/scripts/script.php?script_id=5348
 [5]: https://github.com/KnoP-01/rapid-for-vim/issues
-[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L171
+[6]: https://github.com/KnoP-01/rapid-for-vim/blob/master/doc/rapid.txt#L195
 [7]: https://www.vim.org/scripts/script.php?script_id=3695
 [8]: https://www.vim.org/scripts/script.php?script_id=39
 [9]: https://new.abb.com/products/robotics/industrial-robots
