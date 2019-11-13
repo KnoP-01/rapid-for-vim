@@ -607,7 +607,7 @@ if !exists("*s:KnopVerboseEcho()")
       "
     endif
     "
-    call s:KnopVerboseEcho("rapid go definition failed",1)
+    call s:KnopVerboseEcho("Nothing found.",1)
     return -1
   endfunction " s:RapidSearchUserDefined()
 
@@ -1170,7 +1170,7 @@ endif " get(g:,'rapidConcealStructs',1)
 " Match It {{{
 
 " matchit support
-if exists("loaded_matchit")
+if exists("loaded_matchit") " depends on matchit (or matchup)
   let b:match_words = '^\s*\<if\>[^!]\+\<then\>.*:^\s*\<elseif\>[^!]\+\<then\>.*:^\s*\<else\>.*:^\s*\<endif\>.*,'
          \.'^\s*\<for\>[^!]\+\<do\>.*:^\s*\<endfor\>.*,'
          \.'^\s*\<while\>[^!]\+\<do\>.*:^\s*\<endwhile\>.*,'
@@ -1345,8 +1345,8 @@ if get(g:,'rapidConcealStructKeyMap',0)
 elseif get(g:,'rapidConcealStructsKeyMap',0)
   " deprecated
   " compatiblity
-  nmap <silent><buffer> <F2> <plug>RapidConcealStructs
   nmap <silent><buffer> <F3> <plug>RapidShowStructs
+  nmap <silent><buffer> <F2> <plug>RapidConcealStructs
 endif
 
 " }}} Configurable mappings
