@@ -138,47 +138,30 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction
 
   function s:KnopAddFileToCompleteOption(file,pathList,...)
-"    echo " "
-"    echo "  attempt to add \nl:file = >" . a:file . "< at"
     let l:file=a:file
     for l:path in a:pathList
       let l:path = substitute(l:path,'[\\/]\*\*$','','')
-"      echo "l:path = >".l:path."<"
       if l:path != ''
         if filereadable(l:path.'/'.l:file)!=''
           let l:f = s:KnopFnameescape4Path(l:path.'/'.l:file)
-"          echo "file readable"
-"          echo '  setlocal complete+=k'.l:f
           call s:knopCompleteEnbMsg()
-          if exists("g:knopCompleteMsg2")
-            call s:KnopVerboseEcho(l:f)
-          endif
+          if exists("g:knopCompleteMsg2")|call s:KnopVerboseEcho(l:f)|endif
           execute 'setlocal complete+=k'.l:f
           return
         else
-"          echo "  Not found"
         endif
       else
-"        echo "  Ignored"
       endif
     endfor
     if exists('a:1')
       let l:f = a:1
-"      echo ""
-"      echo "search for file in same dir as current file"
-"      echo "try " l:f
       if filereadable(l:f)!=''
         let l:f = s:KnopFnameescape4Path(a:1)
-"        echo "file readable"
-"        echo '  setlocal complete+=k'.l:f
         call s:knopCompleteEnbMsg()
-        if exists("g:knopCompleteMsg2")
-          call s:KnopVerboseEcho(l:f)
-        endif
+        if exists("g:knopCompleteMsg2")|call s:KnopVerboseEcho(l:f)|endif
         execute 'setlocal complete+=k'.l:f
         return
       else
-"        echo "  Not found"
       endif
     endif
   endfunction " s:KnopAddFileToCompleteOption()
@@ -1222,40 +1205,44 @@ endif " get(g:,'rapidPath',1)
 
 " complete option
 if get(g:,'rapidComplete',1)
+  "
   let s:pathList = s:KnopSplitAndUnescapeCommaSeparatedPathStr(&path)
   let s:pathToCurrentFile = substitute(expand("%:p:h"),'\\','/','g')
+  "
   " EIO.cfg
   call s:KnopAddFileToCompleteOption('EIO.cfg',s:pathList,s:pathToCurrentFile.'/'.'EIO.cfg')
   " TASK1/SYSMOD/user.sys
   call s:KnopAddFileToCompleteOption('TASK1/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
   " TASK2/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK2/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK2/SYSMOD/user.sys',s:pathList)
   " TASK3/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK3/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK3/SYSMOD/user.sys',s:pathList)
   " TASK4/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK4/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK4/SYSMOD/user.sys',s:pathList)
   " TASK5/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK5/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK5/SYSMOD/user.sys',s:pathList)
   " TASK6/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK6/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK6/SYSMOD/user.sys',s:pathList)
   " TASK7/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK7/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK7/SYSMOD/user.sys',s:pathList)
+  "
+  " user custom files
   if exists('g:rapidCompleteAdditions')
     for s:customCompleteAdditions in g:rapidCompleteAdditions
-"      echo "\n\n~~~ CUSTOM ~~~"
-"      echo "\n\ns:customCompleteAdditions >" . s:customCompleteAdditions . '<'
       let s:file = substitute(s:customCompleteAdditions,'^.*[\\/]\(\w\+\.\)\(src\|sub\|dat\)$','\1\2','')
-"      echo 's:File >' . s:file . "<\n\n"
       call s:KnopAddFileToCompleteOption(s:customCompleteAdditions,s:pathList,s:pathToCurrentFile.'/'.s:file,)
-"      echo "~~~ CUSTOM ~~~\n\n"
     endfor
   endif
+  "
   " syntax file
-  call s:KnopAddFileToCompleteOption('syntax/rapid.vim',split(&rtp,'\\\@1<!,'))
-  if exists("g:knopCompleteMsg2")
-    unlet g:knopCompleteMsg2
-  endif
- let b:undo_ftplugin = b:undo_ftplugin." cpt<"
+  let s:pathList=[]
+  for s:i in split(&rtp,'\\\@1<!,')
+    call add(s:pathList,substitute(s:i,'\\','/','g')) 
+  endfor
+  call s:KnopAddFileToCompleteOption('syntax/rapid.vim',s:pathList)
+  if exists("g:knopCompleteMsg2")|unlet g:knopCompleteMsg2|endif
+  "
+  let b:undo_ftplugin = b:undo_ftplugin." cpt<"
 endif " get(g:,'rapidComplete',1)
 
 " conceal structure values (for MoveJ * v2500,z100...)
