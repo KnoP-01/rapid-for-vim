@@ -237,8 +237,8 @@ Also see these options for alternative <PLUG> mappings.
 |g:rapidPath|               Disable 'path' setting
 
 *rapid-complete-options*
-|g:rapidComplete|           Disable 'complete' setting
-|g:rapidCompleteAdditions|  Add custom files to 'complete' setting
+|g:rapidCompleteStd|        Disable standard 'complete' setting
+|g:rapidCompleteCustom|     Enable custom 'complete' setting
 
 *rapid-auto-correct-cfg*
 |g:rapidAutoCorrCfgLineEnd| Auto correct mixed unix/dos line endings in *.cfg
@@ -431,7 +431,7 @@ Alternativ <plug> mapping: >
     augroup END
 
 A succesful search for a file local declaration jumps there right away. Get
-back where you were with |''|. A succesful search for a global declaration
+back where you were with |CTRL-O|. A succesful search for a global declaration
 opens the |quickfix-window|. 
 
 Works best with `:syntax on` and both |g:rapidPath| omitted.
@@ -600,17 +600,17 @@ Can't remember if the name of that signal was `diGrp1_Opn` or `diGripper1Open`?
 No problem! Just insert `diG` and hit |i_CTRL-P| or |i_CTRL-N|. 
 
 rapid-complete adds the `EIO.cfg` and `user.sys` file to 'complete' as {dict}.
-You may add your own files, see |g:rapidCompleteAdditions|.
+You may add your own files, see |g:rapidCompleteCustom|.
 The syntax file will also be added, so you can complete known Raid functions
 and keywords.
 
 ==============================================================================
-                        *g:rapidComplete*
-g:rapidComplete:
-----------------
+                        *g:rapidCompleteStd*
+g:rapidCompleteStd:
+-------------------
 
 Disables the modification of 'complete': >
-    let g:rapidComplete = 0
+    let g:rapidCompleteStd = 0
 
 If omitted or set to 1 rapid-for-vim will attempt to add the following files 
 to 'complete' as {dict}. >
@@ -625,14 +625,12 @@ Enable |g:rapidVerbose| to see what files are actually added.
 
 
 Index: |rapid-index|
-                        *g:rapidCompleteAdditions*
-g:rapidCompleteAdditions:
--------------------------
-
-Note: This feature depend on |g:rapidComplete| ommited or set to 1.
+                        *g:rapidCompleteCustom*
+g:rapidCompleteCustom:
+----------------------
 
 Add custom files to 'complete': >
-    let g:rapidCompleteAdditions = [
+    let g:rapidCompleteCustom = [
       \'TASK1/PROGMOD/advR1_MainMod.mod',
       \'TASK1/SYSMOD/DAI_System_R1.sys', 
       \'TASK1/SYSMOD/DAI_IntertaskDefinitions.sys', 

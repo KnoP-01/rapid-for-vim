@@ -1203,11 +1203,20 @@ if get(g:,'rapidPath',1)
 
 endif " get(g:,'rapidPath',1)
 
-" complete option
-if get(g:,'rapidComplete',1)
-  "
-  let s:pathList = s:KnopSplitAndUnescapeCommaSeparatedPathStr(&path)
-  let s:pathToCurrentFile = substitute(expand("%:p:h"),'\\','/','g')
+" complete
+let s:pathList = s:KnopSplitAndUnescapeCommaSeparatedPathStr(&path)
+let s:pathToCurrentFile = substitute(expand("%:p:h"),'\\','/','g')
+"
+" complete custom files
+if exists('g:rapidCompleteCustom')
+  for s:customCompleteAdditions in g:rapidCompleteCustom
+    let s:file = substitute(s:customCompleteAdditions,'^.*[\\/]\(\w\+\.\)\(src\|sub\|dat\)$','\1\2','')
+    call s:KnopAddFileToCompleteOption(s:customCompleteAdditions,s:pathList,s:pathToCurrentFile.'/'.s:file,)
+  endfor
+endif
+"
+" complete standard files
+if get(g:,'rapidCompleteStd',1)
   "
   " EIO.cfg
   call s:KnopAddFileToCompleteOption('EIO.cfg',s:pathList,s:pathToCurrentFile.'/'.'EIO.cfg')
@@ -1226,14 +1235,6 @@ if get(g:,'rapidComplete',1)
   " TASK7/SYSMOD/user.sys
   call s:KnopAddFileToCompleteOption('TASK7/SYSMOD/user.sys',s:pathList)
   "
-  " user custom files
-  if exists('g:rapidCompleteAdditions')
-    for s:customCompleteAdditions in g:rapidCompleteAdditions
-      let s:file = substitute(s:customCompleteAdditions,'^.*[\\/]\(\w\+\.\)\(src\|sub\|dat\)$','\1\2','')
-      call s:KnopAddFileToCompleteOption(s:customCompleteAdditions,s:pathList,s:pathToCurrentFile.'/'.s:file,)
-    endfor
-  endif
-  "
   " syntax file
   let s:pathList=[]
   for s:i in split(&rtp,'\\\@1<!,')
@@ -1243,7 +1244,9 @@ if get(g:,'rapidComplete',1)
   if exists("g:knopCompleteMsg2")|unlet g:knopCompleteMsg2|endif
   "
   let b:undo_ftplugin = b:undo_ftplugin." cpt<"
-endif " get(g:,'rapidComplete',1)
+endif " get(g:,'rapidCompleteStd',1)
+unlet s:pathList
+unlet s:pathToCurrentFile
 
 " conceal structure values (for MoveJ * v2500,z100...)
 if get(g:,'rapidConcealStructs',1)
