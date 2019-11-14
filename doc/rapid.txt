@@ -176,7 +176,6 @@ A: `:let g:knopVerbose=1` any time.
 
 ==============================================================================
                         *rapid* *rapid-index* *rapid-for-vim*
-==============================================================================
 
 |rapid-Introduction|
     |rapid-tl:dr|     Short overview
@@ -199,7 +198,6 @@ Set or reset options in your .vimrc. Except |g:rapidCommentIndent| and
 |g:knopVerbose| changeing a rapid option during an editing session will 
 have no effect.
 
-==============================================================================
 
 *rapid-key-mappings*
 Also see these options for alternative <PLUG> mappings.
@@ -250,7 +248,6 @@ Also see these options for alternative <PLUG> mappings.
 Index: |rapid-index|
 ==============================================================================
                         *rapid-highlighting*
-==============================================================================
                         *g:rapidShowError*
 g:rapidShowError:
 -----------------
@@ -303,7 +300,6 @@ colorscheme tortus or tortusless which makes use of these groups:
 Index: |rapid-index|
 ==============================================================================
                         *rapid-indent*
-==============================================================================
                         *g:rapidSpaceIndent*
 g:rapidSpaceIndent:
 -------------------
@@ -347,7 +343,6 @@ This option may be changed any time and will take effect immediately.
 Index: |rapid-index|
 ==============================================================================
                         *rapid-concealing*
-==============================================================================
                         *g:rapidConcealStructs* 
 g:rapidConcealStructs:
 ----------------------
@@ -412,7 +407,6 @@ You may instruct rapid-for-vim not to change 'path' if you reset |g:rapidPath|.
 'suffixes' and 'suffixesadd' get their values unconditionally. 
 
 Index: |rapid-index|
-==============================================================================
                         *g:rapidGoDefinitionKeyMap*   *<Plug>RapidGoDef*
 g:rapidGoDefinitionKeyMap:
 --------------------------
@@ -604,10 +598,12 @@ You may add your own files, see |g:rapidCompleteCustom|.
 The syntax file will also be added, so you can complete known Raid functions
 and keywords.
 
-==============================================================================
                         *g:rapidCompleteStd*
 g:rapidCompleteStd:
 -------------------
+
+Note that if you work below a path with special characters (one of `{}[]) in
+it this feature may not work.
 
 Disables the modification of 'complete': >
     let g:rapidCompleteStd = 0
@@ -628,6 +624,9 @@ Index: |rapid-index|
                         *g:rapidCompleteCustom*
 g:rapidCompleteCustom:
 ----------------------
+
+Note that if you work below a path with special characters (one of `{}[]) in
+it this feature may not work.
 
 Add custom files to 'complete': >
     let g:rapidCompleteCustom = [
@@ -653,7 +652,6 @@ If omitted or set to 0 no custom files get added to complete.
 Index: |rapid-index|
 ==============================================================================
                         *rapid-debug*  
-==============================================================================
                         *g:rapidVerbose*
 g:rapidVerbose:
 ---------------
@@ -675,7 +673,6 @@ Index: |rapid-index|
 rapid-for-vim text objects work similar as other Vim |text-objects|.
 They can be used in |Visual|- and |Operator-pending|-mode, see |operator|. 
 
-==============================================================================
                   *g:rapidFunctionTextObject* *<plug>RapidTxtObjInnerFunc*
                                             *<plug>RapidTxtObjAroundFuncExclCo*
                                             *<plug>RapidTxtObjAroundFuncInclCo*
@@ -742,7 +739,6 @@ correct this unless: >
 Index: |rapid-index|
 ==============================================================================
                         *rapid-formatting-comments*
-==============================================================================
                         *g:rapidAutoComment*
 g:rapidAutoComment:
 -------------------
@@ -790,7 +786,6 @@ insertion is finished and may be used for further customization: >
     augroup END
 
 Index: |rapid-index|
-==============================================================================
                         *g:rapidAutoFormKeyMap*
 g:rapidAutoFormKeyMap:
 ----------------------
