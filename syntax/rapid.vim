@@ -335,9 +335,6 @@ else
     " a string containing a single \ which is not a char code
     syn match rapidError1 contained containedin=rapidString /\c\v[^\\]\zs\\\ze[^\\0-9]/
     "
-  " more or less common misspellings. unnecessary. if misspelled they will not get their regular highlighting
-    " syn match rapidError3 /\c\v^\s*\zs(esle>|endfi>|ednif>|ednwhile>|ednfor>)/
-    "
     " WaitUntil a==b ok
     "            ||
     syn match rapidError4 /\c\v%(^\s*%(return|waituntil)>[^!\\]+[^!<>])@<=%(\=|:)\=/
