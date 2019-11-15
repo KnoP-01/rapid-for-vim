@@ -107,7 +107,7 @@ A: Disable stuff in your |vimrc|, see |rapid-options| for details: >
 Q: Which keys get mapped to what? Will that override my own mappings?  
 A: rapid-for-vim will not override existing mappings unless the corresponding
    option is explicitly set. To use different key bindings use the
-   <PLUG>mapping. Otherwise rapid-for-vim create the followin mappings: >
+   <Plug> mapping. Otherwise rapid-for-vim create the followin mappings: >
 
     <F2> Show all structure values
     <F3> Show structure values at cursorline
@@ -178,8 +178,9 @@ A: `:let g:knopVerbose=1` any time.
                         *rapid* *rapid-index* *rapid-for-vim*
 
 |rapid-Introduction|
+    If you don't know what to read, READ rapid-tl:dr ~
     |rapid-tl:dr|     Short overview
-|rapid-options|       List of all options and <plug> mappings
+|rapid-options|       List of all options and <Plug> mappings
 |rapid-highlighting|
 |rapid-indent|
 |rapid-conceal|
@@ -198,9 +199,14 @@ Set or reset options in your .vimrc. Except |g:rapidCommentIndent| and
 |g:knopVerbose| changeing a rapid option during an editing session will 
 have no effect.
 
+Most features are enabled by default. Unless a mapping doesn't work as
+expected, a mapping should be redefined or you want do get rid of some 
+annoying feature there is no need to put any option in your .vimrc.
+Exceptions may be |g:rapidCompleteCustom| and |g:rapidPathToBodyFiles|.
+
 
 *rapid-key-mappings*
-Also see these options for alternative <PLUG> mappings.
+Also see these options for alternative <Plug> mappings.
 |g:rapidConcealStructKeyMap| `<F2>`-`<F4>` chang concealing of structure values
 |g:rapidGoDefinitionKeyMap|  `gd` to see declaration of word under cursor
 |g:rapidListUsageKeyMap|     `<leader>u` lists all appearances of current word
@@ -376,7 +382,7 @@ Note: These mappings depend on |g:rapidConcealStructs| >= 1 or omitted.
 To force these mappings if your F-Keys are already mapped: >
     let g:rapidConcealStructKeyMap = 1
 
-Alternativ <plug> mapping: >
+Alternativ <Plug> mapping: >
   augroup RapidConcealStructs
   au!
   au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidConcealStructs
@@ -418,7 +424,7 @@ Note: This mapping overshadows the default Vim command |gd|.
 To force this mapping off and make Vims default available: >
     let g:rapidGoDefinitionKeyMap = 0
 
-Alternativ <plug> mapping: >
+Alternativ <Plug> mapping: >
     augroup RapidGoDefMapping
     au!
     au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidGoDef
@@ -442,7 +448,7 @@ g:rapidListUsageKeyMap:
 To force this mapping if `<leader>u` is already mapped: >
     let g:rapidListUsageKeyMap = 1
 
-Alternativ <plug> mapping: >
+Alternativ <Plug> mapping: >
     augroup RapidListUseMapping
     au!
     au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidListUse
@@ -459,7 +465,7 @@ g:rapidListDefKeyMap:
 To force this mapping if `<leader>f` is already mapped: >
     let g:rapidListDefKeyMap = 1
 
-Alternativ <plug> mapping: >
+Alternativ <Plug> mapping: >
     augroup RapidListDefMapping
     au!
     au FileType rapid nmap <silent><buffer> ANYKEY <Plug>RapidListDef
@@ -635,7 +641,8 @@ Add custom files to 'complete': >
       \'TASK1/SYSMOD/DAI_IntertaskDefinitions.sys', 
       \'ApplSys/ROB1/BE_User.sys']
 
-Make sure to use forward slashes (`/`) as path separator, also on Windows!
+Note: Make sure to use forward slashes (`/`) as path separator, also on
+Windows!
 
 You should add the path relative to `RAPID/`. `HOME/`, `CS/` etc. Even if you 
 put all the files you edit are in the same directory, they will be found. You 
@@ -673,9 +680,9 @@ Index: |rapid-index|
 rapid-for-vim text objects work similar as other Vim |text-objects|.
 They can be used in |Visual|- and |Operator-pending|-mode, see |operator|. 
 
-                  *g:rapidFunctionTextObject* *<plug>RapidTxtObjInnerFunc*
-                                            *<plug>RapidTxtObjAroundFuncExclCo*
-                                            *<plug>RapidTxtObjAroundFuncInclCo*
+                  *g:rapidFunctionTextObject* *<Plug>RapidTxtObjInnerFunc*
+                                            *<Plug>RapidTxtObjAroundFuncExclCo*
+                                            *<Plug>RapidTxtObjAroundFuncInclCo*
 g:rapidFunctionTextObject:
 --------------------------
 
@@ -689,7 +696,7 @@ Note: These text objects depend on |g:rapidMoveAroundKeyMap| = 1 or omitted.
 To force these text objects if `if`, `af` and/or `aF` is already mapped: >
     let g:rapidFunctionTextObject = 1
 
-Alternativ <plug> mappings: >
+Alternativ <Plug> mappings: >
   augroup RapidFuncTextObj
   au!
   au FileType rapid xmap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundFuncInclCo
@@ -702,8 +709,8 @@ Alternativ <plug> mappings: >
 
 
 Index: |rapid-index|
-                    *g:rapidCommentTextObject*  *<plug>RapidTxtObjInnerComment*
-                                              *<plug>RapidTxtObjAroundComment*
+                    *g:rapidCommentTextObject*  *<Plug>RapidTxtObjInnerComment*
+                                              *<Plug>RapidTxtObjAroundComment*
 g:rapidCommentTextObject:
 -------------------------
 
@@ -715,7 +722,7 @@ Note: These text objects depend on |g:rapidMoveAroundKeyMap| = 1 or omitted.
 To force these text objects if `ic` and/or `ac` is already mapped: >
     let g:rapidCommentTextObject = 1
 
-Alternativ <plug> mappings: >
+Alternativ <Plug> mappings: >
     augroup RapidCommentTextObj
     au!
     au FileType rapid xmap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundComment
@@ -858,7 +865,7 @@ Note: Mappings marked with * will have a little delay until they trigger.
   `<leader>ngfw`   New Global FUNC of type Wobjdata
 
                         *<Plug>RapidAutoForm*
-Alternativ <plug> mappings: >
+Alternativ <Plug> mappings: >
   augroup RapidAutoFormMapping
   au!
   au FileType rapid nmap <silent><buffer> KEY01 <Plug>RapidAutoForm
