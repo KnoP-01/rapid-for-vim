@@ -179,11 +179,11 @@ A: `:let g:knopVerbose=1` any time.
 
 |rapid-Introduction|
     If you don't know what to read, READ rapid-tl:dr ~
-    |rapid-tl:dr|     Short overview
+    |rapid-tl:dr|     Short overview.
 |rapid-options|       List of all options and <Plug> mappings
 |rapid-highlighting|
 |rapid-indent|
-|rapid-conceal|
+|rapid-concealing|
 |rapid-jump-quickly|
     |rapid-matchit-support|
     |rapid-text-objects|
