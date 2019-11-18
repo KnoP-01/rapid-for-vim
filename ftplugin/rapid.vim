@@ -1220,8 +1220,10 @@ if get(g:,'rapidCompleteStd',1)
   "
   " EIO.cfg
   call s:KnopAddFileToCompleteOption('EIO.cfg',s:pathList,s:pathToCurrentFile.'/'.'EIO.cfg')
+  " TASK0/SYSMOD/user.sys
+  call s:KnopAddFileToCompleteOption('TASK0/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
   " TASK1/SYSMOD/user.sys
-  call s:KnopAddFileToCompleteOption('TASK1/SYSMOD/user.sys',s:pathList,s:pathToCurrentFile.'/'.'user.sys')
+  call s:KnopAddFileToCompleteOption('TASK1/SYSMOD/user.sys',s:pathList)
   " TASK2/SYSMOD/user.sys
   call s:KnopAddFileToCompleteOption('TASK2/SYSMOD/user.sys',s:pathList)
   " TASK3/SYSMOD/user.sys
