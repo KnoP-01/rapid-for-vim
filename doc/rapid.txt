@@ -59,7 +59,7 @@ Index: |rapid-index|
 ==============================================================================
                         *rapid-Introduction*
 
-**READ |tl:dr| FIRST** if you want more than just syntax highlight and 
+**READ |rapid-FAQ| FIRST** if you want more than just syntax highlight and 
 automatic indenting. It is a quick overview over the most important options and
 mappings provided by Rapid for Vim.
 
@@ -86,7 +86,7 @@ Some features need the case insensitive file system to work properly.
 
 Index: |rapid-index|
 ==============================================================================
-                        *rapid-tl:dr*
+                        *rapid-FAQ*
 Short description:
 ------------------
 Q: Since version 2.0.0 everything's weird. How so?  
@@ -178,8 +178,8 @@ A: `:let g:knopVerbose=1` any time.
                         *rapid* *rapid-index* *rapid-for-vim*
 
 |rapid-Introduction|
-    If you don't know what to read, READ rapid-tl:dr ~
-    |rapid-tl:dr|     Short overview.
+    If you don't know what to read, READ rapid-FAQ ~
+    |rapid-FAQ|       Short overview.
 |rapid-options|       List of all options and <Plug> mappings
 |rapid-highlighting|
 |rapid-indent|
