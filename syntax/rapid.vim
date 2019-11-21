@@ -68,7 +68,7 @@ if bufname("%") =~ '\c\.cfg$'
 
   " Constant values
   " Boolean
-  syn keyword rapidBoolean TRUE FALSE Edge High Low
+  syn keyword rapidBoolean True False Edge High Low
   highlight default link rapidBoolean Boolean
   " Float (num)
   syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
@@ -101,10 +101,10 @@ else
 "
   " Comment
   " TODO Comment
-  syn match rapidTodoComment contained /\<todo\>\|\<fixme\>\|\<xxx\>/
+  syn match rapidTodoComment contained /\<TODO\>\|\<FIXME\>\|\<XXX\>/
   highlight default link rapidTodoComment Todo
   " Debug comment
-  syn match rapidDebugComment contained /\<debug\>/
+  syn match rapidDebugComment contained /\<DEBUG\>/
   highlight default link rapidDebugComment Debug
   " Line comment
   syn match rapidComment /!.*$/ contains=rapidTodoComment,rapidDebugComment
@@ -118,7 +118,7 @@ else
 
 " Operator {{{
 " Boolean operator
-  syn keyword rapidOperator and or xor not Div Mod
+  syn keyword rapidOperator and or xor not div mod
 " Arithmetic and Compare operator
   syn match rapidOperator /[-+*/<>:=]/
   highlight default link rapidOperator Operator
@@ -177,7 +177,7 @@ else
 
 " Constant values {{{
   " Boolean
-  syn keyword rapidBoolean TRUE FALSE Edge High Low
+  syn keyword rapidBoolean True False Edge High Low
   highlight default link rapidBoolean Boolean
   " Float (num)
   syn match rapidFloat /\v\W@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
@@ -194,15 +194,15 @@ else
   " syn keyword rapidStatement
   " highlight default link rapidStatement Statement
   " Conditional
-  syn keyword rapidConditional IF THEN ELSEIF ELSE ENDIF TEST CASE DEFAULT ENDTEST
+  syn keyword rapidConditional if then elseif else endif test case default endtest
   highlight default link rapidConditional Conditional
   " Repeat
   syn keyword rapidRepeat DO
   syn match rapidRepeat /\c\v^\s*%(<while>|<for>)%([^!]+<do>)@=/
-  syn keyword rapidRepeat FROM TO STEP ENDFOR ENDWHILE
+  syn keyword rapidRepeat from to step endfor endwhile
   highlight default link rapidRepeat Repeat
   " Label
-  syn keyword rapidLabel GOTO
+  syn keyword rapidLabel goto
   syn match rapidLabel /\c\v^\s*\a\w*\:\ze%([^=]|$)/ contains=rapidConditional,rapidOperator
   highlight default link rapidLabel Label
   " Keyword
@@ -237,7 +237,7 @@ else
   syn keyword rapidKeyword CapAPTrSetup CapCondSetDO CapEquiDist CapLATrSetup CapNoProcess CapRefresh CapWeaveSync ICap InitSuperv IPathPos RemoveSuperv SetupSuperv 
   highlight default link rapidKeyword Keyword
   " Exception
-  syn keyword rapidException EXIT ErrRaise ExitCycle RAISE RaiseToUser RETRY RETURN TRYNEXT
+  syn keyword rapidException Exit ErrRaise ExitCycle Raise RaiseToUser Retry Return TryNext
   syn match rapidException /^\s*Stop\s*[\\;]/me=e-1
   highlight default link rapidException Exception
 " }}} Statements, keywords et al
@@ -319,8 +319,6 @@ else
 " Function {{{
   syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<(proc|module)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
   highlight default link rapidFunction Function
-  " call by var: %"product"+NumToStr(nProductNumber)%;
-  " call by var: if bBool %stString%;
   syn match rapidCallByVar /%\ze[^%]/
   highlight default link rapidCallByVar Function
 " }}} Function
