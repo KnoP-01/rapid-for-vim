@@ -87,15 +87,23 @@ if !exists("*s:KnopVerboseEcho()")
   endif
   if exists('g:knopVerboseMsg')
     unlet g:knopVerboseMsg
-    echo "\nSwitch verbose messages off with \":let g:knopVerbose=0\" any time. You may put this in your .vimrc"
-    echo " "
+    echomsg "Switch verbose messages off with \":let g:knopVerbose=0\" any time. You may put this in your .vimrc"
   endif
   function s:KnopVerboseEcho(msg, ...)
     if get(g:,'knopVerbose',0)
-      echo a:msg
+      if type(a:msg) == v:t_list
+        let l:msg = a:msg
+      elseif type(a:msg) == v:t_string
+        let l:msg = split(a:msg, "\n")
+      else
+        return
+      endif
+      for l:i in l:msg
+        echomsg l:i
+      endfor
       if exists('a:1')
         " for some reason I don't understand this has to be present twice
-        call input("Hit enter> ") 
+        call input("Hit enter> ")
         call input("Hit enter> ")
       endif
     endif
