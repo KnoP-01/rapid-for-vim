@@ -599,7 +599,7 @@ Index: |rapid-index|
 Can't remember if the name of that signal was `diGrp1_Opn` or `diGripper1Open`?
 No problem! Just insert `diG` and hit |i_CTRL-P| or |i_CTRL-N|. 
 
-rapid-complete adds the `EIO.cfg` and `user.sys` file to 'complete' as {dict}.
+rapid-complete adds the `EIO.cfg` and `user.sys` files to 'complete' as {dict}.
 You may add your own files, see |g:rapidCompleteCustom|.
 The syntax file will also be added, so you can complete known Raid functions
 and keywords.
@@ -700,11 +700,11 @@ Alternativ <Plug> mappings: >
   augroup RapidFuncTextObj
   au!
   au FileType rapid xmap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundFuncInclCo
-  au FileType rapid omap <silent><buffer> KEY2 <Plug>RapidTxtObjAroundFuncInclCo
-  au FileType rapid xmap <silent><buffer> KEY3 <Plug>RapidTxtObjAroundFuncExclCo
-  au FileType rapid omap <silent><buffer> KEY4 <Plug>RapidTxtObjAroundFuncExclCo
-  au FileType rapid xmap <silent><buffer> KEY5 <Plug>RapidTxtObjInnerFunc
-  au FileType rapid omap <silent><buffer> KEY6 <Plug>RapidTxtObjInnerFunc
+  au FileType rapid omap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundFuncInclCo
+  au FileType rapid xmap <silent><buffer> KEY2 <Plug>RapidTxtObjAroundFuncExclCo
+  au FileType rapid omap <silent><buffer> KEY2 <Plug>RapidTxtObjAroundFuncExclCo
+  au FileType rapid xmap <silent><buffer> KEY3 <Plug>RapidTxtObjInnerFunc
+  au FileType rapid omap <silent><buffer> KEY3 <Plug>RapidTxtObjInnerFunc
   augroup END
 
 
@@ -726,9 +726,9 @@ Alternativ <Plug> mappings: >
     augroup RapidCommentTextObj
     au!
     au FileType rapid xmap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundComment
-    au FileType rapid omap <silent><buffer> KEY2 <Plug>RapidTxtObjAroundComment
-    au FileType rapid xmap <silent><buffer> KEY3 <Plug>RapidTxtObjInnerComment
-    au FileType rapid omap <silent><buffer> KEY4 <Plug>RapidTxtObjInnerComment
+    au FileType rapid omap <silent><buffer> KEY1 <Plug>RapidTxtObjAroundComment
+    au FileType rapid xmap <silent><buffer> KEY2 <Plug>RapidTxtObjInnerComment
+    au FileType rapid omap <silent><buffer> KEY2 <Plug>RapidTxtObjInnerComment
     augroup END
 
 
