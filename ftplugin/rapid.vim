@@ -1110,6 +1110,7 @@ if !exists("*s:KnopVerboseEcho()")
         silent normal ][
       endif
       silent normal [[
+      silent normal! zz
       if a:inner==1
         silent normal! j
       elseif a:withcomment==1
