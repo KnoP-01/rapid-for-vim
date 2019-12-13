@@ -1,8 +1,8 @@
 " ABB Rapid Command file type detection for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 1.0.5
-" Last Change: 24. June 2016
+" Version: 2.0.0
+" Last Change: 11. Apr 2019
 " Credits:
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -25,7 +25,7 @@ augroup END
 if !exists("*<SID>RapidAutoCorrCfgLineEnding()")
   function <SID>RapidAutoCorrCfgLineEnding()
     setf rapid
-    if exists("g:rapidAutoCorrCfgLineEnd") && g:rapidAutoCorrCfgLineEnd==1
+    if get(g:,'rapidAutoCorrCfgLineEnd',1)
       silent! %s/\r//
       normal ``
     endif
