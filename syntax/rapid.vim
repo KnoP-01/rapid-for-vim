@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.0.2
-" Last Change: 13.11.2019
+" Last Change: 15. Jan 2020
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -323,6 +323,12 @@ else
   highlight default link rapidCallByVar Function
 " }}} Function
 
+" ERRNO Constants {{{
+  " syn match rapidErrNo /ERR_\w\+/
+  syn keyword rapidErrNo ERRNO
+  highlight default link rapidErrNo Sysvars
+" }}} ERRNO Constants
+
 " Error {{{
   if get(g:,'rapidShowError',1)
     " some more or less common typos
@@ -335,21 +341,21 @@ else
     "
     " WaitUntil a==b ok
     "            ||
-    syn match rapidError4 /\c\v%(^\s*%(return|waituntil)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    syn match rapidError4 /\c\v%(^\s*%(Return|WaitUntil)>[^!\\]+[^!<>])@<=%(\=|:)\=/
     syn match rapidError5 /\c\v%(^\s*if>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!]*then/
     syn match rapidError6 /\c\v%(^\s*while>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!]*do/
     "
     " WaitUntil a=>b ok
     "            ||
-    syn match rapidError7 /\c\v%(^\s*%(return|waituntil|if|while)>[^!]+[^!<>])@<=\=[><]/
+    syn match rapidError7 /\c\v%(^\s*%(Return|WaitUntil|if|while)>[^!]+[^!<>])@<=\=[><]/
     "
     " WaitUntil a><b ok
     "           ||
-    syn match rapidError8 /\c\v%(^\s*%(return|waituntil|if|while)[^!]+)@<=\>\s*\</
+    syn match rapidError8 /\c\v%(^\s*%(Return|WaitUntil|if|while)[^!]+)@<=\>\s*\</
     "
     " if (a==5) (b==6) ok
     "         |||
-    syn match rapidError9 /\c\v%(^\s*%(return|wait\s+for|if|while)[^!]+[^!])@<=\)\s*\(/
+    syn match rapidError9 /\c\v%(^\s*%(Return|WaitUntil|if|while)[^!]+[^!])@<=\)\s*\(/
     "
     " a == b + 1 ok
     "   ||
