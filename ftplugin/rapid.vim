@@ -1,8 +1,8 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.1.1
-" Last Change: 13.11.2019
+" Version: 2.1.2
+" Last Change: 16. Jan 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -272,6 +272,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:KnopOpenQf()
 
   function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax)
+    call setqflist([])
     try
       execute ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
     catch /^Vim\%((\a\+)\)\=:E303/
@@ -941,6 +942,7 @@ if !exists("*s:KnopVerboseEcho()")
     if exists("b:did_indent")
       if l:start>0 && l:end>l:start
         execute l:start.','.l:end."substitute/^/ /"
+        call search(a:sType,'bW')
         execute "silent normal! " . (l:end-l:start+1) . "=="
       endif
     endif
