@@ -119,7 +119,7 @@ else
 " Operator {{{
 " Boolean operator
   syn keyword rapidOperator and or xor not div mod
-" Arithmetic and Compare operator
+" Arithmetic and compare operator
   syn match rapidOperator /[-+*/<>:=]/
   highlight default link rapidOperator Operator
 " }}} Operator
@@ -179,6 +179,8 @@ else
 " Delimiter {{{
   syn match rapidDelimiter /[\\(){},;|\[\]]/
   highlight default link rapidDelimiter Delimiter
+  " ? (conditional argument) gets a special color
+  syn match rapidLabel /?/
 " }}} Delimiter
 
 " Constant values {{{
@@ -499,11 +501,13 @@ else
   syn keyword rapidConstant GAP_SERVICE_TYPE GAP_SETUP_TYPE GAP_STATE_IDLE GAP_STATE_PART GAP_STATE_SERV GAP_STATE_SETUP GAP_STATE_UNKN GAP_TASK_NAME GAP_TASK_NO GAP_SHOW_ALWAYS GAP_SHOW_NEVER GAP_SHOW_SAFE GAP_SHOW_SERVICE
   syn keyword rapidConstant EOF EOF_BIN EOF_NUM
   syn keyword rapidConstant END_OF_LIST WAIT_MAX
-  highlight default link rapidConstant Sysvars
   syn keyword rapidErrNo ERRNO
-  highlight default link rapidErrNo Sysvars
   syn keyword rapidIntNo INTNO
-  highlight default link rapidIntNo Sysvars
+  if g:rapidGroupName
+    highlight default link rapidConstant Sysvars
+    highlight default link rapidErrNo Sysvars
+    highlight default link rapidIntNo Sysvars
+  endif
 " }}} ERRNO Constants
 
 " Error {{{
