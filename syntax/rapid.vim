@@ -92,6 +92,13 @@ if bufname("%") =~ '\c\.cfg$'
   syn match rapidException /CFG\ze_/
   highlight default link rapidException Exception
   " ---
+
+  " Error
+  if get(g:,'rapidShowError',1)
+    syn match rapidError11 /-Name "[^"]\{33,}"/
+    highlight default link rapidError11 Error
+  endif
+  " ---
 else
 " }}} highlighting for *.cfg
 
