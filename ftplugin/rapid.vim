@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.1.2
-" Last Change: 16. Jan 2020
+" Last Change: 10. Feb 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -319,8 +319,8 @@ if !exists("*s:KnopVerboseEcho()")
       let l:rapidTmpFile = substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
     endif
     let l:b = {}
-    for l:b in getbufinfo()
-      " delete temp file buffer
+    for l:b in getbufinfo({'buflisted':1})
+      " unlist temp file buffer
       if exists("g:knopTmpFile")
             \&& l:b["name"] =~ l:knopTmpFile . '$'
             \&& !l:b["hidden"]
