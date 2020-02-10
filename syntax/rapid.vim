@@ -545,12 +545,6 @@ else
     " "for" missing "from"
     syn match rapidError10 /\c\v^\s*for\s+%(\w[0-9a-zA-Z_.{}]*\s+from)@!\S+\s+\S+/
     "
-    " this one is tricky. Make sure this does not match trigger instructions
-    " a = b and c or (int1=int2)
-    "                     |
-    " syn match rapidError /\c\v(^\s*\$?[^=;]+\s*\=[^=;][^;]+[^;<>=])@<=\=[^=]/
-    " syn match rapidError /\c\v^\s*(trigger\swhen\s)@<!(\$?[^=;]+\s*\=[^=;][^;]+[^;<>=])@<=\=[^=]/
-    "
     highlight default link rapidError0 Error
     highlight default link rapidError1 Error
     highlight default link rapidError2 Error
