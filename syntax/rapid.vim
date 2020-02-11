@@ -1,8 +1,8 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.0.3
-" Last Change: 23. Jan 2020
+" Version: 2.1.0
+" Last Change: 11. Feb 2020
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -95,8 +95,10 @@ if bufname("%") =~ '\c\.cfg$'
 
   " Error
   if get(g:,'rapidShowError',1)
-    syn match rapidError11 /-Name "[^"]\{33,}"/
+    syn match rapidError11 /[^"]\{80}\zs[^"]\+/ containedin=rapidString
     highlight default link rapidError11 Error
+    syn match rapidError12 /-Name "[^"]\{33,}"/
+    highlight default link rapidError12 Error
   endif
   " ---
 else
@@ -552,6 +554,9 @@ else
     " "for" missing "from"
     syn match rapidError10 /\c\v^\s*for\s+%(\w[0-9a-zA-Z_.{}]*\s+from)@!\S+\s+\S+/
     "
+    " string too long
+    syn match rapidError11 /[^"]\{80}\zs[^"]\+/ containedin=rapidString
+    "
     highlight default link rapidError0 Error
     highlight default link rapidError1 Error
     highlight default link rapidError2 Error
@@ -563,6 +568,7 @@ else
     highlight default link rapidError8 Error
     highlight default link rapidError9 Error
     highlight default link rapidError10 Error
+    highlight default link rapidError11 Error
   endif
 " }}} Error
 
