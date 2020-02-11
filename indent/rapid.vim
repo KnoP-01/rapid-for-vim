@@ -166,8 +166,8 @@ function s:RapidLoneParen(lnum,lchar)
     while s:i < s:len
       let s:i = stridx(s:line, "!", s:i)
       if s:i >= 0
-        if synIDattr(synID(a:lnum,s:i+1,0),"name") == "rapidString"
-              \||synIDattr(synID(a:lnum,s:i+1,0),"name") == "rapidConcealableString"
+        if        synIDattr(synID(a:lnum,s:i+1,0),"name") == "rapidString"
+              \|| synIDattr(synID(a:lnum,s:i+1,0),"name") == "rapidConcealableString"
           " ! is part of string
           let s:i += 1 " continue search for !
         else
@@ -195,7 +195,8 @@ function s:RapidLoneParen(lnum,lchar)
     let s:i = stridx(s:line, s:opnParChar, s:i)
     if s:i >= 0 && s:i <= s:len
       " brakets that are part of a strings or comment are ignored
-      if synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
+      if        synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
+            \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
             \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment"
         let s:opnParen += 1
       endif
@@ -211,7 +212,8 @@ function s:RapidLoneParen(lnum,lchar)
     let s:i = stridx(s:line, s:clsParChar, s:i)
     if s:i >= 0 && s:i <= s:len
       " brakets that are part of a strings or comment are ignored
-      if synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
+      if        synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
+            \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
             \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment"
         let s:clsParen += 1
       endif
