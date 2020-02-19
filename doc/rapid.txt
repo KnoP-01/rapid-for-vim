@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 13. Nov 2019
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 14. Feb 2020
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -207,11 +207,11 @@ Exceptions may be |g:rapidCompleteCustom| and |g:rapidPathToBodyFiles|.
 
 *rapid-key-mappings*
 Also see these options for alternative <Plug> mappings.
-|g:rapidConcealStructKeyMap| `<F2>`-`<F4>` chang concealing of structure values
+|g:rapidConcealStructKeyMap| `<F2>` - `<F4>` change concealing of structure values
 |g:rapidGoDefinitionKeyMap|  `gd` to see declaration of word under cursor
 |g:rapidListUsageKeyMap|     `<leader>u` lists all appearances of current word
 |g:rapidListDefKeyMap|       `<leader>f` lists PROC/TRAP/... of current file
-|g:rapidMoveAroundKeyMap|    `[[`, ]]` ... jumps around PROC/TRAP/...
+|g:rapidMoveAroundKeyMap|    `[[`, `]]` ... jumps around PROC/TRAP/...
 |g:rapidFunctionTextObject|  `if`, `af` and `aF` def/deffct text objects
 |g:rapidCommentTextObject|   `ic` and `ac` comment text objects
 |g:rapidAutoFormKeyMap|      `<leader>n` inserts body for PROC/TRAP/...
