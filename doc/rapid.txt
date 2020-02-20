@@ -70,8 +70,8 @@ It provides
 * syntax highlighting,
 * indenting,
 * concealing of structure values (e.g. MoveJ \* v2500...),
-* support for commentary [vimscript #3695], matchit [vimscript #39] and
-  matchup [vimscript #5624],
+* support for commentary [vimscript #3695], matchit [vimscript #39],
+  matchup [vimscript #5624] and endwise [vimscript #2386],
 * mappings and settings to navigate through code in a backup folder structure,
 * text objects for functions and
 * completion of words from known or custom global files like EIO.cfg,
