@@ -660,8 +660,8 @@ Index: |rapid-index|
 ==============================================================================
                         *rapid-debug*  
                         *g:rapidVerbose*
-g:rapidVerbose:
----------------
+g:knopVerbose:
+--------------
 
 Note: `g:rapidVerbose` is synonym for `g:knopVerbose`. Use the g:knop* variable!
 
