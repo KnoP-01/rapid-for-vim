@@ -1306,7 +1306,7 @@ if exists("loaded_endwise")
     let b:endwise_addition  = '\=submatch(0)=~"case" ? "endtest" : "end" . submatch(0)'
   endif
   let b:endwise_words     = 'proc,func,trap,record,then,do,:'
-  let b:endwise_pattern   = '^\s*\(local\s\+\)\?\zs\(proc\|func\|trap\|\(local\s\+\)\?record\|if\|while\|for\|case\)\>\ze'
+  let b:endwise_pattern   = '^\s*\(local\s\+\)\?\zs\(proc\|func\|trap\|record\|if\|while\|for\|case\)\>\ze'
   let b:endwise_syngroups = 'rapidTypeDef,rapidRepeat,rapidConditional'
 endif
 
