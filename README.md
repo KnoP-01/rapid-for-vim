@@ -13,8 +13,8 @@ It provides
 * syntax highlighting,
 * indenting,
 * concealing of structure values (e.g. MoveJ \* v2500...),
-* support for commentary [vimscript #3695][7], matchit [vimscript #39][8] and
-  matchup [vimscript #5624][11],
+* support for commentary [vimscript #3695][7], matchit [vimscript #39][8], 
+  matchup [vimscript #5624][11] and endwise [vimscript #2386][12],
 * mappings and settings to navigate through code in a backup folder structure,
 * text objects for functions and
 * completion of words from known or custom global files like EIO.cfg,
@@ -179,3 +179,4 @@ any questions.
 [9]: https://new.abb.com/products/robotics/industrial-robots
 [10]: https://www.vim.org/
 [11]: https://www.vim.org/scripts/script.php?script_id=5624
+[12]: https://github.com/tpope/vim-endwise

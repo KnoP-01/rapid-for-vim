@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.1.3
-" Last Change: 11. Feb 2020
+" Last Change: 20. Feb 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1295,6 +1295,18 @@ if get(g:,'rapidConcealStructs',1)
 endif " get(g:,'rapidConcealStructs',1)
 
 " }}} Vim Settings
+
+" Endwise (tpope) {{{
+
+" endwise support
+if exists("loaded_endwise")
+  let b:endwise_addition = '\=submatch(0)=~"case" ? "endtest" : "end" . submatch(0)'
+  let b:endwise_words = 'proc,func,trap,record,then,do,:'
+  let b:endwise_pattern = '^\s*\zs\(proc\|func\|trap\|record\|if\|while\|for\|case\)\>\ze'
+  let b:endwise_syngroups = 'rapidTypeDef,rapidRepeat,rapidConditional'
+endif
+
+" }}} Endwise
 
 " Match It {{{
 
