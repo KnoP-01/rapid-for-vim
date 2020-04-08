@@ -107,8 +107,6 @@ else
 " highlighting for *.mod, *.sys and *.prg
 
 " Comment {{{ 
-"
-  " Comment
   " TODO Comment
   syn match rapidTodoComment contained /\<TODO\>\|\<FIXME\>\|\<XXX\>/
   highlight default link rapidTodoComment Todo
@@ -126,10 +124,12 @@ else
 " }}} Header
 
 " Operator {{{
-" Boolean operator
+  " Boolean operator
   syn keyword rapidOperator and or xor not div mod
-" Arithmetic and compare operator
+  " Arithmetic and compare operator
   syn match rapidOperator /[-+*/<>:=]/
+  " conditional argument
+  syn match rapidOperator /?/
   highlight default link rapidOperator Operator
 " }}} Operator
 
@@ -137,9 +137,8 @@ else
   " anytype (preceded by 'alias|pers|var|const|func'
   " TODO: still missing are userdefined types which are part of a parameter:
   " proc message( mystring msMessagePart1{},
-  "               mystring msMessagePart2{},  
-  "               mystring msMsg3{} 
-  "               \ mystring msMsg4{})
+  "               \ myvar msMsg4{})
+  " TODO testing. Problem: does not highlight any type if it's part of an argument list
   " syn match rapidAnyType /\v^\s*(global\s+|task\s+|local\s+)?(alias|pers|var|const|func)\s+\w+>/ contains=rapidStorageClass,rapidType,rapidTypeDef
   " highlight default link rapidAnyType Type
   syn keyword rapidType aiotrigg bool btnres busstate buttondata byte
@@ -188,8 +187,6 @@ else
 " Delimiter {{{
   syn match rapidDelimiter /[\\(){},;|\[\]]/
   highlight default link rapidDelimiter Delimiter
-  " ? (conditional argument) gets a special color
-  syn match rapidLabel /?/
 " }}} Delimiter
 
 " Constant values {{{
