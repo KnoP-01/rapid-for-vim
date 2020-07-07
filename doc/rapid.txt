@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 20. Feb 2020
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 10. Jun 2020
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -121,7 +121,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Disable override existing mapping and Vim's default with
         let g:rapidGoDefinitionKeyMap = 0
 
-    <leader>u List all significant appearances of word under cursor.
+    <leader>u List all significant references of word under cursor.
             Override existing mapping with
         let g:rapidListUsageKeyMap = 1
 
@@ -209,7 +209,7 @@ Exceptions may be |g:rapidCompleteCustom| and |g:rapidPathToBodyFiles|.
 Also see these options for alternative <Plug> mappings.
 |g:rapidConcealStructKeyMap| `<F2>` - `<F4>` change concealing of structure values
 |g:rapidGoDefinitionKeyMap|  `gd` to see declaration of word under cursor
-|g:rapidListUsageKeyMap|     `<leader>u` lists all appearances of current word
+|g:rapidListUsageKeyMap|     `<leader>u` lists all references of current word
 |g:rapidListDefKeyMap|       `<leader>f` lists PROC/TRAP/... of current file
 |g:rapidMoveAroundKeyMap|    `[[`, `]]` ... jumps around PROC/TRAP/...
 |g:rapidFunctionTextObject|  `if`, `af` and `aF` def/deffct text objects
@@ -445,7 +445,7 @@ Index: |rapid-index|
 g:rapidListUsageKeyMap:
 -----------------------
 
-    `<leader>u`: List all appearances, outside of enum declarations and comments 
+    `<leader>u`: List all references, outside of enum declarations and comments 
                  of the word under the cursor in the |quickfix-window|.
 
 To force this mapping if `<leader>u` is already mapped: >

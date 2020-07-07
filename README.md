@@ -108,7 +108,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Disable override existing mapping and Vim's default with
         let g:rapidGoDefinitionKeyMap = 0
 
-    <leader>u List all significant appearances of word under cursor.
+    <leader>u List all significant references of word under cursor.
             Override existing mapping with
         let g:rapidListUsageKeyMap = 1
 
