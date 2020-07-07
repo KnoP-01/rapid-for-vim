@@ -498,6 +498,8 @@ else
   syn keyword rapidConstant PW_EQUIP_ERR
   " Bulls Eye
   syn keyword rapidConstant BESuccess BENoOverwrite BENoNameMatch BENoBEDataMod BEArrayFull BEToolNotFound BEInvalidSignal BEAliasSet BERangeLimFail BERangeSingFail BERangeTiltFail BEScanPlaneErr BEBFrameNotRead BEScanRadZero BEHeightSrchErr BEBeamNotFound BEBeamSpinErr BESrchErrInBeam BESrchErrNoDet BENumOfScansErr BEDiaZeroOrLess BESliceCountErr BEGetNewTcpMax BEBeamOriFail BEGetTcpDelErr BERefPosSetErr BERefToolSetErr BERefBeamSetErr BEBFrameDefErr BESetupAlready BERefResetErr BESetupFailed BEToolNotSet BEStartChanged BEBeamMoveErr BECheckTcp BECheckErr BESkipUpdate BEStrtningErr BEAllNotSet BEQuikRefNotDef BEConvergErr BEInstFwdErr BEGetGantryErr BEUnknownErr
+  " Continuous Application Platform constants
+  syn keyword rapidConstant CAP_START START_PRE PRE_STARTED START_MAIN MAIN_STARTED STOP_WEAVESTART WEAVESTART_REGAIN MOTION_DELAY STARTSPEED_TIME MAIN_MOTION MOVE_STARTED RESTART NEW_INSTR AT_POINT AT_RESTARTPOINT LAST_SEGMENT PROCESS_END_POINT END_MAIN MAIN_ENDED PATH_END_POINT PROCESS_ENDED END_POST1 POST1_ENDED END_POST2 POST2_ENDED CAP_STOP CAP_PF_RESTART EQUIDIST AT_ERRORPOINT FLY_START FLY_END LAST_INSTR_ENDED END_PRE PRE_ENDED START_POST1 POST1_STARTED START_POST2 POST2_STARTED 
   " Machine Tending grppos 
   syn keyword rapidConstant gsOpen gsVacuumOff gsBackward gsClose gsVacuumOn gsForward gsReset
   " Machine Tending grpaction
