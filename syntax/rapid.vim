@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.2
-" Last Change: 26. Jun 2020
+" Last Change: 08. Jul 2020
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -63,50 +63,73 @@ endif
 syn case ignore
 " }}} init
 
-" {{{ highlighting for *.cfg
+" common highlighting {{{
+
+" Error {{{
+if get(g:,'rapidShowError',1)
+  "
+  " This error must be defined befor rapidCharCode and rapidEscapedBackSlash
+  " a string containing a single \ which is not a char code
+  syn match rapidErrorSingleBackslash /\\/ contained
+  highlight default link rapidErrorSingleBackslash Error
+  "
+endif
+" }}} Error
+
+" Constant values {{{
+" Boolean
+syn keyword rapidBoolean True False Edge High Low
+highlight default link rapidBoolean Boolean
+" Float (num)
+syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
+highlight default link rapidFloat Float
+" String. Note: Don't rename group rapidString. Indent depend on this
+syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ contains=rapidCharCode,rapidEscapedBackSlash,rapidStringDoubleQuote,rapidErrorSingleBackslash,rapidErrorStringTooLong
+highlight default link rapidString String
+" two adjacent "" in string for one double quote
+syn match rapidStringDoubleQuote /""/ contained
+highlight default link rapidStringDoubleQuote SpecialChar
+" character code in string
+syn match rapidCharCode /\\\x\x/ contained
+highlight default link rapidCharCode SpecialChar
+" escaped \ in string
+syn match rapidEscapedBackSlash /\\\\/ contained
+highlight default link rapidEscapedBackSlash SpecialChar
+" }}} Constant values
+
+" }}} common highlighting
+
 if bufname("%") =~ '\c\.cfg$'
+" {{{ highlighting for *.cfg
 
-  " Constant values
-  " Boolean
-  syn keyword rapidBoolean True False Edge High Low
-  highlight default link rapidBoolean Boolean
-  " Float (num)
-  syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
-  highlight default link rapidFloat Float
-  " character code in string
-  syn match rapidCharCode /[^\\]\zs\\\d\{1,3}/ contained
-  highlight default link rapidCharCode SpecialChar
-  " String. Note: Don't rename group rapidString. Indent depend on this
-  syn region rapidString start=/"/ end=/"/ contains=rapidCharCode
-  highlight default link rapidString String
-  " ---
-
-  " special chars
+  " special chars {{{
   syn match rapidOperator /:\|[+-]\|\*\|\/\|\\/
   syn match rapidOperator /^#/
   highlight default link rapidOperator Operator
-  " ---
+  " }}} special chars
 
-  " sections
+  " sections {{{
   syn match rapidException /^\w\+/
   syn match rapidException /CFG\ze_/
   highlight default link rapidException Exception
-  " ---
+  " }}} sections
 
-  " Error
+  " Error {{{
   if get(g:,'rapidShowError',1)
-    syn match rapidError11 /[^"]\{80}\zs[^"]\+/ containedin=rapidString
-    highlight default link rapidError11 Error
-    syn match rapidError12 /-Name "[^"]\{33,}"/
-    highlight default link rapidError12 Error
+    "
+    " This error must be defined after rapidString
+    " Any Name longer than 32 chars
+    syn match rapidErrorNameTooLong /-Name "[^"]\{33,}"/
+    highlight default link rapidErrorNameTooLong Error
+    "
   endif
-  " ---
+  " }}} Error
+
+  " }}} highlighting for *.cfg
 else
-" }}} highlighting for *.cfg
+  " highlighting for *.mod, *.sys and *.prg {{{
 
-" highlighting for *.mod, *.sys and *.prg
-
-" Comment {{{ 
+  " Comment {{{ 
   " TODO Comment
   syn match rapidTodoComment contained /\<TODO\>\|\<FIXME\>\|\<XXX\>/
   highlight default link rapidTodoComment Todo
@@ -116,14 +139,14 @@ else
   " Line comment
   syn match rapidComment /!.*$/ contains=rapidTodoComment,rapidDebugComment
   highlight default link rapidComment Comment
-" }}} Comment 
+  " }}} Comment 
 
-" Header {{{
+  " Header {{{
   syn match rapidHeader /^%%%/
   highlight default link rapidHeader PreProc
-" }}} Header
+  " }}} Header
 
-" Operator {{{
+  " Operator {{{
   " Boolean operator
   syn keyword rapidOperator and or xor not div mod
   " Arithmetic and compare operator
@@ -131,9 +154,9 @@ else
   " conditional argument
   syn match rapidOperator /?/
   highlight default link rapidOperator Operator
-" }}} Operator
+  " }}} Operator
 
-" Type, StorageClass and Typedef {{{
+  " Type, StorageClass and Typedef {{{
   " anytype (preceded by 'alias|pers|var|const|func'
   " TODO: still missing are userdefined types which are part of a parameter:
   " proc message( mystring msMessagePart1{},
@@ -182,29 +205,14 @@ else
   " structures or strorage classes
   syn keyword rapidTypeDef MODULE ENDMODULE PROC ERROR UNDO BACKWARD ENDPROC RECORD ENDRECORD TRAP ENDTRAP FUNC ENDFUNC
   highlight default link rapidTypeDef TypeDef
-" }}} Type, StorageClass and Typedef
+  " }}} Type, StorageClass and Typedef
 
-" Delimiter {{{
+  " Delimiter {{{
   syn match rapidDelimiter /[\\(){},;|\[\]]/
   highlight default link rapidDelimiter Delimiter
-" }}} Delimiter
+  " }}} Delimiter
 
-" Constant values {{{
-  " Boolean
-  syn keyword rapidBoolean True False Edge High Low
-  highlight default link rapidBoolean Boolean
-  " Float (num)
-  syn match rapidFloat /\v\W@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
-  highlight default link rapidFloat Float
-  " String. Note: Don't rename group rapidString. Indent depend on this
-  syn region rapidString start=/"/ end=/"/ contains=rapidCharCode
-  highlight default link rapidString String
-  " character code in string
-  syn match rapidCharCode /[^\\]\zs\\\d\{1,3}/ contained
-  highlight default link rapidCharCode SpecialChar
-" }}} Constant values
-
-" Statements, keywords et al {{{
+  " Statements, keywords et al {{{
   " syn keyword rapidStatement
   " highlight default link rapidStatement Statement
   " Conditional
@@ -262,9 +270,9 @@ else
   syn keyword rapidException Exit ErrRaise ExitCycle Raise RaiseToUser Retry Return TryNext
   syn match rapidException /^\s*Stop\s*[\\;]/me=e-1
   highlight default link rapidException Exception
-" }}} Statements, keywords et al
+  " }}} Statements, keywords et al
 
-" special keyword for move command {{{
+  " special keyword for move command {{{
   " arc instructions
   syn keyword rapidMovement ArcC ArcC1 ArcC2 ArcCEnd ArcC1End ArcC2End ArcCStart ArcC1Start ArcC2Start 
   syn keyword rapidMovement ArcL ArcL1 ArcL2 ArcLEnd ArcL1End ArcL2End ArcLStart ArcL1Start ArcL2Start ArcMoveExtJ 
@@ -296,18 +304,18 @@ else
   else
     highlight default link rapidMovement Special
   endif
-" }}} special keyword for move command 
+  " }}} special keyword for move command 
 
-" Structure value {{{
+  " Structure value {{{
   syn match rapidNames /[a-zA-Z_][.a-zA-Z0-9_]*/
   " highlight default link rapidNames None
   " rapid structrure values. added to be able to conceal them
-  syn region rapidConcealableString start=/"/ end=/"/ contained contains=rapidCharCode conceal 
+  syn region rapidConcealableString start=/"/ end=/"/ contained contains=rapidCharCode,rapidEscapedBackSlash,rapidErrorSingleBackslash,rapidErrorStringTooLong  conceal 
   highlight default link rapidConcealableString String
   syn region rapidStructVal matchgroup=rapidDelimiter start=/\[/ end=/\]/ contains=ALLBUT,rapidString keepend extend conceal cchar=* 
-" }}} Structure value
+  " }}} Structure value
 
-" BuildInFunction {{{
+  " BuildInFunction {{{
   " dispense functions
   syn keyword rapidBuildInFunction contained GetSignal GetSignalDnum
   " Integrated Vision Platform functions
@@ -347,16 +355,16 @@ else
   else
     highlight default link rapidBuildInFunction Function
   endif
-" }}}
+  " }}}
 
-" Function {{{
+  " Function {{{
   syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<(proc|module)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
   highlight default link rapidFunction Function
   syn match rapidCallByVar /%\ze[^%]/
   highlight default link rapidCallByVar Function
-" }}} Function
+  " }}} Function
 
-" Rapid Constants {{{
+  " Rapid Constants {{{
   " standard rapid constants
   syn keyword rapidConstant pi stEmpty
   syn keyword rapidConstant STR_DIGIT STR_LOWER STR_UPPER STR_WHITE
@@ -519,63 +527,59 @@ else
     highlight default link rapidErrNo Sysvars
     highlight default link rapidIntNo Sysvars
   endif
-" }}} ERRNO Constants
+  " }}} ERRNO Constants
 
-" Error {{{
+  " Error {{{
   if get(g:,'rapidShowError',1)
-    " some more or less common typos
     "
     " vars or funcs >32 chars are not possible in rapid. a234567890123456789012345
-    syn match rapidError0 /\w\{33,}/ containedin=rapidFunction,rapidNames,rapidLabel
+    syn match rapidErrorIdentifierNameTooLong /\w\{33,}/ containedin=rapidFunction,rapidNames,rapidLabel
+    highlight default link rapidErrorIdentifierNameTooLong Error
     "
-    " a string containing a single \ which is not a char code
-    syn match rapidError1 contained containedin=rapidString /\c\v[^\\]\zs\\\ze[^\\0-9]/
+    " a == b + 1
+    syn match rapidErrorShouldBeColonEqual /\c\v%(^\s*%(%(global\s+|task\s+|local\s+)?%(var|pers|const)\s+\w+\s+)?\w+%(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
+    highlight default link rapidErrorShouldBeColonEqual Error
     "
-    " WaitUntil a==b ok
-    "            ||
-    syn match rapidError4 /\c\v%(^\s*%(Return|WaitUntil)>[^!\\]+[^!<>])@<=%(\=|:)\=/
-    syn match rapidError5 /\c\v%(^\s*if>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!]*then/
-    syn match rapidError6 /\c\v%(^\s*while>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!]*do/
+    " WaitUntil a==b
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(Return|WaitUntil|if|elseif|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    highlight default link rapidErrorShouldBeEqual Error
     "
-    " WaitUntil a=>b ok
-    "            ||
-    syn match rapidError7 /\c\v%(^\s*%(Return|WaitUntil|if|while)>[^!]+[^!<>])@<=\=[><]/
+    " WaitUntil a=>b
+    syn match rapidErrorShoudBeLessOrGreaterEqual /\c\v%(^\s*%(Return|WaitUntil|if|elseif|while)>[^!]+[^!<>])@<=\=[><]/
+    highlight default link rapidErrorShoudBeLessOrGreaterEqual Error
     "
-    " WaitUntil a><b ok
-    "           ||
-    syn match rapidError8 /\c\v%(^\s*%(Return|WaitUntil|if|while)[^!]+)@<=\>\s*\</
+    " WaitUntil a><b
+    syn match rapidErrorShouldBeLessGreater /\c\v%(^\s*%(Return|WaitUntil|if|elseif|while)[^!]+)@<=\>\s*\</
+    highlight default link rapidErrorShouldBeLessGreater Error
     "
-    " if (a==5) (b==6) ok
-    "         |||
-    syn match rapidError9 /\c\v%(^\s*%(Return|WaitUntil|if|while)[^!]+[^!])@<=\)\s*\(/
-    "
-    " a == b + 1 ok
-    "   ||
-    syn match rapidError0 /\c\v%(^\s*%(%(global\s+|task\s+|local\s+)?%(var|pers|const)\s+\w+\s+)?\w+%(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
+    " if (a==5) (b==6)
+    syn match rapidErrorMissingOperator /\c\v%(^\s*%(Return|WaitUntil|if|elseif|while)[^!]+[^!])@<=\)\s*\(/
+    highlight default link rapidErrorMissingOperator Error
     "
     " "for" missing "from"
-    syn match rapidError10 /\c\v^\s*for\s+%(\w[0-9a-zA-Z_.{}]*\s+from)@!\S+\s+\S+/
+    syn match rapidErrorMissingFrom /\c\v^\s*for\s+%(\w[0-9a-zA-Z_.{},*/+-]*\s+from)@!\S+\s+\S+/
+    highlight default link rapidErrorMissingFrom Error
     "
-    " string too long
-    syn match rapidError11 /[^"]\{80}\zs[^"]\+/ containedin=rapidString
     "
-    highlight default link rapidError0 Error
-    highlight default link rapidError1 Error
-    highlight default link rapidError2 Error
-    highlight default link rapidError3 Error
-    highlight default link rapidError4 Error
-    highlight default link rapidError5 Error
-    highlight default link rapidError6 Error
-    highlight default link rapidError7 Error
-    highlight default link rapidError8 Error
-    highlight default link rapidError9 Error
-    highlight default link rapidError10 Error
-    highlight default link rapidError11 Error
   endif
+  " }}} Error
+
+" }}}
+endif
+
+" common Error {{{
+if get(g:,'rapidShowError',1)
+  "
+  " This error must be defined after rapidString
+  " string too long
+  syn match rapidErrorStringTooLong /\v("[^"]{80})@81<=[^"]+\ze"/ contained
+  highlight default link rapidErrorStringTooLong Error
+  "
+endif
+
 " }}} Error
 
 " Finish {{{
-endif
 let &cpo = s:keepcpo
 unlet s:keepcpo
 
