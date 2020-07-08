@@ -1,8 +1,8 @@
 " ABB Rapid Command indent file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.0.1
-" Last Change: 11. Feb 2020
+" Version: 2.2.2
+" Last Change: 09. Jul 2020
 " Credits: Based on indent/vim.vim
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -90,31 +90,33 @@ function s:GetRapidIndentIntern()
               \|trap\s+\w
             \)
           \|[^!]*<then>\s*(!.*)?$
-          \|else\s*(!.*)?$
+          \|else>
           \|[^!]*<do>\s*(!.*)?$
-          \|[^!]*<case>[^!]+:
-          \|[^!"]*<default>\s*:
+          \|case>[^!]+:
+          \|default>\s*:
           \)'
         \)
   if l:i >= 0
     let l:ind += &sw
   endif
-  let l:i = match(l:preNoneBlankLine, '\c\v^\s*(backward|error|undo)\s*(!.*)?$')
+  let l:i = match(l:preNoneBlankLine, '\c\v^\s*(backward|error|undo)>')
   if l:i >= 0
     let l:ind += &sw
   endif
 
   " Subtract a 'shiftwidth'
   if l:currentLine =~ '\c\v^\s*
-            \(end(module|record|proc|func|trap|if|for|while|test)\s*(!.*)?$
-            \|[^!]*else\s*(!.*)?$
-            \|[^!]*elseif>(\W|$)
-            \|[^!]*<case>[^!]+:
-            \|[^!]*<default>\s*:
+        \(
+            \end(module|record|proc|func|trap)>
+            \|end(if|for|while|test)>
+            \|else>
+            \|elseif>
+            \|case>[^!]+:
+            \|default>\s*:
         \)'
     let l:ind -= &sw
   endif
-  if l:currentLine =~ '\c\v^\s*(backward|error|undo)\s*(!.*)?$'
+  if l:currentLine =~ '\c\v^\s*(backward|error|undo)>'
     let l:ind -= &sw
   endif
 
