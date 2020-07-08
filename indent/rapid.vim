@@ -137,16 +137,45 @@ function s:GetRapidIndentIntern()
   return l:ind
 endfunction
 
-function s:RapidLoneParen(lnum,lchar)
-  " init
+" Returns the length of the line until a:str is found outside a string or
+" comment. Search start at a:start
+" Note: rapidTodoComment and rapidDebugComment are not taken into account
+function s:RapidLenTilStr(lnum,str,start)
   let s:line = getline(a:lnum)
+
   let s:len = strlen(s:line)
-  if s:len == 0
-    return 0
-  endif
-  let s:opnParen = 0
-  let s:clsParen = 0
-  "
+  " if s:len >= 4096
+  "   return 4096 " line too long; ignored
+  " endif
+
+  let s:i = a:start
+  while s:i < s:len
+    let s:i = stridx(s:line, a:str, s:i)
+    if s:i >= 0
+          \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
+          \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
+          \&& (synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment" || a:str =~ '^!')
+      " a:str found outside string or line comment
+      return s:i
+    elseif s:i == a:start
+      " a:str found at search start 
+      return a:start
+    else
+      " a:str not found, return full length
+      return s:len
+    endif
+    " a:str is part of string or line comment
+    let s:i += 1 " continue search for a:str
+  endwhile
+
+  " a:str not found or a:start>=s:len, return full length
+  return s:len
+endfunction
+
+" a:lchar shoud be one of (, ), [, ], { or }
+" returns the number of opening/closing parenthesise which have no
+" closing/opening match in getline(a:lnum)
+function s:RapidLoneParen(lnum,lchar)
   if a:lchar == "(" || a:lchar == ")"
     let s:opnParChar = "("
     let s:clsParChar = ")"
@@ -160,37 +189,18 @@ function s:RapidLoneParen(lnum,lchar)
     return 0
   endif
 
-  " find first ! which is not part of a string
-  let s:i = stridx(s:line, "!", 0)
-  if s:i > 0
-    " ! found
-    let s:i = 0
-    while s:i < s:len
-      let s:i = stridx(s:line, "!", s:i)
-      if s:i >= 0
-        if        synIDattr(synID(a:lnum,s:i+1,0),"name") == "rapidString"
-              \|| synIDattr(synID(a:lnum,s:i+1,0),"name") == "rapidConcealableString"
-          " ! is part of string
-          let s:i += 1 " continue search for !
-        else
-          " ! is start of line comment
-          let s:len = s:i " len = start of line comment
-        endif
-      else
-        " no start of line comment found
-        let s:i = s:len " finish
-      endif
-    endwhile
-  elseif s:i == 0
-    " first char is !
-    return 0
-  endif
+  let s:line = getline(a:lnum)
 
-  " too long lines are ignored
-  if s:len > 4096
-    return 0
+  " look for the first ! which is not part of a string 
+  let s:len = s:RapidLenTilStr(a:lnum,"!",0)
+  if s:len == 0
+    return 0 " first char is !; ignored
   endif
+  " if s:len >= 4096
+  "   return 0 " line too long; ignored
+  " endif
 
+  let s:opnParen = 0
   " count opening brakets
   let s:i = 0
   while s:i < s:len
@@ -208,6 +218,7 @@ function s:RapidLoneParen(lnum,lchar)
     let s:i += 1
   endwhile
 
+  let s:clsParen = 0
   " count closing brakets
   let s:i = 0
   while s:i < s:len
@@ -234,8 +245,9 @@ function s:RapidLoneParen(lnum,lchar)
   return 0
 endfunction
 
+" This function works almost like prevnonblank() but handles %%%-headers and
+" comments like blank lines
 function s:RapidPreNoneBlank(lnum)
-  " this function handles &foo-headers and comments like blank lines
   let nPreNoneBlank = prevnonblank(a:lnum)
   " At the start of the file use zero indent.
   if nPreNoneBlank == 0
