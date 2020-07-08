@@ -541,7 +541,8 @@ else
     highlight default link rapidErrorShouldBeColonEqual Error
     "
     " WaitUntil a==b
-    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(Return|WaitUntil|if|elseif|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(Return|WaitUntil|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(if|elseif)>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!\\]+<then>/
     highlight default link rapidErrorShouldBeEqual Error
     "
     " WaitUntil a=>b
