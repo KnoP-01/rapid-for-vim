@@ -154,9 +154,11 @@ function s:RapidLenTilStr(lnum,str,start) abort
     if s:i < 0
       " a:str not found, return full length
       return s:len
-    elseif     synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
-          \&&  synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
-          \&& (synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment" || a:str =~ '^!')
+    endif
+    let s:synName = synIDattr(synID(a:lnum,s:i+1,0),"name")
+    if         s:synName != "rapidString"
+          \&&  s:synName != "rapidConcealableString"
+          \&& (s:synName != "rapidComment" || a:str =~ '^!')
       " a:str found outside string or line comment
       return s:i
     endif
