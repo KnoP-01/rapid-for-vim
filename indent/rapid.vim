@@ -63,7 +63,7 @@ function GetRapidIndent()
   endtry
 endfunction
 
-function s:GetRapidIndentIntern()
+function s:GetRapidIndentIntern() abort
   let l:currentLine = getline(v:lnum)
   if  l:currentLine =~ '^!' && !get(g:,'rapidCommentIndent',0)
     " if first char is ! line comment, do not change indent
@@ -137,10 +137,10 @@ function s:GetRapidIndentIntern()
   return l:ind
 endfunction
 
-" Returns the length of the line until a:str is found outside a string or
-" comment. Search start at a:start
+" Returns the length of the line until a:str occur outside a string or
+" comment. Search starts at a:start
 " Note: rapidTodoComment and rapidDebugComment are not taken into account
-function s:RapidLenTilStr(lnum,str,start)
+function s:RapidLenTilStr(lnum,str,start) abort
   let s:line = getline(a:lnum)
 
   let s:len = strlen(s:line)
@@ -151,18 +151,14 @@ function s:RapidLenTilStr(lnum,str,start)
   let s:i = a:start
   while s:i < s:len
     let s:i = stridx(s:line, a:str, s:i)
-    if s:i >= 0
-          \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
-          \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
+    if s:i < 0
+      " a:str not found, return full length
+      return s:len
+    elseif     synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
+          \&&  synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
           \&& (synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment" || a:str =~ '^!')
       " a:str found outside string or line comment
       return s:i
-    elseif s:i == a:start
-      " a:str found at search start 
-      return a:start
-    else
-      " a:str not found, return full length
-      return s:len
     endif
     " a:str is part of string or line comment
     let s:i += 1 " continue search for a:str
@@ -175,7 +171,7 @@ endfunction
 " a:lchar shoud be one of (, ), [, ], { or }
 " returns the number of opening/closing parenthesise which have no
 " closing/opening match in getline(a:lnum)
-function s:RapidLoneParen(lnum,lchar)
+function s:RapidLoneParen(lnum,lchar) abort
   if a:lchar == "(" || a:lchar == ")"
     let s:opnParChar = "("
     let s:clsParChar = ")"
@@ -247,7 +243,7 @@ endfunction
 
 " This function works almost like prevnonblank() but handles %%%-headers and
 " comments like blank lines
-function s:RapidPreNoneBlank(lnum)
+function s:RapidPreNoneBlank(lnum) abort
   let nPreNoneBlank = prevnonblank(a:lnum)
   " At the start of the file use zero indent.
   if nPreNoneBlank == 0
