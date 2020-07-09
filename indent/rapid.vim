@@ -200,16 +200,9 @@ function s:RapidLoneParen(lnum,lchar) abort
   " count opening brakets
   let s:i = 0
   while s:i < s:len
-    let s:i = stridx(s:line, s:opnParChar, s:i)
-    if s:i >= 0 && s:i <= s:len
-      " brakets that are part of a strings or comment are ignored
-      if        synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
-            \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
-            \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment"
-        let s:opnParen += 1
-      endif
-    else
-      let s:i = s:len
+    let s:i = s:RapidLenTilStr(a:lnum, s:opnParChar, s:i)
+    if s:i < s:len
+      let s:opnParen += 1
     endif
     let s:i += 1
   endwhile
@@ -218,16 +211,9 @@ function s:RapidLoneParen(lnum,lchar) abort
   " count closing brakets
   let s:i = 0
   while s:i < s:len
-    let s:i = stridx(s:line, s:clsParChar, s:i)
-    if s:i >= 0 && s:i <= s:len
-      " brakets that are part of a strings or comment are ignored
-      if        synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidString"
-            \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidConcealableString"
-            \&& synIDattr(synID(a:lnum,s:i+1,0),"name") != "rapidComment"
-        let s:clsParen += 1
-      endif
-    else
-      let s:i = s:len
+    let s:i = s:RapidLenTilStr(a:lnum, s:clsParChar, s:i)
+    if s:i < s:len
+      let s:clsParen += 1
     endif
     let s:i += 1
   endwhile
