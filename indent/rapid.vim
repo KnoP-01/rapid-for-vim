@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.2
-" Last Change: 09. Jul 2020
+" Last Change: 17. Jul 2020
 " Credits: Based on indent/vim.vim
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -23,7 +23,7 @@ if exists("g:rapidNoSpaceIndent")
 endif
 
 " Only load this indent file when no other was loaded.
-if exists("b:did_indent") || exists("g:rapidNoIndent") && g:rapidNoIndent==1
+if exists("b:did_indent") || get(g:,'rapidNoIndent',0)
   finish
 endif
 let b:did_indent = 1
@@ -36,8 +36,8 @@ setlocal indentkeys=!^F,o,O,0=~endmodule,0=~error,0=~undo,0=~backward,0=~endproc
 let b:undo_indent="setlocal lisp< si< ai< inde< indk<"
 
 if get(g:,'rapidSpaceIndent',1)
-  " use spaces for indention, 2 is enough, more or even tabs are looking awful
-  " on the teach pendant
+  " Use spaces for indention, 2 is enough. 
+  " More or even tabs wastes space on the teach pendant.
   setlocal softtabstop=2
   setlocal shiftwidth=2
   setlocal expandtab
@@ -64,64 +64,63 @@ function GetRapidIndent()
 endfunction
 
 function s:GetRapidIndentIntern() abort
-  let l:currentLine = getline(v:lnum)
+
+  let l:currentLineNum = v:lnum
+  let l:currentLine = getline(l:currentLineNum)
+
   if  l:currentLine =~ '^!' && !get(g:,'rapidCommentIndent',0)
-    " if first char is ! line comment, do not change indent
-    " this may be usefull if code did get commented out at the first column
+    " If current line is ! line comment, do not change indent
+    " This may be usefull if code is commented out at the first column.
     return 0
   endif
+
   " Find a non-blank line above the current line.
   let l:preNoneBlankLineNum = s:RapidPreNoneBlank(v:lnum - 1)
   if  l:preNoneBlankLineNum == 0
     " At the start of the file use zero indent.
     return 0
   endif
+
   let l:preNoneBlankLine = getline(l:preNoneBlankLineNum)
   let l:ind = indent(l:preNoneBlankLineNum)
 
-  " Add a 'shiftwidth'
-  let l:i = match(l:preNoneBlankLine, '\c\v^\s*
-          \(
-            \((local|task|global)\s+)?
-            \(module\s+\w
-              \|record\s+\w
-              \|proc\s+\w
-              \|func\s+\w
-              \|trap\s+\w
-            \)
-          \|[^!]*<then>\s*(!.*)?$
-          \|else>
-          \|[^!]*<do>\s*(!.*)?$
-          \|case>[^!]+:
-          \|default>\s*:
-          \)'
-        \)
-  if l:i >= 0
-    let l:ind += &sw
-  endif
-  let l:i = match(l:preNoneBlankLine, '\c\v^\s*(backward|error|undo)>')
-  if l:i >= 0
+  " Define add a 'shiftwidth' pattern
+  let l:addShiftwidthPattern  = '\c\v^\s*('
+  let l:addShiftwidthPattern .=           '((local|task)\s+)?(module|record|proc|func|trap)\s+\w'
+  let l:addShiftwidthPattern .=           '|(backward|error|undo)>'
+  let l:addShiftwidthPattern .=         ')'
+  "
+  " Define Subtract 'shiftwidth' pattern
+  let l:subtractShiftwidthPattern  = '\c\v^\s*('
+  let l:subtractShiftwidthPattern .=           'end(module|record|proc|func|trap)>'
+  let l:subtractShiftwidthPattern .=           '|(backward|error|undo)>'
+  let l:subtractShiftwidthPattern .=         ')'
+
+  " Add shiftwidth
+  if l:preNoneBlankLine =~ l:addShiftwidthPattern
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "then",     0)>0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "else",     0)>0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "do",       0)>0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "case",     0)>0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "default",  0)>0
     let l:ind += &sw
   endif
 
-  " Subtract a 'shiftwidth'
-  if l:currentLine =~ '\c\v^\s*
-        \(
-            \end(module|record|proc|func|trap)>
-            \|end(if|for|while|test)>
-            \|else>
-            \|elseif>
-            \|case>[^!]+:
-            \|default>\s*:
-        \)'
-    let l:ind -= &sw
-  endif
-  if l:currentLine =~ '\c\v^\s*(backward|error|undo)>'
-    let l:ind -= &sw
+  " Subtract shiftwidth
+  if l:currentLine =~ l:subtractShiftwidthPattern
+        \|| s:RapidLenTilStr(l:currentLineNum, "endif",     0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endfor",    0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endwhile",  0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endtest",   0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "else",      0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "elseif",    0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "case",      0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "default",   0)>0
+    let l:ind = l:ind - &sw
   endif
 
-  " first case after a test
-  if l:currentLine =~ '\c\v^\s*case>' && l:preNoneBlankLine =~ '\c\v^\s*test>'
+  " First case after a test gets the indent of the test.
+  if s:RapidLenTilStr(l:currentLineNum, "case", 0)>0 && s:RapidLenTilStr(l:preNoneBlankLineNum, "test", 0)>0
     let l:ind += &sw
   endif
 
@@ -138,36 +137,39 @@ function s:GetRapidIndentIntern() abort
 endfunction
 
 " Returns the length of the line until a:str occur outside a string or
-" comment. Search starts at a:start
-" Note: rapidTodoComment and rapidDebugComment are not taken into account
-function s:RapidLenTilStr(lnum,str,start) abort
-  let s:line = getline(a:lnum)
+" comment. Search starts at string index a:startIdx.
+" If a:str is a word also add word bounderies and case insesitivity.
+" Note: rapidTodoComment and rapidDebugComment are not taken into account.
+function s:RapidLenTilStr(lnum, str, startIdx) abort
 
-  let s:len = strlen(s:line)
-  " if s:len >= 4096
-  "   return 4096 " line too long; ignored
-  " endif
+  let l:line = getline(a:lnum)
+  let l:len  = strlen(l:line)
+  let l:idx  = a:startIdx
+  if a:str =~ '^\w\+$'
+    let l:str = '\c\<' . a:str . '\>'
+  else
+    let l:str = a:str
+  endif
 
-  let s:i = a:start
-  while s:i < s:len
-    let s:i = stridx(s:line, a:str, s:i)
-    if s:i < 0
-      " a:str not found, return full length
-      return s:len
+  while l:len > l:idx
+    let l:idx = match(l:line, l:str, l:idx)
+    if l:idx < 0
+      " a:str not found
+      return -1
     endif
-    let s:synName = synIDattr(synID(a:lnum,s:i+1,0),"name")
-    if         s:synName != "rapidString"
-          \&&  s:synName != "rapidConcealableString"
-          \&& (s:synName != "rapidComment" || a:str =~ '^!')
+    let l:synName = synIDattr(synID(a:lnum,l:idx+1,0),"name")
+    if         l:synName != "rapidString"
+          \&&  l:synName != "rapidConcealableString"
+          \&& (l:synName != "rapidComment" || l:str =~ '^!')
       " a:str found outside string or line comment
-      return s:i
+      return l:idx
     endif
     " a:str is part of string or line comment
-    let s:i += 1 " continue search for a:str
+    let l:idx += 1 " continue search for a:str
   endwhile
-
-  " a:str not found or a:start>=s:len, return full length
-  return s:len
+  
+  " a:str not found or l:len <= a:startIdx
+  return -1
 endfunction
 
 " a:lchar shoud be one of (, ), [, ], { or }
@@ -175,55 +177,52 @@ endfunction
 " closing/opening match in getline(a:lnum)
 function s:RapidLoneParen(lnum,lchar) abort
   if a:lchar == "(" || a:lchar == ")"
-    let s:opnParChar = "("
-    let s:clsParChar = ")"
+    let l:opnParChar = "("
+    let l:clsParChar = ")"
   elseif a:lchar == "[" || a:lchar == "]"
-    let s:opnParChar = "["
-    let s:clsParChar = "]"
+    let l:opnParChar = "["
+    let l:clsParChar = "]"
   elseif a:lchar == "{" || a:lchar == "}"
-    let s:opnParChar = "{"
-    let s:clsParChar = "}"
+    let l:opnParChar = "{"
+    let l:clsParChar = "}"
   else
     return 0
   endif
 
-  let s:line = getline(a:lnum)
+  let l:line = getline(a:lnum)
 
   " look for the first ! which is not part of a string 
-  let s:len = s:RapidLenTilStr(a:lnum,"!",0)
-  if s:len == 0
+  let l:len = s:RapidLenTilStr(a:lnum,"!",0)
+  if l:len == 0
     return 0 " first char is !; ignored
   endif
-  " if s:len >= 4096
-  "   return 0 " line too long; ignored
-  " endif
 
-  let s:opnParen = 0
+  let l:opnParen = 0
   " count opening brakets
-  let s:i = 0
-  while s:i < s:len
-    let s:i = s:RapidLenTilStr(a:lnum, s:opnParChar, s:i)
-    if s:i < s:len
-      let s:opnParen += 1
+  let l:i = 0
+  while l:i >= 0
+    let l:i = s:RapidLenTilStr(a:lnum, l:opnParChar, l:i)
+    if l:i >= 0
+      let l:opnParen += 1
+      let l:i += 1
     endif
-    let s:i += 1
   endwhile
 
-  let s:clsParen = 0
+  let l:clsParen = 0
   " count closing brakets
-  let s:i = 0
-  while s:i < s:len
-    let s:i = s:RapidLenTilStr(a:lnum, s:clsParChar, s:i)
-    if s:i < s:len
-      let s:clsParen += 1
+  let l:i = 0
+  while l:i >= 0
+    let l:i = s:RapidLenTilStr(a:lnum, l:clsParChar, l:i)
+    if l:i >= 0
+      let l:clsParen += 1
+      let l:i += 1
     endif
-    let s:i += 1
   endwhile
 
-  if (a:lchar == "(" || a:lchar == "[" || a:lchar == "{") && s:opnParen>s:clsParen
-    return (s:opnParen-s:clsParen)
-  elseif (a:lchar == ")" || a:lchar == "]" || a:lchar == "}") && s:clsParen>s:opnParen
-    return (s:clsParen-s:opnParen)
+  if (a:lchar == "(" || a:lchar == "[" || a:lchar == "{") && l:opnParen>l:clsParen
+    return (l:opnParen-l:clsParen)
+  elseif (a:lchar == ")" || a:lchar == "]" || a:lchar == "}") && l:clsParen>l:opnParen
+    return (l:clsParen-l:opnParen)
   endif
 
   return 0
@@ -232,26 +231,12 @@ endfunction
 " This function works almost like prevnonblank() but handles %%%-headers and
 " comments like blank lines
 function s:RapidPreNoneBlank(lnum) abort
-  let nPreNoneBlank = prevnonblank(a:lnum)
-  " At the start of the file use zero indent.
-  if nPreNoneBlank == 0
-    return 0
-  endif
 
-  let l:i=1
-  while l:i>=1 && nPreNoneBlank>=0
-    if getline(nPreNoneBlank) =~ '\v\c^\s*
-          \(\%\%\%.*$
-          \|(!.*)?$
-          \)'
-      let nPreNoneBlank = prevnonblank(nPreNoneBlank - 1)
-      " At the start of the file use zero indent.
-      if nPreNoneBlank == 0
-        return 0
-      endif
-    else
-      let l:i=0
-    endif
+  let nPreNoneBlank = prevnonblank(a:lnum)
+
+  while nPreNoneBlank>0 && getline(nPreNoneBlank) =~ '\v\c^\s*(\%\%\%|!)'
+    " Previouse none blank line irrelevant. Look further aback.
+    let nPreNoneBlank = prevnonblank(nPreNoneBlank - 1)
   endwhile
 
   return nPreNoneBlank
