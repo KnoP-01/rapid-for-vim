@@ -154,6 +154,7 @@ A: No, but you may put the following in your .vimrc or
 
     nnoremap <ANYKEY> mzgg=G`z 
 or if you don't use syntax highlighting >
+
     nnoremap <ANYKEY> :syntax on<bar>normal mzgg=G`z<cr>:syntax off<cr>
 
 Q: Scrolling feels sluggish. What can I do?  
