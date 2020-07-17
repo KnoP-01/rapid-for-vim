@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.2
-" Last Change: 08. Jul 2020
+" Last Change: 13. Jul 2020
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -20,6 +20,7 @@
 "
 " TODO:   - highlight rapid constants and maybe constants from common
 "           technology packages
+"         - optimize rapidErrorStringTooLong 
 
 " Init {{{
 " Remove any old syntax stuff that was loaded (5.x) or quit when a syntax file

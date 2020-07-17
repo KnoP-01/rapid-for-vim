@@ -8,6 +8,10 @@
 "
 " Suggestions of improvement are very welcome. Please email me!
 "
+" TODO: - set buftype=nofile bufhidden=delete instead of temp file for altered
+"         quick fix
+"       - proper altering of quickfix: see :help quickfix-window then /filled
+"
 " ToDo's {{{
 " TODO  - make file search case insensitive
 "       - make [[, [], ][ and ]] text objects
