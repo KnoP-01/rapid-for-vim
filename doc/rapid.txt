@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 10. Jun 2020
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 13. Jul 2020
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -156,11 +156,18 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Override existing mapping with
         let g:rapidAutoFormKeyMap = 1
 
-Q: Does rapid-for-vim provide a mapping for indenting a complete file?  
+Q: When I switch syntax off I get false indentation sometimes?
+A: Indentation partly depends on `syntax on` . If you have strings with ! or
+   keywords in it Indentation may get confused without syntax on. It should
+   do fine for the most part of your editing. See next question.
+
+Q: Does rapid-for-vim provide a mapping for indenting the whole file?  
 A: No, but you may put the following in your .vimrc or
    `~/.vim/after/ftplugin/rapid.vim`: >
 
-    nnoremap ANYKEY gg=G``zz
+    nnoremap <ANYKEY> mzgg=G`z 
+or if you don't use syntax highlighting >
+    nnoremap <ANYKEY> :syntax on<bar>normal mzgg=G`z<cr>:syntax off<cr>
 
 Q: Scrolling feels sluggish. What can I do?  
 A: Switch error highlighting off: >
@@ -309,6 +316,15 @@ colorscheme tortus or tortusless which makes use of these groups:
 Index: |rapid-index|
 ==============================================================================
                         *rapid-indent*
+
+Note: rapid-for-vim indentation works best with |syn-on|. 
+You may map >
+    nnoremap <ANYKEY> mzgg=G`z 
+or if you don't use syntax highlighting >
+    nnoremap <ANYKEY> :syntax on<bar>normal mzgg=G'z<cr>:syntax off<cr>
+to indent the whole file with one key stroke. 
+
+Index: |rapid-index|
                         *g:rapidSpaceIndent*
 g:rapidSpaceIndent:
 -------------------
@@ -502,7 +518,8 @@ Note: These mappings overshadow the default Vim commands
 To force these mappings off and make Vims default available: >
     let g:rapidMoveAroundKeyMap = 0
 
-Note that |g:rapidFunctionTextObject| depend on these mappings.
+Note that |g:rapidFunctionTextObject| and |g:rapidCommentTextObject| depend on
+this feature.
 
 
 Index: |rapid-index|
