@@ -289,9 +289,7 @@ if !exists("*s:KnopVerboseEcho()")
       call s:KnopVerboseEcho(":vimgrep stopped with E683. No match found")
       return -1
     endtry
-    if a:n == 1
-      call setqflist(s:KnopUniqueListItems(getqflist()))
-    endif
+    call setqflist(s:KnopUniqueListItems(getqflist()))
     if s:KnopOpenQf(a:useSyntax)==-1
       call s:KnopVerboseEcho("No match found")
       return -1
