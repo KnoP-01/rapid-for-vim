@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.1
-" Last Change: 08. Apr 2020
+" Last Change: 25. Sep 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -93,7 +93,7 @@ if !exists("*s:KnopVerboseEcho()")
     unlet g:knopVerboseMsg
     echomsg "Switch verbose messages off with \":let g:knopVerbose=0\" any time. You may put this in your .vimrc"
   endif
-  function s:KnopVerboseEcho(msg, ...)
+  function s:KnopVerboseEcho(msg, ...) abort
     if get(g:,'knopVerbose',0)
       if type(a:msg) == v:t_list
         let l:msg = a:msg
@@ -113,14 +113,14 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " s:KnopVerboseEcho()
 
-  function s:KnopDirExists(in)
+  function s:KnopDirExists(in) abort
     if finddir( substitute(a:in,'\\','','g') )!=''
       return 1
     endif
     return 0
   endfunction " s:KnopDirExists
 
-  function s:KnopFnameescape4Path(in)
+  function s:KnopFnameescape4Path(in) abort
     " escape a path for use as 'execute "set path=" . s:KnopFnameescape4Path(mypath)'
     " use / (not \) as a separator for the input parameter
     let l:out = fnameescape( a:in )
@@ -132,14 +132,14 @@ if !exists("*s:KnopVerboseEcho()")
     return l:out
   endfunction
 
-  function s:knopCompleteEnbMsg()
+  function s:knopCompleteEnbMsg() abort
     if exists("g:knopCompleteMsg")
       unlet g:knopCompleteMsg
       call s:KnopVerboseEcho("Add the following files to 'complete'.\n  Try <Ctrl-p> and <Ctrl-n> to complete words from there:")
     endif
   endfunction " s:knopCompleteEnbMsg
 
-  function s:KnopSplitAndUnescapeCommaSeparatedPathStr(commaSeparatedPathStr)
+  function s:KnopSplitAndUnescapeCommaSeparatedPathStr(commaSeparatedPathStr) abort
     let l:pathList = []
     for l:pathItem in split(a:commaSeparatedPathStr,'\\\@1<!,')
       if l:pathItem != ''
@@ -149,7 +149,7 @@ if !exists("*s:KnopVerboseEcho()")
     return l:pathList
   endfunction
 
-  function s:KnopAddFileToCompleteOption(file,pathList,...)
+  function s:KnopAddFileToCompleteOption(file,pathList,...) abort
     let l:file=a:file
     for l:path in a:pathList
       let l:path = substitute(l:path,'[\\/]\*\*$','','')
@@ -178,12 +178,12 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " s:KnopAddFileToCompleteOption()
 
-  function s:KnopSubStartToEnd(search,sub,start,end)
+  function s:KnopSubStartToEnd(search,sub,start,end) abort
     execute 'silent '. a:start .','. a:end .' s/'. a:search .'/'. a:sub .'/ge'
     call cursor(a:start,0)
   endfunction " s:KnopSubStartToEnd()
 
-  function s:KnopUpperCase(start,end)
+  function s:KnopUpperCase(start,end) abort
     call cursor(a:start,0)
     execute "silent normal! gU" . (a:end - a:start) . "j"
     call cursor(a:start,0)
@@ -192,14 +192,14 @@ if !exists("*s:KnopVerboseEcho()")
   " taken from Peter Oddings
   " function! xolox#misc#list#unique(list)
   " xolox/misc/list.vim
-  function s:KnopUniqueListItems(list)
+  function s:KnopUniqueListItems(list) abort
     " Remove duplicate values from the given list in-place (preserves order).
     call reverse(a:list)
     call filter(a:list, 'count(a:list, v:val) == 1')
     return reverse(a:list)
   endfunction " s:KnopUniqueListItems()
 
-  function s:KnopPreparePath(path,file)
+  function s:KnopPreparePath(path,file) abort
     " prepares 'path' for use with vimgrep
     let l:path = substitute(a:path,'$',' ','') " make sure that space is the last char
     let l:path = substitute(l:path,'\v(^|[^\\])\zs,+',' ','g') " separate with spaces instead of comma
@@ -217,7 +217,7 @@ if !exists("*s:KnopVerboseEcho()")
     return l:path
   endfunction " s:KnopPreparePath()
 
-  function s:KnopQfCompatible()
+  function s:KnopQfCompatible() abort
     " check for qf.vim compatiblity
     if exists('g:loaded_qf') && get(g:,'qf_window_bottom',1)
           \&& (get(g:,'knopRhsQuickfix',0)
@@ -229,7 +229,7 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:KnopQfCompatible()
 
   let g:knopPositionQf=1
-  function s:KnopOpenQf(useSyntax)
+  function s:KnopOpenQf(useSyntax) abort
     if getqflist()==[] | return -1 | endif
     cwindow 4
     if getbufvar('%', "&buftype")!="quickfix"
@@ -275,7 +275,7 @@ if !exists("*s:KnopVerboseEcho()")
     return 0
   endfunction " s:KnopOpenQf()
 
-  function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax)
+  function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax) abort
     call setqflist([])
     try
       execute ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
@@ -299,7 +299,7 @@ if !exists("*s:KnopVerboseEcho()")
     return 0
   endfunction " s:KnopSearchPathForPatternNTimes()
 
-  function <SID>KnopNTimesSearch(nCount,sSearchPattern,sFlags)
+  function <SID>KnopNTimesSearch(nCount,sSearchPattern,sFlags) abort
     let l:nCount=a:nCount
     let l:sFlags=a:sFlags
     while l:nCount>0
@@ -315,7 +315,7 @@ if !exists("*s:KnopVerboseEcho()")
 
   " Rapid Helper {{{
 
-  function <SID>RapidCleanBufferList()
+  function <SID>RapidCleanBufferList() abort
     if exists("g:knopTmpFile")
       let l:knopTmpFile = substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
     endif
@@ -349,7 +349,7 @@ if !exists("*s:KnopVerboseEcho()")
     augroup END
   endfunction " <SID>RapidCleanBufferList()
 
-  function s:RapidCurrentWordIs()
+  function s:RapidCurrentWordIs() abort
     " returns the string "<type><name>" depending on the word under the cursor
     "
     let l:numLine = line(".")
@@ -432,7 +432,7 @@ if !exists("*s:KnopVerboseEcho()")
     return "none"
   endfunction " s:RapidCurrentWordIs()
 
-  function s:RapidPutCursorOnModuleAndReturnEndmoduleline()
+  function s:RapidPutCursorOnModuleAndReturnEndmoduleline() abort
     if search('\c^\s*module\s','bcW')
       let l:numEndmodule = search('\v\c^\s*endmodule>','nW')
       if l:numEndmodule <= 0
@@ -452,7 +452,7 @@ if !exists("*s:KnopVerboseEcho()")
 
   " Go Definition {{{
 
-  function s:RapidSearchUserDefined(declPrefix,currentWord)
+  function s:RapidSearchUserDefined(declPrefix,currentWord) abort
     "
     let l:numSearchStartLine = line(".")
     let l:numSearchStartColumn = col(".")
@@ -676,7 +676,7 @@ if !exists("*s:KnopVerboseEcho()")
     return -1
   endfunction " s:RapidSearchUserDefined()
 
-  function <SID>RapidGoDefinition()
+  function <SID>RapidGoDefinition() abort
     augroup RapidCleanBufferList
       " work around where buffer list is not cleaned if knopVerbose is enabled
       autocmd!
@@ -734,7 +734,7 @@ if !exists("*s:KnopVerboseEcho()")
 
   " Auto Form {{{
 
-  function s:RapidGetGlobal(sAction)
+  function s:RapidGetGlobal(sAction) abort
     if a:sAction=~'^[lg]'
       let l:sGlobal = a:sAction
     else
@@ -748,7 +748,7 @@ if !exists("*s:KnopVerboseEcho()")
     return ''
   endfunction " s:RapidGetGlobal()
 
-  function s:RapidGetType(sAction)
+  function s:RapidGetType(sAction) abort
     if a:sAction =~ '^.[pftr]'
       let l:sType = substitute(a:sAction,'^.\(\w\).','\1','')
     else
@@ -766,7 +766,7 @@ if !exists("*s:KnopVerboseEcho()")
     return ''
   endfunction " s:RapidGetType()
 
-  function s:RapidGetName()
+  function s:RapidGetName() abort
     let l:sName = substitute(input("\nName?\n Type <space><enter> for word under cursor.\n> "),'[^ 0-9a-zA-Z_]*','','g')
     if l:sName==""
       return ''
@@ -777,7 +777,7 @@ if !exists("*s:KnopVerboseEcho()")
     return l:sName
   endfunction " s:RapidGetName()
 
-  function s:RapidGetDataType(sAction)
+  function s:RapidGetDataType(sAction) abort
     if a:sAction=~'..[bndsprjtw]'
       let l:sDataType = substitute(a:sAction,'..\(\w\)','\1','')
     else
@@ -807,7 +807,7 @@ if !exists("*s:KnopVerboseEcho()")
     return substitute(l:sDataType,'[^0-9a-zA-Z_{}]*','','g')
   endfunction " s:RapidGetDataType()
 
-  function s:RapidGetReturnVar(sDataType)
+  function s:RapidGetReturnVar(sDataType) abort
     if a:sDataType=~'\c^bool\>'
       return "bResult"
     elseif a:sDataType=~'\c^num\>'
@@ -830,7 +830,7 @@ if !exists("*s:KnopVerboseEcho()")
     return substitute(a:sDataType,'^\(..\).*','\l\1','')."Result"
   endfunction " s:RapidGetReturnVar()
 
-  function s:RapidPositionForEdit(sType)
+  function s:RapidPositionForEdit(sType) abort
     let l:commentline = '^\s*!'
     " empty file
     if line('$')==1 && getline('.')=='' | return | endif
@@ -875,7 +875,7 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " s:RapidPositionForEdit()
 
-  function s:RapidPositionForRead(sType)
+  function s:RapidPositionForRead(sType) abort
     call s:RapidPositionForEdit(a:sType)
     if getline('.')=~'^\s*$'
           \&& line('.')!=line('$')
@@ -883,7 +883,7 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " s:RapidPositionForRead()
 
-  function s:RapidReadBody(sBodyFile,sType,sName,sGlobal,sDataType,sReturnVar)
+  function s:RapidReadBody(sBodyFile,sType,sName,sGlobal,sDataType,sReturnVar) abort
     let l:sBodyFile = glob(fnameescape(g:rapidPathToBodyFiles)).a:sBodyFile
     if !filereadable(glob(l:sBodyFile))
       call s:KnopVerboseEcho([l:sBodyFile,": Body file not readable."],1)
@@ -918,7 +918,7 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " s:RapidReadBody()
 
-  function s:RapidDefaultBody(sType,sName,sGlobal,sDataType,sReturnVar)
+  function s:RapidDefaultBody(sType,sName,sGlobal,sDataType,sReturnVar) abort
     call s:RapidPositionForEdit(a:sType)
     call setline('.',a:sGlobal . a:sType . " " . a:sDataType . " " . a:sName . '()')
     if a:sType =~ '\v\c(trap|record)' | silent substitute/()// | endif
@@ -954,7 +954,7 @@ if !exists("*s:KnopVerboseEcho()")
     call search('^\s*!','eW',l:end)
   endfunction " s:RapidDefaultBody()
 
-  function <SID>RapidAutoForm(sAction)
+  function <SID>RapidAutoForm(sAction) abort
     " check input
     if a:sAction !~ '^[ gl][ pftr][ bndsprjtw]$' | return | endif
     "
@@ -1003,7 +1003,7 @@ if !exists("*s:KnopVerboseEcho()")
 
   " List Def/Usage {{{
 
-  function <SID>RapidListDefinition()
+  function <SID>RapidListDefinition() abort
     augroup RapidCleanBufferList
       " work around where buffer list is not cleaned if knopVerbose is enabled
       autocmd!
@@ -1041,7 +1041,7 @@ if !exists("*s:KnopVerboseEcho()")
     endif
   endfunction " <SID>RapidListDefinition()
 
-  function <SID>RapidListUsage()
+  function <SID>RapidListUsage() abort
     augroup RapidCleanBufferList
       " work around where buffer list is not cleaned if knopVerbose is enabled
       autocmd!
@@ -1107,7 +1107,7 @@ if !exists("*s:KnopVerboseEcho()")
   " Function Text Object {{{
 
   if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
-    function <SID>RapidFunctionTextObject(inner,withcomment)
+    function <SID>RapidFunctionTextObject(inner,withcomment) abort
       if a:inner==1
         let l:n = 1
       else
@@ -1139,7 +1139,7 @@ if !exists("*s:KnopVerboseEcho()")
   " Comment Text Object {{{
 
   if get(g:,'rapidMoveAroundKeyMap',1) " depends on move around key mappings
-    function <SID>RapidCommentTextObject(around)
+    function <SID>RapidCommentTextObject(around) abort
       if getline('.')!~'^\s*!' && !search('^\s*!',"sW")
         return
       endif
@@ -1270,7 +1270,7 @@ unlet s:pathToCurrentFile
 if get(g:,'rapidConcealStructs',1)
 
   if !exists("*<SID>RapidConcealLevel")
-    function <SID>RapidConcealLevel(lvl)
+    function <SID>RapidConcealLevel(lvl) abort
       " g:rapidConcealStructs may be used as input for a:lvl
 
 
