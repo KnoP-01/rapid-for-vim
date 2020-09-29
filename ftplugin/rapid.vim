@@ -11,6 +11,8 @@
 " TODO: - set buftype=nofile bufhidden=delete instead of temp file for altered
 "         quick fix
 "       - proper altering of quickfix: see :help quickfix-window then /filled
+"       - [[,]]... mappings for jumping from section to section in .cfg files
+"       - test compatiblity with quickfix-reflector
 "
 " ToDo's {{{
 " TODO  - make file search case insensitive
@@ -334,10 +336,7 @@ if !exists("*s:KnopVerboseEcho()")
         call setbufvar(l:b["bufnr"],"&buflisted",0)
       endif
       " delete those strange empty unnamed buffers
-      if        l:b["name"]==""       " not named
-            \&& l:b["windows"]==[]    " not shown in any window
-            \&& !l:b["hidden"]        " not hidden
-            \&& !l:b["changed"]       " not modified
+      if l:b['name']=='' && l:b['windows']==[] && !l:b['changed']
         execute "silent bwipeout! " . l:b["bufnr"]
       endif
     endfor
@@ -1502,13 +1501,16 @@ endif
 " <PLUG> mappings {{{
 
 " Go Definition
-nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
+" nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
+nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>
 
 " list all PROCs of current file
-nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
+" nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
+nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDefinition()<CR>
 
 " list usage
-nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<CR>:call <SID>RapidCleanBufferList()<CR>
+" nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<CR>:call <SID>RapidCleanBufferList()<CR>
+nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<CR>
 
 " auto form
 nnoremap <silent><buffer> <plug>RapidAutoForm                 :call <SID>RapidAutoForm("   ")<cr>
