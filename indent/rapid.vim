@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.2
-" Last Change: 17. Jul 2020
+" Last Change: 25. Sep 2020
 " Credits: Based on indent/vim.vim
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -98,29 +98,29 @@ function s:GetRapidIndentIntern() abort
 
   " Add shiftwidth
   if l:preNoneBlankLine =~ l:addShiftwidthPattern
-        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "then",     0)>0
-        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "else",     0)>0
-        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "do",       0)>0
-        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "case",     0)>0
-        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "default",  0)>0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "then",     0)>=0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "else",     0)>=0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "do",       0)>=0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "case",     0)>=0
+        \|| s:RapidLenTilStr(l:preNoneBlankLineNum, "default",  0)>=0
     let l:ind += &sw
   endif
 
   " Subtract shiftwidth
   if l:currentLine =~ l:subtractShiftwidthPattern
-        \|| s:RapidLenTilStr(l:currentLineNum, "endif",     0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "endfor",    0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "endwhile",  0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "endtest",   0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "else",      0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "elseif",    0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "case",      0)>0
-        \|| s:RapidLenTilStr(l:currentLineNum, "default",   0)>0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endif",     0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endfor",    0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endwhile",  0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "endtest",   0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "else",      0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "elseif",    0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "case",      0)>=0
+        \|| s:RapidLenTilStr(l:currentLineNum, "default",   0)>=0
     let l:ind = l:ind - &sw
   endif
 
   " First case after a test gets the indent of the test.
-  if s:RapidLenTilStr(l:currentLineNum, "case", 0)>0 && s:RapidLenTilStr(l:preNoneBlankLineNum, "test", 0)>0
+  if s:RapidLenTilStr(l:currentLineNum, "case", 0)>=0 && s:RapidLenTilStr(l:preNoneBlankLineNum, "test", 0)>=0
     let l:ind += &sw
   endif
 
