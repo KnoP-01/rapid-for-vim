@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.2
-" Last Change: 13. Jul 2020
+" Last Change: 25. Oct 2020
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -21,6 +21,7 @@
 " TODO:   - highlight rapid constants and maybe constants from common
 "           technology packages
 "         - optimize rapidErrorStringTooLong 
+"         - error highlight for missing 2nd point in MoveCirc et al
 
 " Init {{{
 " Remove any old syntax stuff that was loaded (5.x) or quit when a syntax file
@@ -266,6 +267,8 @@ else
   syn keyword rapidKeyword DaActProc DaDeactAllProc DaDeactProc DaDefExtSig DaDefProcData DaDefProcSig DaDefUserData DaGetCurrData DaSetCurrData DaSetupAppBehav DaStartManAction DaGetAppDescr DaGetAppIndex DaGetNumOfProcs DaGetNumOfRob DaGetPrcDescr 
   " Production Manager instructions
   syn keyword rapidKeyword ExecEngine PMgrGetNextPart PMgrSetNextPart PMgrRunMenu
+  " Homepos-Running instructions
+  syn keyword rapidKeyword HR_Exit HR_ExitCycle HR_SavePos HR_SetMoveToStartPos HR_SetTypeDIndex HR_SetTypeIndex 
   highlight default link rapidKeyword Keyword
   " Exception
   syn keyword rapidException Exit ErrRaise ExitCycle Raise RaiseToUser Retry Return TryNext
