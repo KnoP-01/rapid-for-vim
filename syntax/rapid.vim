@@ -475,8 +475,6 @@ else
   syn keyword rapidConstant OP_UNDEF OP_AUTO OP_MAN_PROG OP_MAN_TEST
   " symnum of RunMode()
   syn keyword rapidConstant RUN_UNDEF RUN_CONT_CYCLE RUN_INSTR_FWD RUN_INSTR_BWD RUN_SIM RUN_STEP_MOVE
-  " opcalc
-  syn keyword rapidConstant OpAdd OpSub OpMult OpDiv OpMod
   " event_type of EventType()
   syn keyword rapidConstant EVENT_NONE EVENT_POWERON EVENT_START EVENT_STOP EVENT_QSTOP EVENT_RESTART EVENT_RESET EVENT_STEP
   " handler_type of ExecHandler()
