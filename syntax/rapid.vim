@@ -79,7 +79,7 @@ endif
 
 " Constant values {{{
 " Boolean
-syn keyword rapidBoolean True False Edge High Low
+syn keyword rapidBoolean TRUE FALSE Edge High Low
 highlight default link rapidBoolean Boolean
 " Float (num)
 syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
