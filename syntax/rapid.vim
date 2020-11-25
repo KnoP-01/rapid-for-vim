@@ -277,6 +277,15 @@ else
   " }}} Statements, keywords et al
 
   " special keyword for move command {{{
+  " uncategorized yet
+  syn keyword rapidMovement MovePnP
+  syn keyword rapidMovement EGMMoveC EGMMoveL EGMRunJoint EGMRunPose EGMStop
+  syn keyword rapidMovement IndAMove IndCMove IndDMove IndRMove 
+  " common instructions
+  syn keyword rapidMovement MoveAbsJ MoveC MoveExtJ MoveJ MoveL 
+  syn keyword rapidMovement MoveCAO MoveCDO MoveCGO MoveCSync MoveJAO MoveJDO MoveJGO MoveJSync MoveLAO MoveLDO MoveLGO MoveLSync 
+  syn keyword rapidMovement SearchC SearchExtJ SearchL
+  syn keyword rapidMovement TriggC TriggJ TriggL TriggJIOs TriggLIOs
   " Arc instructions
   syn keyword rapidMovement ArcC ArcC1 ArcC2 ArcCEnd ArcC1End ArcC2End ArcCStart ArcC1Start ArcC2Start 
   syn keyword rapidMovement ArcL ArcL1 ArcL2 ArcLEnd ArcL1End ArcL2End ArcLStart ArcL1Start ArcL2Start ArcMoveExtJ 
@@ -287,11 +296,6 @@ else
   syn keyword rapidMovement CapC CapL CapLATrSetup CSSDeactMoveL ContactL
   " Dispense instructions
   syn keyword rapidMovement DispL DispC
-  syn keyword rapidMovement EGMMoveC EGMMoveL EGMRunJoint EGMRunPose EGMStop
-  syn keyword rapidMovement IndAMove IndCMove IndDMove IndRMove 
-  syn keyword rapidMovement MoveAbsJ MoveC MoveExtJ MoveJ MoveL 
-  syn keyword rapidMovement MoveCAO MoveCDO MoveCGO MoveCSync MoveJAO MoveJDO MoveJGO MoveJSync MoveLAO MoveLDO MoveLGO MoveLSync 
-  syn keyword rapidMovement MovePnP
   " Nut instructions"
   syn keyword rapidMovement NutL NutJ
   syn keyword rapidMovement PathRecMoveBwd PathRecMoveFwd 
@@ -302,8 +306,6 @@ else
   syn keyword rapidMovement SpotL SpotJ SpotML SpotMJ CalibL CalibJ MeasureWearL 
   " Homepos-Running instructions
   syn keyword rapidMovement SMoveJ SMoveJDO SMoveJGO SMoveJSync SMoveL SMoveLDO SMoveLGO SMoveLSync SSearchL STriggJ STriggL
-  syn keyword rapidMovement SearchC SearchExtJ SearchL
-  syn keyword rapidMovement TriggC TriggJ TriggL TriggJIOs TriggLIOs
   " Discrete application platform instructions
   syn keyword rapidMovement DaProcML DaProcMJ
   if g:rapidGroupName
