@@ -200,7 +200,7 @@ else
   syn keyword rapidType dadescapp dadescprc daintdata
   highlight default link rapidType Type
   " Storage class
-  syn keyword rapidStorageClass LOCAL TASK GLOBAL VAR PERS CONST ALIAS NOVIEW NOSTEPIN VIEWONLY READONLY SYSMODULE INOUT
+  syn keyword rapidStorageClass LOCAL TASK VAR PERS CONST ALIAS NOVIEW NOSTEPIN VIEWONLY READONLY SYSMODULE INOUT
   highlight default link rapidStorageClass StorageClass
   " Not a typedef but I like to have those highlighted different then types,
   " structures or strorage classes
