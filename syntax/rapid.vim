@@ -277,27 +277,30 @@ else
   " }}} Statements, keywords et al
 
   " special keyword for move command {{{
-  " arc instructions
+  " Arc instructions
   syn keyword rapidMovement ArcC ArcC1 ArcC2 ArcCEnd ArcC1End ArcC2End ArcCStart ArcC1Start ArcC2Start 
   syn keyword rapidMovement ArcL ArcL1 ArcL2 ArcLEnd ArcL1End ArcL2End ArcLStart ArcL1Start ArcL2Start ArcMoveExtJ 
-  " arc Weldguide and MultiPass instructions
+  " Arc Weldguide and MultiPass instructions
   syn keyword rapidMovement ArcRepL ArcAdaptLStart ArcAdaptL ArcAdaptC ArcAdaptLEnd ArcAdaptCEnd ArcCalcLStart ArcCalcL ArcCalcC ArcCalcLEnd ArcCalcCEnd ArcAdaptRepL 
   syn keyword rapidMovement Break 
   " Continuous Application Platform instructions
   syn keyword rapidMovement CapC CapL CapLATrSetup CSSDeactMoveL ContactL
-  " dispense instructions
+  " Dispense instructions
   syn keyword rapidMovement DispL DispC
   syn keyword rapidMovement EGMMoveC EGMMoveL EGMRunJoint EGMRunPose EGMStop
   syn keyword rapidMovement IndAMove IndCMove IndDMove IndRMove 
   syn keyword rapidMovement MoveAbsJ MoveC MoveExtJ MoveJ MoveL 
   syn keyword rapidMovement MoveCAO MoveCDO MoveCGO MoveCSync MoveJAO MoveJDO MoveJGO MoveJSync MoveLAO MoveLDO MoveLGO MoveLSync 
   syn keyword rapidMovement MovePnP
+  " Nut instructions"
   syn keyword rapidMovement NutL NutJ
   syn keyword rapidMovement PathRecMoveBwd PathRecMoveFwd 
+  " Paint instructions"
   syn keyword rapidMovement PaintL PaintLDO PaintC
   syn keyword rapidMovement StartMove StartMoveRetry StepBwdPath StopMove StopMoveReset
   " Spot instructions
   syn keyword rapidMovement SpotL SpotJ SpotML SpotMJ CalibL CalibJ MeasureWearL 
+  " Homepos-Running instructions
   syn keyword rapidMovement SMoveJ SMoveJDO SMoveJGO SMoveJSync SMoveL SMoveLDO SMoveLGO SMoveLSync SSearchL STriggJ STriggL
   syn keyword rapidMovement SearchC SearchExtJ SearchL
   syn keyword rapidMovement TriggC TriggJ TriggL TriggJIOs TriggLIOs
