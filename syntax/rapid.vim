@@ -375,7 +375,7 @@ else
   highlight default link rapidCallByVar Function
   " }}} Function
 
-  " Rapid Constants {{{
+  " Constants {{{
   " standard rapid constants
   syn keyword rapidConstant pi stEmpty
   syn keyword rapidConstant STR_DIGIT STR_LOWER STR_UPPER STR_WHITE
@@ -551,7 +551,7 @@ else
     highlight default link rapidErrorIdentifierNameTooLong Error
     "
     " a == b + 1
-    syn match rapidErrorShouldBeColonEqual /\c\v%(^\s*%(%(global\s+|task\s+|local\s+)?%(var|pers|const)\s+\w+\s+)?\w+%(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
+    syn match rapidErrorShouldBeColonEqual /\c\v%(^\s*%(%(TASK\s+|LOCAL\s+)?%(VAR|PERS|CONST)\s+\w+\s+)?\w+%(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
     highlight default link rapidErrorShouldBeColonEqual Error
     "
     " WaitUntil a==b
