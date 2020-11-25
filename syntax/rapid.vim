@@ -306,6 +306,7 @@ else
   syn keyword rapidMovement SpotL SpotJ SpotML SpotMJ CalibL CalibJ MeasureWearL 
   " Homepos-Running instructions
   syn keyword rapidMovement SMoveJ SMoveJDO SMoveJGO SMoveJSync SMoveL SMoveLDO SMoveLGO SMoveLSync SSearchL STriggJ STriggL
+  syn keyword rapidMovement HR_ContMove HR_MoveBack HR_MoveRoutine HR_MoveTo HR_MoveToHome SCSSDeactMoveL 
   " Discrete application platform instructions
   syn keyword rapidMovement DaProcML DaProcMJ
   if g:rapidGroupName
