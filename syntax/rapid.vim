@@ -357,6 +357,8 @@ else
   syn keyword rapidBuildInFunction contained PMgrAtSafe PMgrAtService PMgrAtState PMgrAtStation PMgrNextStation PMgrTaskNumber PMgrTaskName
   " Spot functions
   syn keyword rapidBuildInFunction contained SwGetCurrTargetName SwGetCurrSpotName 
+  " Homepos-Running functions
+  syn keyword rapidBuildInFunction contained HR_RobotInHome HR_GetTypeDIndex HR_GetTypeIndex
   if g:rapidGroupName
     highlight default link rapidBuildInFunction BuildInFunction
   else
