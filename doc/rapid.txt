@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 13. Jul 2020
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 30. Nov 2020
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -250,9 +250,6 @@ Also see these options for alternative <Plug> mappings.
 *rapid-complete-options*
 |g:rapidCompleteStd|        Disable standard 'complete' setting
 |g:rapidCompleteCustom|     Enable custom 'complete' setting
-
-*rapid-endwise-options*
-|g:rapidEndwiseUpperCase|   Use upper case for `vim-endwise`
 
 *rapid-auto-correct-cfg*
 |g:rapidAutoCorrCfgLineEnd| Auto correct mixed unix/dos line endings in *.cfg
@@ -674,17 +671,6 @@ Enable |g:rapidVerbose| to see what files are actually added.
 See also |rapid-complete|.
 
 If omitted or set to 0 no custom files get added to complete.
-
-
-Index: |rapid-index|
-==============================================================================
-                        *g:rapidEndwiseUpperCase*
-g:rapidEndwiseUpperCase:
-------------------------
-
-Insert upper case `ENDIF` etc. instead of lower case when `vim-endwise`
-triggers: >
-    let g:rapidEndwiseUpperCase = 1
 
 
 Index: |rapid-index|

@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.1
-" Last Change: 25. Sep 2020
+" Last Change: 30. Nov 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1302,13 +1302,16 @@ endif " get(g:,'rapidConcealStructs',1)
 
 " endwise support
 if exists("loaded_endwise")
-  if get(g:,'rapidEndwiseUpperCase',0)
-    let b:endwise_addition  = '\=submatch(0)=~"CASE" ? "ENDTEST" : submatch(0)=~"IF" ? "ENDIF" : "END" . submatch(0)'
-  else
-    let b:endwise_addition  = '\=submatch(0)=~"case" ? "endtest" : submatch(0)=~"if" ? "endif" : "end" . submatch(0)'
-  endif
+  let b:endwise_addition  = '\=submatch(0)=~#"CASE" ? "ENDTEST" '
+  let b:endwise_addition .= ': submatch(0)=~#"DEFAULT" ? "ENDTEST" '
+  let b:endwise_addition .= ': submatch(0)=~#"IF" ? "ENDIF" '
+  let b:endwise_addition .= ': submatch(0)=~"case" ? "endtest" '
+  let b:endwise_addition .= ': submatch(0)=~"default" ? "endtest" '
+  let b:endwise_addition .= ': submatch(0)=~"if" ? "endif" '
+  let b:endwise_addition .= ': submatch(0)=~"\\u" ? "END" . toupper(submatch(0)) '
+  let b:endwise_addition .= ': "end" . tolower(submatch(0))'
   let b:endwise_words     = 'proc,func,trap,record,then,do,:'
-  let b:endwise_pattern   = '^\s*\(local\s\+\)\?\zs\(proc\|func\|trap\|record\|if[^!]*\<then\|while\|for\|case\)\>\ze'
+  let b:endwise_pattern   = '^\s*\(local\s\+\)\?\zs\(proc\|func\|trap\|record\|module\|if[^!]*\<then\|while\|for\|case\|default\)\>\ze'
   let b:endwise_syngroups = 'rapidTypeDef,rapidRepeat,rapidConditional'
 endif
 
