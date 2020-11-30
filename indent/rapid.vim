@@ -86,7 +86,7 @@ function s:GetRapidIndentIntern() abort
 
   " Define add a 'shiftwidth' pattern
   let l:addShiftwidthPattern  = '\c\v^\s*('
-  let l:addShiftwidthPattern .=           '((local|task)\s+)?(module|record|proc|func|trap)\s+\w'
+  let l:addShiftwidthPattern .=           '((local|task)\s+)?(module|record|proc|func|trap)\s+\k'
   let l:addShiftwidthPattern .=           '|(backward|error|undo)>'
   let l:addShiftwidthPattern .=         ')'
   "
@@ -145,7 +145,7 @@ function s:RapidLenTilStr(lnum, str, startIdx) abort
   let l:line = getline(a:lnum)
   let l:len  = strlen(l:line)
   let l:idx  = a:startIdx
-  if a:str =~ '^\w\+$'
+  if a:str =~ '^\k\+$'
     let l:str = '\c\<' . a:str . '\>'
   else
     let l:str = a:str
