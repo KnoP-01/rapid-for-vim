@@ -1264,37 +1264,33 @@ unlet s:pathList
 unlet s:pathToCurrentFile
 
 " conceal structure values (for MoveJ * v2500,z100...)
-if get(g:,'rapidConcealStructs',1)
-
-  if !exists("*<SID>RapidConcealLevel")
-    function <SID>RapidConcealLevel(lvl) abort
-      " g:rapidConcealStructs may be used as input for a:lvl
+if !exists("*<SID>RapidConcealLevel")
+  function <SID>RapidConcealLevel(lvl) abort
+    " g:rapidConcealStructs may be used as input for a:lvl
 
 
-      if a:lvl == 2
-        " conceal all structure values
-        setlocal conceallevel=2 concealcursor=nc
-        return
+    if a:lvl == 2
+      " conceal all structure values
+      setlocal conceallevel=2 concealcursor=nc
+      return
 
-      elseif a:lvl == 1
-        " conceal less structure values
-        setlocal conceallevel=2 concealcursor=
-        return
+    elseif a:lvl == 1
+      " conceal less structure values
+      setlocal conceallevel=2 concealcursor=
+      return
 
-      endif
+    endif
 
-        " conceal no structure values
-      setlocal conceallevel=0 concealcursor=
+      " conceal no structure values
+    setlocal conceallevel=0 concealcursor=
 
-    endfunction " <SID>RapidConcealLevel(lvl)
+  endfunction " <SID>RapidConcealLevel(lvl)
 
-  endif " !exists("*<SID>RapidConcealLevel")
+endif " !exists("*<SID>RapidConcealLevel")
 
-  call <SID>RapidConcealLevel(get(g:,'rapidConcealStructs',1))
+call <SID>RapidConcealLevel(get(g:,'rapidConcealStructs',1))
 
-  let b:undo_ftplugin = b:undo_ftplugin." cole< cocu<"
-
-endif " get(g:,'rapidConcealStructs',1)
+let b:undo_ftplugin = b:undo_ftplugin." cole< cocu<"
 
 " }}} Vim Settings
 
