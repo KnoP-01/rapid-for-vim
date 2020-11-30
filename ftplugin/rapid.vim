@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.1
-" Last Change: 30. Nov 2020
+" Last Change: 01. Dec 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1223,7 +1223,7 @@ let s:pathToCurrentFile = substitute(expand("%:p:h"),'\\','/','g')
 " complete custom files
 if exists('g:rapidCompleteCustom')
   for s:customCompleteAdditions in g:rapidCompleteCustom
-    let s:file = substitute(s:customCompleteAdditions,'^.*[\\/]\(\w\+\.\)\(src\|sub\|dat\)$','\1\2','')
+   let s:file = substitute(s:customCompleteAdditions,'^.*[\\/]\(\k\+\.\)\(\w\+\)$','\1\2','')
     call s:KnopAddFileToCompleteOption(s:customCompleteAdditions,s:pathList,s:pathToCurrentFile.'/'.s:file,)
   endfor
 endif
