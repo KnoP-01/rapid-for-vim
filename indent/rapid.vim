@@ -32,7 +32,11 @@ setlocal nolisp
 setlocal nosmartindent
 setlocal autoindent
 setlocal indentexpr=GetRapidIndent()
-setlocal indentkeys=!^F,o,O,0=~endmodule,0=~error,0=~undo,0=~backward,0=~endproc,0=~endrecord,0=~endtrap,0=~endfunc,0=~else,0=~endif,0=~endtest,0=~endfor,0=~endwhile,:
+if get(g:,'rapidNewStyleIndent',0)
+  setlocal indentkeys=!^F,o,O,0=~endmodule,0=~error,0=~undo,0=~backward,0=~endproc,0=~endrecord,0=~endtrap,0=~endfunc,0=~else,0=~endif,0=~endtest,0=~endfor,0=~endwhile,:,<[>,<]>,<(>,<)>
+else
+  setlocal indentkeys=!^F,o,O,0=~endmodule,0=~error,0=~undo,0=~backward,0=~endproc,0=~endrecord,0=~endtrap,0=~endfunc,0=~else,0=~endif,0=~endtest,0=~endfor,0=~endwhile,:
+endif
 let b:undo_indent="setlocal lisp< si< ai< inde< indk<"
 
 if get(g:,'rapidSpaceIndent',1)
@@ -126,7 +130,11 @@ function s:GetRapidIndentIntern() abort
 
   " continued lines with () or []
   let l:OpenSum  = s:RapidLoneParen(l:preNoneBlankLineNum,"(") + s:RapidLoneParen(l:preNoneBlankLineNum,"[")
-  let l:CloseSum = s:RapidLoneParen(l:preNoneBlankLineNum,")") + s:RapidLoneParen(l:preNoneBlankLineNum,"]")
+  if get(g:,'rapidNewStyleIndent',0)
+    let l:CloseSum = s:RapidLoneParen(l:preNoneBlankLineNum,")") + s:RapidLoneParen(l:currentLineNum,"]")
+  else
+    let l:CloseSum = s:RapidLoneParen(l:preNoneBlankLineNum,")") + s:RapidLoneParen(l:preNoneBlankLineNum,"]")
+  endif
   if l:OpenSum > l:CloseSum
     let l:ind += (l:OpenSum * 4 * &sw)
   elseif l:OpenSum < l:CloseSum
