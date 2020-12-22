@@ -490,7 +490,7 @@ if !exists("*s:KnopVerboseEcho()")
       call s:KnopVerboseEcho("search Proc/Func/Trap argument declaration")
       call cursor(l:numProcStart,1)
       let l:noneCloseParen = '([^)]|\n)*'
-      if search('\c\v^'.l:noneCloseParen.'\('.l:noneCloseParen.'\w(\s|\n)*\zs<'.a:currentWord.'>'.l:noneCloseParen.'\)','cW',line("."))
+      if search('\c\v^'.l:noneCloseParen.'\('.l:noneCloseParen.'\k(\s|\n)*\zs<'.a:currentWord.'>'.l:noneCloseParen.'\)','cW',line("."))
         call s:KnopVerboseEcho("Found VARIABLE declaration in ARGUMENT list",1)
         return 0
         "
@@ -528,7 +528,7 @@ if !exists("*s:KnopVerboseEcho()")
     " search Module local proc (et al) declaration
     call s:KnopVerboseEcho("search Module local proc (et al) declaration")
     let l:numEndmodule=s:RapidPutCursorOnModuleAndReturnEndmoduleline()
-    if search('\v\c^\s*((local|task)\s+)?(proc|func\s+\w+|trap|record)\s+\zs'.a:currentWord.'>','cW',l:numEndmodule)
+    if search('\v\c^\s*((local|task)\s+)?(proc|func\s+\k+|trap|record)\s+\zs'.a:currentWord.'>','cW',l:numEndmodule)
       call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in this MODULE",1)
       return 0
       "
@@ -543,7 +543,7 @@ if !exists("*s:KnopVerboseEcho()")
       "
       " first fill location list with all (end)?(proc|func|trap|record) and variable
       " declarations with currentWord
-      let l:prefix = '/\c\v^\s*(local\s+|task\s+)?((var|pers|const)\s+\w+\s+'
+      let l:prefix = '/\c\v^\s*(local\s+|task\s+)?((var|pers|const)\s+\k+\s+'
       let l:suffix = '>|(end)?(proc|func|trap|record)>)/j' " since this finds all (not only global) ends, the previous must also list local
       if l:i =~ 'task'
         if has("win32")
@@ -573,9 +573,9 @@ if !exists("*s:KnopVerboseEcho()")
       " search for global proc in loclist
       call s:KnopVerboseEcho("search for global proc in loclist")
       if l:i =~ 'task'
-        let l:procdecl = '\v\c^\s*(task\s+)?(proc|func\s+\w+|trap|record)\s+'
+        let l:procdecl = '\v\c^\s*(task\s+)?(proc|func\s+\k+|trap|record)\s+'
       elseif l:i =~ 'system'
-        let l:procdecl = '\v\c^\s*(proc|func\s+\w+|trap|record)\s+'
+        let l:procdecl = '\v\c^\s*(proc|func\s+\k+|trap|record)\s+'
       endif
       let l:loclist = getloclist(0)
       let l:qf = []
@@ -597,7 +597,7 @@ if !exists("*s:KnopVerboseEcho()")
       "
       " then search for global variable in loc list
       call s:KnopVerboseEcho("search for global variable in loc list")
-      let l:procdecl = '\v\c^\s*(local\s+|task\s+)?(proc|func\s+\w+|trap|record)\s+' " procdecl must also contain local, since all ends are present
+      let l:procdecl = '\v\c^\s*(local\s+|task\s+)?(proc|func\s+\k+|trap|record)\s+' " procdecl must also contain local, since all ends are present
       let l:endproc = '\v\c^\s*end(proc|func|trap|record)>'
       let l:skip = 0
       if l:i =~ 'task'
@@ -681,10 +681,10 @@ if !exists("*s:KnopVerboseEcho()")
       autocmd CursorMoved * call <SID>RapidCleanBufferList()
     augroup END
     "
-    let l:declPrefix = '\c\v^\s*(local\s+|task\s+)?(var|pers|const|alias)\s+\w+\s+'
+    let l:declPrefix = '\c\v^\s*(local\s+|task\s+)?(var|pers|const|alias)\s+\k+\s+'
     "
     " suche das naechste wort
-    if search('\w','cW',line("."))
+    if search('\k','cW',line("."))
       "
       let l:currentWord = s:RapidCurrentWordIs()
       "
@@ -765,13 +765,13 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:RapidGetType()
 
   function s:RapidGetName() abort
-    let l:sName = substitute(input("\nName?\n Type <space><enter> for word under cursor.\n> "),'[^ 0-9a-zA-Z_]*','','g')
+    let l:sName = substitute(input("\nName?\n Type <space><enter> for word under cursor.\n> "),'[^ _0-9[:upper:][:lower:]]*','','g')
     if l:sName==""
       return ''
     elseif l:sName=~'^ $' " sName from current word
       let l:sName = expand("<cword>")
     endif
-    let l:sName = substitute(l:sName,'\W*','','g')
+    let l:sName = substitute(l:sName,'[^_0-9[:upper:][:lower:]]*','','g')
     return l:sName
   endfunction " s:RapidGetName()
 
@@ -781,7 +781,7 @@ if !exists("*s:KnopVerboseEcho()")
     else
       let l:sDataType = substitute(input("\nData type? \n
             \Choose [b]ool, [n]um, [d]num, [s]ring, [p]ose, [r]obtarget, [j]ointtarget, [t]ooldata, [w]objdata,\n
-            \ or enter your desired data type\n> "),'[^ 0-9a-zA-Z_{}]*','','g')
+            \ or enter your desired data type\n> "),'[^ _0-9[:upper:][:lower:],{}]*','','g')
     endif
     if l:sDataType=~'\c^b$'
       return "bool"
@@ -1046,7 +1046,7 @@ if !exists("*s:KnopVerboseEcho()")
       autocmd CursorMoved * call <SID>RapidCleanBufferList()
     augroup END
     "
-    if search('\w','cW',line("."))
+    if search('\k','cW',line("."))
       let l:currentWord = s:RapidCurrentWordIs()
       "
       if l:currentWord =~ '^userdefined.*'
