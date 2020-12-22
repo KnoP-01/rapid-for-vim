@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.2
-" Last Change: 25. Oct 2020
+" Last Change: 22. Dec 2020
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -588,7 +588,7 @@ if get(g:,'rapidShowError',1)
   "
   " This error must be defined after rapidString
   " string too long
-  syn match rapidErrorStringTooLong /\v("[^"]{80})@81<=[^"]+\ze"/ contained
+  " syn match rapidErrorStringTooLong /\v("[^"]{80})@81<=[^"]+\ze"/ contained
   highlight default link rapidErrorStringTooLong Error
   "
 endif
