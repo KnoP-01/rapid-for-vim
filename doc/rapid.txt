@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 20. Feb 2020
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 30. Nov 2020
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -121,7 +121,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Disable override existing mapping and Vim's default with
         let g:rapidGoDefinitionKeyMap = 0
 
-    <leader>u List all significant appearances of word under cursor.
+    <leader>u List all significant references of word under cursor.
             Override existing mapping with
         let g:rapidListUsageKeyMap = 1
 
@@ -156,11 +156,18 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Override existing mapping with
         let g:rapidAutoFormKeyMap = 1
 
-Q: Does rapid-for-vim provide a mapping for indenting a complete file?  
+Q: When I switch syntax off I get false indentation sometimes?
+A: Indentation partly depends on `syntax on` . If you have strings with ! or
+   keywords in it Indentation may get confused without syntax on. It should
+   do fine for the most part of your editing. See next question.
+
+Q: Does rapid-for-vim provide a mapping for indenting the whole file?  
 A: No, but you may put the following in your .vimrc or
    `~/.vim/after/ftplugin/rapid.vim`: >
 
-    nnoremap ANYKEY gg=G``zz
+    nnoremap <ANYKEY> mzgg=G`z 
+or if you don't use syntax highlighting >
+    nnoremap <ANYKEY> :syntax on<bar>normal mzgg=G`z<cr>:syntax off<cr>
 
 Q: Scrolling feels sluggish. What can I do?  
 A: Switch error highlighting off: >
@@ -209,7 +216,7 @@ Exceptions may be |g:rapidCompleteCustom| and |g:rapidPathToBodyFiles|.
 Also see these options for alternative <Plug> mappings.
 |g:rapidConcealStructKeyMap| `<F2>` - `<F4>` change concealing of structure values
 |g:rapidGoDefinitionKeyMap|  `gd` to see declaration of word under cursor
-|g:rapidListUsageKeyMap|     `<leader>u` lists all appearances of current word
+|g:rapidListUsageKeyMap|     `<leader>u` lists all references of current word
 |g:rapidListDefKeyMap|       `<leader>f` lists PROC/TRAP/... of current file
 |g:rapidMoveAroundKeyMap|    `[[`, `]]` ... jumps around PROC/TRAP/...
 |g:rapidFunctionTextObject|  `if`, `af` and `aF` def/deffct text objects
@@ -243,9 +250,6 @@ Also see these options for alternative <Plug> mappings.
 *rapid-complete-options*
 |g:rapidCompleteStd|        Disable standard 'complete' setting
 |g:rapidCompleteCustom|     Enable custom 'complete' setting
-
-*rapid-endwise-options*
-|g:rapidEndwiseUpperCase|   Use upper case for `vim-endwise`
 
 *rapid-auto-correct-cfg*
 |g:rapidAutoCorrCfgLineEnd| Auto correct mixed unix/dos line endings in *.cfg
@@ -309,6 +313,15 @@ colorscheme tortus or tortusless which makes use of these groups:
 Index: |rapid-index|
 ==============================================================================
                         *rapid-indent*
+
+Note: rapid-for-vim indentation works best with |syn-on|. 
+You may map >
+    nnoremap <ANYKEY> mzgg=G`z 
+or if you don't use syntax highlighting >
+    nnoremap <ANYKEY> :syntax on<bar>normal mzgg=G'z<cr>:syntax off<cr>
+to indent the whole file with one key stroke. 
+
+Index: |rapid-index|
                         *g:rapidSpaceIndent*
 g:rapidSpaceIndent:
 -------------------
@@ -445,7 +458,7 @@ Index: |rapid-index|
 g:rapidListUsageKeyMap:
 -----------------------
 
-    `<leader>u`: List all appearances, outside of enum declarations and comments 
+    `<leader>u`: List all references, outside of enum declarations and comments 
                  of the word under the cursor in the |quickfix-window|.
 
 To force this mapping if `<leader>u` is already mapped: >
@@ -502,7 +515,8 @@ Note: These mappings overshadow the default Vim commands
 To force these mappings off and make Vims default available: >
     let g:rapidMoveAroundKeyMap = 0
 
-Note that |g:rapidFunctionTextObject| depend on these mappings.
+Note that |g:rapidFunctionTextObject| and |g:rapidCommentTextObject| depend on
+this feature.
 
 
 Index: |rapid-index|
@@ -657,17 +671,6 @@ Enable |g:rapidVerbose| to see what files are actually added.
 See also |rapid-complete|.
 
 If omitted or set to 0 no custom files get added to complete.
-
-
-Index: |rapid-index|
-==============================================================================
-                        *g:rapidEndwiseUpperCase*
-g:rapidEndwiseUpperCase:
-------------------------
-
-Insert upper case `ENDIF` etc. instead of lower case when `vim-endwise`
-triggers: >
-    let g:rapidEndwiseUpperCase = 1
 
 
 Index: |rapid-index|
