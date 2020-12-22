@@ -161,7 +161,7 @@ else
   " Type, StorageClass and Typedef {{{
   " anytype (preceded by 'alias|pers|var|const|func'
   " TODO: still missing are userdefined types which are part of a parameter:
-  " proc message( mystring msMessagePart1{},
+  " PROC message( mystring msMessagePart1{},
   "               \ myvar msMsg4{})
   " TODO testing. Problem: does not highlight any type if it's part of an argument list
   " syn match rapidAnyType /\v^\s*(global\s+|task\s+|local\s+)?(alias|pers|var|const|func)\s+\w+>/ contains=rapidStorageClass,rapidType,rapidTypeDef
@@ -221,7 +221,7 @@ else
   syn keyword rapidConditional if then elseif else endif test case default endtest
   highlight default link rapidConditional Conditional
   " Repeat
-  syn keyword rapidRepeat DO
+  syn keyword rapidRepeat do
   syn match rapidRepeat /\c\v^\s*%(<while>|<for>)%([^!]+<do>)@=/
   syn keyword rapidRepeat from to step endfor endwhile
   highlight default link rapidRepeat Repeat
@@ -370,7 +370,7 @@ else
   " }}}
 
   " Function {{{
-  syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<(proc|module)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
+  syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<(PROC|MODULE)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
   highlight default link rapidFunction Function
   syn match rapidCallByVar /%\ze[^%]/
   highlight default link rapidCallByVar Function
