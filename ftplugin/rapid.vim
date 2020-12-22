@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.1
-" Last Change: 10. Dec 2020
+" Last Change: 22. Dec 2020
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -400,7 +400,8 @@ if !exists("*s:KnopVerboseEcho()")
         "
       elseif l:currentChar =~ '\d' && 
             \(  synIDattr(synID(line("."),col("."),0),"name")=="rapidFloat" 
-            \|| synIDattr(synID(line("."),col("."),0),"name")=="")
+            \|| synIDattr(synID(line("."),col("."),0),"name")==""
+            \)
         return ("num" . l:word)
         "
       elseif l:nextChar == "(" && 
@@ -1081,10 +1082,6 @@ if !exists("*s:KnopVerboseEcho()")
         let l:qfresult = []
         for l:i in getqflist()
           if bufname(get(l:i,'bufnr')) !~ '\~$'
-        "         \&& (get(l:i,'text') =~ '\v\c^([^"]*"[^"]*"[^"]*)*[^"]*<'.l:currentWord.'>'
-        "         \|| (bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.mod$'
-        "         \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.sys$'
-        "         \&&  bufname(get(l:i,'bufnr')) !~ '\v\c\w+\.prg$'))
             call add(l:qfresult,l:i)
           endif
         endfor
