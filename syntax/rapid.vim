@@ -227,7 +227,7 @@ else
   highlight default link rapidRepeat Repeat
   " Label
   syn keyword rapidLabel goto
-  syn match rapidLabel /\c\v^\s*\a\w*\:\ze%([^=]|$)/ contains=rapidConditional,rapidOperator
+  syn match rapidLabel /\c\v^\s*[[:upper:][:lower:]]\k*\:\ze%([^=]|$)/ contains=rapidConditional,rapidOperator
   highlight default link rapidLabel Label
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasCamera AliasIO AliasIOReset BitClear BitSet BookErrNo BrakeCheck
@@ -317,7 +317,7 @@ else
   " }}} special keyword for move command 
 
   " Structure value {{{
-  syn match rapidNames /[a-zA-Z_][.a-zA-Z0-9_]*/
+  syn match rapidNames /\v[[:upper:][:lower:]](\k|\.)*/
   " highlight default link rapidNames None
   " rapid structrure values. added to be able to conceal them
   syn region rapidConcealableString start=/"/ end=/"/ contained contains=rapidCharCode,rapidEscapedBackSlash,rapidErrorSingleBackslash,rapidErrorStringTooLong  conceal 
@@ -370,7 +370,7 @@ else
   " }}}
 
   " Function {{{
-  syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<(PROC|MODULE)\s+)@10<![a-zA-Z_]\w+ *\(/me=e-1
+  syn match rapidFunction contains=rapidBuildInFunction /\v\c%(<%(PROC|MODULE)\s+)@10<!<[[:upper:][:lower:]]\k+ *\(/me=e-1
   highlight default link rapidFunction Function
   syn match rapidCallByVar /%\ze[^%]/
   highlight default link rapidCallByVar Function
@@ -548,11 +548,11 @@ else
   if get(g:,'rapidShowError',1)
     "
     " vars or funcs >32 chars are not possible in rapid. a234567890123456789012345
-    syn match rapidErrorIdentifierNameTooLong /\w\{33,}/ containedin=rapidFunction,rapidNames,rapidLabel
+    syn match rapidErrorIdentifierNameTooLong /\k\{33,}/ containedin=rapidFunction,rapidNames,rapidLabel
     highlight default link rapidErrorIdentifierNameTooLong Error
     "
     " a == b + 1
-    syn match rapidErrorShouldBeColonEqual /\c\v%(^\s*%(%(TASK\s+|LOCAL\s+)?%(VAR|PERS|CONST)\s+\w+\s+)?\w+%(\w|\{|,|\}|\+|\-|\*|\/|\.)*\s*)@<=\=/
+    syn match rapidErrorShouldBeColonEqual /\c\v%(^\s*%(%(TASK\s+|LOCAL\s+)?%(VAR|PERS|CONST)\s+\k+\s+)?\k+%(\k|[.{},*/+-])*\s*)@<=\=/
     highlight default link rapidErrorShouldBeColonEqual Error
     "
     " WaitUntil a==b
@@ -573,7 +573,7 @@ else
     highlight default link rapidErrorMissingOperator Error
     "
     " "for" missing "from"
-    syn match rapidErrorMissingFrom /\c\v^\s*for\s+%(\w[0-9a-zA-Z_.{},*/+-]*\s+from)@!\S+\s+\S+/
+    syn match rapidErrorMissingFrom /\c\v^\s*for\s+%([[:upper:][:lower:]]%(\k|[.{},*/+-])*\s+from)@!\S+\s+\S+/
     highlight default link rapidErrorMissingFrom Error
     "
     "
