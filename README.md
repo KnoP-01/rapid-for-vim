@@ -113,7 +113,7 @@ A: Disable stuff in your `vimrc`, see [rapid-options][6] for details: >
 Q: Which keys get mapped to what? Will that override my own mappings?  
 A: rapid-for-vim will not override existing mappings unless the corresponding
    option is explicitly set. To use different key bindings use the
-   `<PLUG>`mapping. Otherwise rapid-for-vim create the followin mappings: >
+   `<Plug>`mapping. Otherwise rapid-for-vim create the followin mappings: >
 
     <F2> Show all structure values
     <F3> Show structure values at cursorline
@@ -127,7 +127,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Disable override existing mapping and Vim's default with
         let g:rapidGoDefinitionKeyMap = 0
 
-    <leader>u List all significant appearances of word under cursor.
+    <leader>u List all significant references of word under cursor.
             Override existing mapping with
         let g:rapidListUsageKeyMap = 1
 
@@ -162,11 +162,19 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Override existing mapping with
         let g:rapidAutoFormKeyMap = 1
 
-Q: Does rapid-for-vim provide a mapping for indenting a complete file?  
+Q: When I switch syntax off I get false indentation sometimes?
+A: Indentation partly depends on `syntax on` . If you have strings with ! or
+   keywords in it Indentation may get confused without syntax on. It should
+   do fine for the most part of your editing. See next question.
+
+Q: Does rapid-for-vim provide a mapping for indenting the whole file?  
 A: No, but you may put the following in your .vimrc or
    ~/.vim/after/ftplugin/rapid.vim: >
 
-    nnoremap ANYKEY gg=G``zz
+    nnoremap <ANYKEY> mzgg=G`z 
+or if you don't use syntax highlighting >
+
+    nnoremap <ANYKEY> :syntax on<bar>normal mzgg=G`z<cr>:syntax off<cr>
 
 Q: Scrolling feels sluggish. What can I do?  
 A: Switch error highlighting off: >
