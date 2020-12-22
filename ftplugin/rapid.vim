@@ -454,12 +454,12 @@ if !exists("*s:KnopVerboseEcho()")
     "
     let l:numSearchStartLine = line(".")
     let l:numSearchStartColumn = col(".")
-    let l:numProcStart = search('\v\c^\s*((local|global|task)\s+)?(proc|func|trap)\s+','bcnW')
+    let l:numProcStart = search('\v\c^\s*((local|task)\s+)?(proc|func|trap)\s+','bcnW')
     let l:numProcEnd = search('\v\c^\s*end(proc|func|trap)>','cnW')
     "
     " if search starts inside a proc, search local decl
     if l:numProcStart != 0 && l:numProcEnd  != 0
-          \&& search('\v\c^\s*(((local|global|task)\s+)?(proc|func|trap)\s+|endmodule)','cnW') > l:numProcEnd
+          \&& search('\v\c^\s*(((local|task)\s+)?(proc|func|trap)\s+|endmodule)','cnW') > l:numProcEnd
           \&& search('\v\c^\s*end(proc|func|trap)>','bcnW') < l:numProcStart
       "
       " search FOR loop local auto declaration
@@ -514,7 +514,7 @@ if !exists("*s:KnopVerboseEcho()")
       let l:numFoundLine = line(".")
       let l:numFoundCol = col(".")
       " rule out proc local declarations
-      if search('\v\c^\s*((local|global|task)\s+)?(end)?(proc|func|trap|record|module)>','W') && 
+      if search('\v\c^\s*((local|task)\s+)?(end)?(proc|func|trap|record|module)>','W') && 
             \(  expand("<cword>") !~ '\c\v^\s*end(proc|func|trap|record)>' 
             \|| expand("<cword>") =~ '\c\v^\s*endmodule>' 
             \)
@@ -528,7 +528,7 @@ if !exists("*s:KnopVerboseEcho()")
     " search Module local proc (et al) declaration
     call s:KnopVerboseEcho("search Module local proc (et al) declaration")
     let l:numEndmodule=s:RapidPutCursorOnModuleAndReturnEndmoduleline()
-    if search('\v\c^\s*((local|global|task)\s+)?(proc|func\s+\w+|trap|record)\s+\zs'.a:currentWord.'>','cW',l:numEndmodule)
+    if search('\v\c^\s*((local|task)\s+)?(proc|func\s+\w+|trap|record)\s+\zs'.a:currentWord.'>','cW',l:numEndmodule)
       call s:KnopVerboseEcho("Found declaration of PROC, FUNC, TRAP or RECORD in this MODULE",1)
       return 0
       "
@@ -543,7 +543,7 @@ if !exists("*s:KnopVerboseEcho()")
       "
       " first fill location list with all (end)?(proc|func|trap|record) and variable
       " declarations with currentWord
-      let l:prefix = '/\c\v^\s*(local\s+|task\s+|global\s+)?((var|pers|const)\s+\w+\s+'
+      let l:prefix = '/\c\v^\s*(local\s+|task\s+)?((var|pers|const)\s+\w+\s+'
       let l:suffix = '>|(end)?(proc|func|trap|record)>)/j' " since this finds all (not only global) ends, the previous must also list local
       if l:i =~ 'task'
         if has("win32")
@@ -573,9 +573,9 @@ if !exists("*s:KnopVerboseEcho()")
       " search for global proc in loclist
       call s:KnopVerboseEcho("search for global proc in loclist")
       if l:i =~ 'task'
-        let l:procdecl = '\v\c^\s*(task\s+|global\s+)?(proc|func\s+\w+|trap|record)\s+'
+        let l:procdecl = '\v\c^\s*(task\s+)?(proc|func\s+\w+|trap|record)\s+'
       elseif l:i =~ 'system'
-        let l:procdecl = '\v\c^\s*(global\s+)?(proc|func\s+\w+|trap|record)\s+'
+        let l:procdecl = '\v\c^\s*(proc|func\s+\w+|trap|record)\s+'
       endif
       let l:loclist = getloclist(0)
       let l:qf = []
@@ -597,7 +597,7 @@ if !exists("*s:KnopVerboseEcho()")
       "
       " then search for global variable in loc list
       call s:KnopVerboseEcho("search for global variable in loc list")
-      let l:procdecl = '\v\c^\s*(local\s+|task\s+|global\s+)?(proc|func\s+\w+|trap|record)\s+' " procdecl must also contain local, since all ends are present
+      let l:procdecl = '\v\c^\s*(local\s+|task\s+)?(proc|func\s+\w+|trap|record)\s+' " procdecl must also contain local, since all ends are present
       let l:endproc = '\v\c^\s*end(proc|func|trap|record)>'
       let l:skip = 0
       if l:i =~ 'task'
@@ -681,7 +681,7 @@ if !exists("*s:KnopVerboseEcho()")
       autocmd CursorMoved * call <SID>RapidCleanBufferList()
     augroup END
     "
-    let l:declPrefix = '\c\v^\s*(local\s+|task\s+|global\s+)?(var|pers|const|alias)\s+\w+\s+'
+    let l:declPrefix = '\c\v^\s*(local\s+|task\s+)?(var|pers|const|alias)\s+\w+\s+'
     "
     " suche das naechste wort
     if search('\w','cW',line("."))
@@ -1008,7 +1008,7 @@ if !exists("*s:KnopVerboseEcho()")
       autocmd CursorMoved * call <SID>RapidCleanBufferList()
     augroup END
     " list defs in qf
-    if s:KnopSearchPathForPatternNTimes('\v\c^\s*(global\s+|task\s+|local\s+)?(proc|func|trap|record|module)>','%','','rapid')==0
+    if s:KnopSearchPathForPatternNTimes('\v\c^\s*(task\s+|local\s+)?(proc|func|trap|record|module)>','%','','rapid')==0
       if getqflist()==[] | return | endif
       " put cursor back after manipulating qf
       if getbufvar('%', "&buftype")!="quickfix"
@@ -1017,7 +1017,7 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       if getbufvar('%', "&buftype")!="quickfix" | return | endif
       setlocal modifiable
-      silent %substitute/\v\c^.*\|\s*((global\s+|task\s+|local\s+)?(proc|func|trap|record|module)>)/\1/
+      silent %substitute/\v\c^.*\|\s*((task\s+|local\s+)?(proc|func|trap|record|module)>)/\1/
       0
       if !exists("g:rapidTmpFile")
         let g:rapidTmpFile=tempname()
@@ -1321,7 +1321,7 @@ if exists("loaded_matchit") " depends on matchit (or matchup)
          \.'^\s*\<for\>[^!]\+\<do\>.*:^\s*\<endfor\>.*,'
          \.'^\s*\<while\>[^!]\+\<do\>.*:^\s*\<endwhile\>.*,'
          \.'^\s*\<test\>.*:^\s*\<case\>.*:^\s*\<default\>.*:^\s*\<endtest\>.*,'
-         \.'^\s*\(global\s\+\|local\s\+\|task\s\+\)\?\<\(proc\|func\|trap\|record\)\>.*:\<raise\>:\<return\>:^\s*\<error\>.*:\<trynext\>:\<retry\>:^\s*\<undo\>.*:^\s*\<backward\>.*:^\s*\<end\(proc\|func\|trap\|record\)\>.*,'
+         \.'^\s*\(local\s\+\|task\s\+\)\?\<\(proc\|func\|trap\|record\)\>.*:\<raise\>:\<return\>:^\s*\<error\>.*:\<trynext\>:\<retry\>:^\s*\<undo\>.*:^\s*\<backward\>.*:^\s*\<end\(proc\|func\|trap\|record\)\>.*,'
          \.'^\s*\<module\>.*:^\s*\<endmodule\>.*'
   let b:match_ignorecase = 1 " Rapid does ignore case
 endif
@@ -1346,12 +1346,12 @@ if get(g:,'rapidMoveAroundKeyMap',1)
     onoremap <silent><buffer> [] :<C-U>exe "normal! V"<Bar>call search('^#\n\w\+:\n\n','besW')<cr>
   else
     " Move around functions
-    nnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'bs')        <Bar>unlet b:knopCount<CR>:normal! zt<CR>
-    onoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n\zs', 'bsW')<Bar>unlet b:knopCount<CR>
-    xnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'bsW')     <Bar>unlet b:knopCount<CR>
-    nnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 's')         <Bar>unlet b:knopCount<CR>:normal! zt<CR>
-    onoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'sW')        <Bar>unlet b:knopCount<CR>
-    xnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(global\s+\|local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n', 'seWz')<Bar>unlet b:knopCount<CR>
+    nnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'bs')        <Bar>unlet b:knopCount<CR>:normal! zt<CR>
+    onoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n\zs', 'bsW')<Bar>unlet b:knopCount<CR>
+    xnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'bsW')     <Bar>unlet b:knopCount<CR>
+    nnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 's')         <Bar>unlet b:knopCount<CR>:normal! zt<CR>
+    onoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'sW')        <Bar>unlet b:knopCount<CR>
+    xnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n', 'seWz')<Bar>unlet b:knopCount<CR>
     nnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bs')                                    <Bar>unlet b:knopCount<CR>:normal! zb<CR>
     onoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>\n^(.\|\n)', 'bseW')                        <Bar>unlet b:knopCount<CR>
     xnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bsW')                                 <Bar>unlet b:knopCount<CR>
