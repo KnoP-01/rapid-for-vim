@@ -158,7 +158,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Override existing mapping with
         let g:rapidCommentTextObject = 1
 
-    <leader>n Inserts a new PROC/FUNC/TRAP/RECORD
+    <leader>n Inserts a new PROC/FUNC/TRAP/RECORD.
             Override existing mapping with
         let g:rapidAutoFormKeyMap = 1
 
