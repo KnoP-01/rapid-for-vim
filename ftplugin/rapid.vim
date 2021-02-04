@@ -1,8 +1,8 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.2.1
-" Last Change: 22. Dec 2020
+" Version: 2.2.4
+" Last Change: 03. Feb 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1417,9 +1417,9 @@ endif
 " if the mapping does not exist and there is no plug-mapping just map it,
 " otherwise look for the config variable
 
-if get(g:,'rapidGoDefinitionKeyMap',1)
-      \&& !hasmapto('<plug>RapidGoDef','n')
-  " Go Definition; The condition is different because gd is a vim command
+if get(g:,'rapidGoDefinitionKeyMap',0)
+      \|| mapcheck("gd","n")=="" && !hasmapto('<plug>RapidGoDef','n')
+  " Go Definition
   nmap <silent><buffer> gd <plug>RapidGoDef
 endif
 if get(g:,'rapidListDefKeyMap',0)
