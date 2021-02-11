@@ -1,8 +1,8 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.2.2
-" Last Change: 22. Dec 2020
+" Version: 2.2.3
+" Last Change: 11. Feb 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -166,17 +166,17 @@ else
   " TODO testing. Problem: does not highlight any type if it's part of an argument list
   " syn match rapidAnyType /\v^\s*(global\s+|task\s+|local\s+)?(alias|pers|var|const|func)\s+\w+>/ contains=rapidStorageClass,rapidType,rapidTypeDef
   " highlight default link rapidAnyType Type
-  syn keyword rapidType aiotrigg bool btnres busstate buttondata byte
-  syn keyword rapidType cfgdomain clock confdata corrdescr datapos dionum dir dnum
-  syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum errstr errtype event_type exec_level extjoint handler_type
-  syn keyword rapidType icondata identno intnum iodev iounit_state jointtarget
-  syn keyword rapidType listitem loaddata loadidnum loadsession mecunit motsetdata
+  syn keyword rapidType accdata aiotrigg bool btnres busstate buttondata byte
+  syn keyword rapidType cfgdomain clock cnvcmd confdata confsupdata corrdescr datapos deflectiondata dionum dir dnum
+  syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum ErrorInfo errstr errtype event_type exec_level extjoint handler_type
+  syn keyword rapidType icondata identno inposdata intnum inttypes iodev iounit_state jointtarget
+  syn keyword rapidType listitem loaddata loadidnum loadsession mecunit motionprocessmode motsetdata
   syn keyword rapidType num
-  syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pnpdata pos pose progdisp o_jointtarget o_robtarget
+  syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pnpdata pos pose proc_times progdisp o_jointtarget o_robtarget
   syn keyword rapidType rawbytes restartdata rmqheader rmqmessage rmqslot robjoint robtarget
-  syn keyword rapidType sensor sensorstate sensorvardata shapedata signalorigin signalai signalao signaldi signaldo signalgi signalgo socketdev socketstatus speeddata stoppointdata string stringdig switch symnum syncident 
-  syn keyword rapidType taskid tasks testsignal tooldata tpnum trapdata triggdata triggios triggiosdnum triggmode triggstrgo tsp_status tunetype
-  syn keyword rapidType uishownum wobjdata wzstationary wztemporary zonedata
+  syn keyword rapidType searchdata sensor sensorstate sensorvardata shapedata signalai signalao signaldi signaldo signalgi signalgo signalorigin singdata socketdev socketstatus speeddata stopmovestartmove_mem stoppoint stoppointdata string stringdig sup_timeouts supervtype switch symnum syncident 
+  syn keyword rapidType taskid tasks tasksatstart testsignal tooldata tpnum trapdata triggdata triggflag triggios triggiosdnum triggmode triggstrgo tsp_status tunegtype tunetype
+  syn keyword rapidType uishownum veldata visiondata wobjdata wzstationary wztemporary zonedata
   " SoftMove data types
   syn keyword rapidType css_offset_dir css_soft_dir cssframe
   " arc data types
@@ -190,9 +190,11 @@ else
   " dispense data types
   syn keyword rapidType beaddata equipdata
   " Spot data types
-  syn keyword rapidType gundata spotdata forcedata simdata smeqdata
+  syn keyword rapidType gundata gunnum spotdata forcedata simdata smeqdata smeqtype
+  " Tool change types
+  syn keyword rapidType standno ToolInfo toolno
   " Continuous Application Platform data types
-  syn keyword rapidType capaptrreferencedata capdata caplatrackdata capspeeddata capspeeddata capstopmode captrackdata capweavedata flypointdata processtimes restartblkdata supervtimeouts weavestartdata 
+  syn keyword rapidType capaptrreferencedata capdata capevent caplatrackdata capmvsttim capspeeddata capspeeddata capstopmode captestno captrackdata capweavedata flypointdata processtimes restartblkdata supervtimeouts weavestartdata 
   " Bulls Eye data types
   syn keyword rapidType be_device be_scan be_tooldesign
   " Force Control data types
@@ -232,11 +234,12 @@ else
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasCamera AliasIO AliasIOReset BitClear BitSet BookErrNo BrakeCheck
   syn keyword rapidKeyword CallByVar CancelLoad CheckProgRef CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir ConfJ ConfL CONNECT CopyFile CopyRawBytes CornerPathWarning CorrClear CorrCon CorrDiscon CorrWrite
-  syn keyword rapidKeyword CSSAct CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTuneCSSOffsetTune
+  syn keyword rapidKeyword CSSAct CSSDeact CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTune  CyclicBrakeCheck
   syn keyword rapidKeyword DeactEventBuffer DeactUnit Decr DitherAct DitherDeact DropSensor 
   syn keyword rapidKeyword EGMActJoint EGMActMove EGMActPose EGMGetId EGMReset EGMSetupAI EGMSetupAO EGMSetupGI EGMSetupLTAPP EGMSetupUC EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrWrite
   syn keyword rapidKeyword FitCircle FricIdInit FricIdEvaluate FricIdSetFricLevels 
-  syn keyword rapidKeyword GetDataVal GetGroupSignalInfo GetJointData GetSysData GetTorqueMargin GetTrapData GripLoad HollowWristReset IDelete IDisable IEnable IError Incr IndReset InvertDO IOBusStart IOBusState IODisable IOEnable IPers IRMQMessage ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep ITimer IVarValue IWatch
+  syn keyword rapidKeyword GetDataVal GetGroupSignalInfo GetJointData GetSysData GetTorqueMargin GetTrapData GripLoad HollowWristReset 
+  syn keyword rapidKeyword IDelete IDisable IEnable IError Incr IndReset InvertDO IOBusStart IOBusState IoCtrlAxis_RefSync IoCtrlAxis_RefSyncOff IoCtrlAxis_RefSyncOn IODisable IOEnable IPers IRMQMessage ISignalAI ISignalAO ISignalDI ISignalDO ISignalGI ISignalGO ISleep ITimer IVarValue IWatch
   syn keyword rapidKeyword Load LoadId MakeDir ManLoadIdProc MatrixSolve MatrixSolveQR MatrixSVD MechUnitLoad MotionProcessModeSet MotionSup MToolRotCalib MToolTCPCalib Open OpenDir
   syn keyword rapidKeyword PackDNHeader PackRawBytes PathAccLim PathLengthReset PathLengthStart PathLengthStop PathRecStart PathRecStop PathResol PDispOff PDispOn PDispSet ProcerrRecovery PrxActivAndStoreRecord PrxActivRecord PrxDbgStoreRecord PrxDeactRecord PrxResetPos PrxResetRecords PrxSetPosOffset PrxSetRecordSampleTime PrxSetSyncalarm PrxStartRecord PrxStopRecord PrxStoreRecord PrxUseFileRecord PulseDO
   syn keyword rapidKeyword ReadAnyBin ReadBlock ReadCfgData ReadErrData ReadRawBytes ReadVarArr RemoveAllCyclicBool RemoveCyclicBool RemoveDir RemoveFile RenameFile Reset ResetAxisDistance ResetAxisMoveTime ResetPPMoved ResetRetryCount ResetTorqueMargin RestoPath Rewind RMQEmptyQueue RMQFindSlot RMQGetMessage RMQGetMsgData RMQGetMsgHeader RMQReadWait RMQSendMessage RMQSendWait
@@ -255,6 +258,8 @@ else
   syn keyword rapidKeyword IndexLookup IpsCommand IpsGetParam IpsSetParam PaintCommand PntProdUserLog PntQueueExtraGet PntQueueExtraSet PntQueuePeek SetBrush SetBrushFac
   " Spot instructions
   syn keyword rapidKeyword SetForce Calibrate ReCalcTCP IndGunMove IndGunMoveReset OpenHighLift CloseHighLift SwSetIntSpotData SwSetIntForceData SwSetIntGunData SwSetIntSimData SwGetCalibData SwGetFixTipData 
+  " Tool change instructions
+  syn keyword rapidKeyword TcCloseCover TcDropOffTool TcLockTool TcOpenCover TcPickupTool TcUnlockTool
   " dispense instructions
   syn keyword rapidKeyword SetTmSignal SyncWWObj
   " Continuous Application Platform instructions
@@ -436,6 +441,8 @@ else
   syn keyword rapidConstant SEN_BUSY SEN_CAALARM SEN_CAMCHECK SEN_EXALARM SEN_GENERRO SEN_NO_MEAS SEN_NOREADY SEN_TEMP SEN_TIMEOUT SEN_UNKNOWN SEN_VALUE
   " error codes starting with SYS_
   syn keyword rapidConstant SYS_ERR_ARL_INPAR_RDONLY SYS_ERR_HW_SMB_WARNING_BATTERY_LOW SYS_ERR_MOC_CNV_REC_FILE_UNKNOWN SYS_ERR_MOC_CNV_REC_NOT_READY
+  " error codes starting with TC_
+  syn keyword rapidConstant TC_ERR_AIR TC_ERR_CLOSE_COV TC_ERR_DOUNLOCK TC_ERR_IO TC_ERR_IOCFG TC_ERR_LOCK TC_ERR_NOTOOL TC_ERR_OPEN_COV TC_ERR_POWER TC_ERR_PULOCK TC_ERR_ROBPOS TC_ERR_ROBPOS_DROP TC_ERR_ROBPOS_PICK TC_ERR_SERVO_TOOL TC_ERR_STANDNUM TC_ERR_TOOL TC_ERR_TOOLCFG TC_ERR_TOOLNUM  TC_ERR_UNLOCK
   " long jump error
   syn keyword rapidConstant LONG_JMP_ALL_ERR
   " Arc and Arc sensor
