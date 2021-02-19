@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.3
-" Last Change: 14. Feb 2021
+" Last Change: 19. Feb 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -247,7 +247,7 @@ if !exists("*s:KnopVerboseEcho()")
       let l:item = l:items[l:idx]
       let l:line = fnamemodify(bufname(l:item.bufnr),':.')
       if get(g:,'knopShortenQFPath',1) && strlen(l:line)>40
-        let l:line = pathshorten(l:line,3)
+        let l:line = pathshorten(l:line,5)
       endif
       let l:line .= "|" . l:item.lnum . " col " . l:item.col . "| "
       let l:line .= l:item.text
