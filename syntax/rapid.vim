@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.3
-" Last Change: 11. Feb 2021
+" Last Change: 25. Feb 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -191,7 +191,7 @@ else
   syn keyword rapidType beaddata equipdata
   " Spot data types
   syn keyword rapidType gundata gunnum spotdata forcedata simdata smeqdata smeqtype
-  " Tool change types
+  " Tool change data types
   syn keyword rapidType standno ToolInfo toolno
   " Continuous Application Platform data types
   syn keyword rapidType capaptrreferencedata capdata capevent caplatrackdata capmvsttim capspeeddata capspeeddata capstopmode captestno captrackdata capweavedata flypointdata processtimes restartblkdata supervtimeouts weavestartdata 
@@ -234,7 +234,7 @@ else
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasCamera AliasIO AliasIOReset BitClear BitSet BookErrNo BrakeCheck
   syn keyword rapidKeyword CallByVar CancelLoad CheckProgRef CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir ConfJ ConfL CONNECT CopyFile CopyRawBytes CornerPathWarning CorrClear CorrCon CorrDiscon CorrWrite
-  syn keyword rapidKeyword CSSAct CSSDeact CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTune  CyclicBrakeCheck
+  syn keyword rapidKeyword CSSAct CSSDeact CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTune CyclicBrakeCheck
   syn keyword rapidKeyword DeactEventBuffer DeactUnit Decr DitherAct DitherDeact DropSensor 
   syn keyword rapidKeyword EGMActJoint EGMActMove EGMActPose EGMGetId EGMReset EGMSetupAI EGMSetupAO EGMSetupGI EGMSetupLTAPP EGMSetupUC EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrWrite
   syn keyword rapidKeyword FitCircle FricIdInit FricIdEvaluate FricIdSetFricLevels 
