@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.3
-" Last Change: 25. Feb 2021
+" Last Change: 08. Mar 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -211,11 +211,6 @@ else
   highlight default link rapidTypeDef TypeDef
   " }}} Type, StorageClass and Typedef
 
-  " Delimiter {{{
-  syn match rapidDelimiter /[\\(){},;|\[\]]/
-  highlight default link rapidDelimiter Delimiter
-  " }}} Delimiter
-
   " Statements, keywords et al {{{
   " syn keyword rapidStatement
   " highlight default link rapidStatement Statement
@@ -330,6 +325,19 @@ else
   highlight default link rapidConcealableString String
   syn region rapidStructVal matchgroup=rapidDelimiter start=/\[/ end=/\]/ contains=ALLBUT,rapidString keepend extend conceal cchar=* 
   " }}} Structure value
+
+  " Delimiter {{{
+  " must come after rapidConcealableString
+  " otherwise the follwoing gets messed up:
+  "
+  "  LOCAL CONST listitem lstAuswService{18}:=[["","Service Position"],["","Bremsentest"],["","Referenzfahrt"],["","Manuelles Abfahren"],["","Justagestellung"],["","Transportposition"],
+  "      ["","Spitze-Spitze Greifer 1, [RT]"],["","Spitze-Spitze Greifer 2, [FT]"],["","Spitze-Spitze Pruefspitze"],["","Werkobjekt Ablage"],["","Werkobjekt Modul 1"],
+  "      ["","Werkobjekt Modul 2"],["","TCP von Greifer 1 vermessen, [RT]"],["","TCP von Greifer 2 vermessen, [FT]"],["","TCP von Basisdorn vermessen"],
+  "      ["","Greifer abdocken"],["","Greifer andocken"],["","Kollision Check (Ohne Greifer)"]];
+  " 
+  syn match rapidDelimiter /[\\(){},;|\[\]]/
+  highlight default link rapidDelimiter Delimiter
+  " }}} Delimiter
 
   " BuildInFunction {{{
   " dispense functions
