@@ -112,7 +112,7 @@ if bufname("%") =~ '\c\.cfg$'
 
   " sections {{{
   syn match rapidException /^\w\+/
-  syn match rapidException /CFG\ze_/
+  syn match rapidException /CFG_\d\+/
   highlight default link rapidException Exception
   " }}} sections
 
