@@ -86,7 +86,7 @@ highlight default link rapidBoolean Boolean
 syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
 highlight default link rapidFloat Float
 " String. Note: Don't rename group rapidString. Indent depend on this
-syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ contains=rapidCharCode,rapidEscapedBackSlash,rapidStringDoubleQuote,rapidErrorSingleBackslash,rapidErrorStringTooLong
+syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ oneline contains=rapidCharCode,rapidEscapedBackSlash,rapidErrorSingleBackslash,rapidErrorStringTooLong,rapidStringDoubleQuote
 highlight default link rapidString String
 " two adjacent "" in string for one double quote
 syn match rapidStringDoubleQuote /""/ contained
@@ -321,7 +321,7 @@ else
   syn match rapidNames /\v[[:upper:][:lower:]](\k|\.)*/
   " highlight default link rapidNames None
   " rapid structrure values. added to be able to conceal them
-  syn region rapidConcealableString start=/"/ end=/"/ contained contains=rapidCharCode,rapidEscapedBackSlash,rapidErrorSingleBackslash,rapidErrorStringTooLong  conceal 
+  syn region rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline contained contains=rapidCharCode,rapidEscapedBackSlash,rapidErrorSingleBackslash,rapidErrorStringTooLong,rapidStringDoubleQuote conceal 
   highlight default link rapidConcealableString String
   syn region rapidStructVal matchgroup=rapidDelimiter start=/\[/ end=/\]/ contains=ALLBUT,rapidString keepend extend conceal cchar=* 
   " }}} Structure value
