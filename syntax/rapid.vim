@@ -83,7 +83,8 @@ endif
 syn keyword rapidBoolean TRUE FALSE Edge High Low
 highlight default link rapidBoolean Boolean
 " Float (num)
-syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
+" syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
+syn match rapidFloat /\v\c%(<\d+\.|\.?<\d)\d*%(E[+-]?\d+)?>/ contains=rapidOperator
 highlight default link rapidFloat Float
 " String. Note: Don't rename group rapidString. Indent depend on this
 syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ oneline contains=rapidCharCode,rapidEscapedBackSlash,rapidErrorSingleBackslash,rapidErrorStringTooLong,rapidStringDoubleQuote
@@ -105,7 +106,8 @@ if bufname("%") =~ '\c\.cfg$'
 " {{{ highlighting for *.cfg
 
   " special chars {{{
-  syn match rapidOperator /:\|[+-]\|\*\|\/\|\\/
+  " syn match rapidOperator /:\|[+-]\|\*\|\/\|\\/
+  syn match rapidOperator /[-+*/:\\]/
   syn match rapidOperator /^#/
   highlight default link rapidOperator Operator
   " }}} special chars
