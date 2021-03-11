@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
 " Version: 2.2.3
-" Last Change: 10. Mar 2021
+" Last Change: 11. Mar 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -319,25 +319,25 @@ else
   endif
   " }}} special keyword for move command 
 
-  " Structure value {{{
+  " Any name {{{
   syn match rapidNames /\v[[:upper:][:lower:]](\k|\.)*/
-  " highlight default link rapidNames None
-  " rapid structrure values. added to be able to conceal them
-  syn region rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong conceal 
-  highlight default link rapidConcealableString String
-  syn region rapidStructVal matchgroup=rapidDelimiter start=/\[/ end=/\]/ contains=ALLBUT,rapidString keepend extend conceal cchar=* 
-  " }}} Structure value
+  " }}} Any name
 
-  " Delimiter {{{
-  " must come after rapidConcealableString
-  " otherwise the follwoing gets messed up:
-  "
+  " Structure value {{{
+  " rapid structrure values. added to be able to conceal them
+  syn region rapidConcealableString matchgroup=rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline keepend extend contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong conceal 
+  highlight default link rapidConcealableString String
+  syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
+  highlight default link rapidStructDelimiter Delimiter
+  " check edge cases like this one:
   "  LOCAL CONST listitem lstAuswService{18}:=[["","Service Position"],["","Bremsentest"],["","Referenzfahrt"],["","Manuelles Abfahren"],["","Justagestellung"],["","Transportposition"],
   "      ["","Spitze-Spitze Greifer 1, [RT]"],["","Spitze-Spitze Greifer 2, [FT]"],["","Spitze-Spitze Pruefspitze"],["","Werkobjekt Ablage"],["","Werkobjekt Modul 1"],
   "      ["","Werkobjekt Modul 2"],["","TCP von Greifer 1 vermessen, [RT]"],["","TCP von Greifer 2 vermessen, [FT]"],["","TCP von Basisdorn vermessen"],
   "      ["","Greifer abdocken"],["","Greifer andocken"],["","Kollision Check (Ohne Greifer)"]];
-  " 
-  syn match rapidDelimiter /[\\(){},;|\[\]]/
+  " }}} Structure value
+
+  " Delimiter {{{
+  syn match rapidDelimiter /[\\(){},;|]/
   highlight default link rapidDelimiter Delimiter
   " }}} Delimiter
 
