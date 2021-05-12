@@ -173,7 +173,7 @@ else
   syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum ErrorInfo errstr errtype event_type exec_level extjoint handler_type
   syn keyword rapidType icondata identno inposdata intnum inttypes iodev iounit_state jointtarget
   syn keyword rapidType listitem loaddata loadidnum loadsession mecunit motionprocessmode motsetdata
-  syn keyword rapidType num
+  " syn keyword rapidType num
   syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pnpdata pos pose proc_times progdisp o_jointtarget o_robtarget
   syn keyword rapidType rawbytes restartdata rmqheader rmqmessage rmqslot robjoint robtarget
   syn keyword rapidType searchdata sensor sensorstate sensorvardata shapedata signalai signalao signaldi signaldo signalgi signalgo signalorigin singdata socketdev socketstatus speeddata stopmovestartmove_mem stoppoint stoppointdata string stringdig sup_timeouts supervtype switch symnum syncident 
@@ -322,6 +322,11 @@ else
   " Any name {{{
   syn match rapidNames /\v[[:upper:][:lower:]](\k|\.)*/
   " }}} Any name
+
+  " Attempt to avoid false highlight of num in case of parameter name:
+  "   TPWrite "goPosNo="\num:=GOutput(goPosNo);
+  " Must follow after rapidNames in this file
+  syn match rapidType /\c\v<num>\s*\ze[^ :]/
 
   " Structure value {{{
   " rapid structrure values. added to be able to conceal them
