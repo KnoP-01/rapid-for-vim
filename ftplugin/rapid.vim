@@ -1141,18 +1141,19 @@ let b:undo_ftplugin = b:undo_ftplugin." fenc<"
 " path for gf, :find etc
 if get(g:,'rapidPath',1)
 
+  let s:pathcurrfile = s:KnopFnameescape4Path(substitute(expand("%:p:h"), '\\', '/', 'g'))
   let s:rapidpath=''
-  if finddir(expand('%:p:h').'/../../../RAPID')    !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../../../RAPID/**,'   )     | endif
-  if finddir(expand('%:p:h').'/../../../SYSPAR')   !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../../../SYSPAR/**,'  )     | endif
-  if finddir(expand('%:p:h').'/../../../HOME')     !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../../../HOME/**,'    )     | endif
-  if finddir(expand('%:p:h').'/../../../BACKINFO') !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../../../BACKINFO/**,')     | endif
-  if finddir(expand('%:p:h').'/../../../CS')       !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../../../CS/**,'      )     | endif
-  if finddir(expand('%:p:h').'/../RAPID')          !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../RAPID/**,'         )     | endif
-  if finddir(expand('%:p:h').'/../SYSPAR')         !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../SYSPAR/**,'        )     | endif
-  if finddir(expand('%:p:h').'/../HOME')           !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../HOME/**,'          )     | endif
-  if finddir(expand('%:p:h').'/../BACKINFO')       !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../BACKINFO/**,'      )     | endif
-  if finddir(expand('%:p:h').'/../CS')             !='' | let s:rapidpath.=simplify(expand('%:p:h').'/../CS/**,'            )     | endif
-  if finddir(expand('%:p:h').'/SYSPAR')            !='' | let s:rapidpath.=simplify(expand('%:p:h').'/SYSPAR/**,'           )     | endif " for .prg files
+  if finddir(s:pathcurrfile.'/../../../RAPID')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../RAPID/**,'   )     | endif
+  if finddir(s:pathcurrfile.'/../../../SYSPAR')   !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../SYSPAR/**,'  )     | endif
+  if finddir(s:pathcurrfile.'/../../../HOME')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../HOME/**,'    )     | endif
+  if finddir(s:pathcurrfile.'/../../../BACKINFO') !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../BACKINFO/**,')     | endif
+  if finddir(s:pathcurrfile.'/../../../CS')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../CS/**,'      )     | endif
+  if finddir(s:pathcurrfile.'/../RAPID')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../RAPID/**,'         )     | endif
+  if finddir(s:pathcurrfile.'/../SYSPAR')         !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../SYSPAR/**,'        )     | endif
+  if finddir(s:pathcurrfile.'/../HOME')           !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../HOME/**,'          )     | endif
+  if finddir(s:pathcurrfile.'/../BACKINFO')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../BACKINFO/**,'      )     | endif
+  if finddir(s:pathcurrfile.'/../CS')             !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../CS/**,'            )     | endif
+  if finddir(s:pathcurrfile.'/SYSPAR')            !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )     | endif " for .prg files
 
   execute "setlocal path=".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
