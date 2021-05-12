@@ -293,6 +293,7 @@ if !exists("*s:KnopVerboseEcho()")
   function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax) abort
     call setqflist([])
     try
+      call s:KnopVerboseEcho("try: ".':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path)
       execute ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
     catch /^Vim\%((\a\+)\)\=:E303/
       call s:KnopVerboseEcho(":vimgrep stopped with E303. No match found")
