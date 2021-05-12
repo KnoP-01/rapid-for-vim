@@ -1,8 +1,8 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
-" Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
+" Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 20. Apr 2021
+" Last Change: 12. May 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "

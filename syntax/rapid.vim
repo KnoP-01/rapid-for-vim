@@ -1,8 +1,8 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
-" Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
+" Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 11. Mar 2021
+" Last Change: 29. Apr 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -279,7 +279,7 @@ else
   highlight default link rapidException Exception
   " }}} Statements, keywords et al
 
-  " special keyword for move command {{{
+  " Special keyword for move command {{{
   " uncategorized yet
   syn keyword rapidMovement MovePnP
   syn keyword rapidMovement EGMMoveC EGMMoveL EGMRunJoint EGMRunPose EGMStop
