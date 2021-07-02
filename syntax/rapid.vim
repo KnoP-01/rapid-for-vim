@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 29. Apr 2021
+" Last Change: 22. Jun 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -611,7 +611,7 @@ if get(g:,'rapidShowError',1)
   "
   " This error must be defined after rapidString
   " string too long
-  syn match rapidErrorStringTooLong /\v%("%(""|\\\\|\\\x\x|[^"\\]){80})@240<=%([^"]|"{2})+/ contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash
+  " syn match rapidErrorStringTooLong /\v%("%(""|\\\\|\\\x\x|[^"\\]){80})@240<=%([^"]|"{2})+/ contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash
   highlight default link rapidErrorStringTooLong Error
   "
 endif
