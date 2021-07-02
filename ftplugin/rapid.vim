@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 12. May 2021
+" Last Change: 23. Jun 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1148,12 +1148,23 @@ if get(g:,'rapidPath',1)
   if finddir(s:pathcurrfile.'/../../../HOME')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../HOME/**,'    )     | endif
   if finddir(s:pathcurrfile.'/../../../BACKINFO') !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../BACKINFO/**,')     | endif
   if finddir(s:pathcurrfile.'/../../../CS')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../CS/**,'      )     | endif
-  if finddir(s:pathcurrfile.'/../RAPID')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../RAPID/**,'         )     | endif
-  if finddir(s:pathcurrfile.'/../SYSPAR')         !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../SYSPAR/**,'        )     | endif
-  if finddir(s:pathcurrfile.'/../HOME')           !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../HOME/**,'          )     | endif
-  if finddir(s:pathcurrfile.'/../BACKINFO')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../BACKINFO/**,'      )     | endif
-  if finddir(s:pathcurrfile.'/../CS')             !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../CS/**,'            )     | endif
-  if finddir(s:pathcurrfile.'/SYSPAR')            !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )     | endif " for .prg files
+  if s:rapidpath == ''
+    if finddir(s:pathcurrfile.'/../../RAPID')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../RAPID/**,'      )     | endif
+    if finddir(s:pathcurrfile.'/../../SYSPAR')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../SYSPAR/**,'     )     | endif
+    if finddir(s:pathcurrfile.'/../../HOME')      !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../HOME/**,'       )     | endif
+    if finddir(s:pathcurrfile.'/../../BACKINFO')  !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../BACKINFO/**,'   )     | endif
+    if finddir(s:pathcurrfile.'/../../CS')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../CS/**,'         )     | endif
+  endif
+  if s:rapidpath == ''
+    if finddir(s:pathcurrfile.'/../RAPID')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../RAPID/**,'         )     | endif
+    if finddir(s:pathcurrfile.'/../SYSPAR')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../SYSPAR/**,'        )     | endif
+    if finddir(s:pathcurrfile.'/../HOME')         !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../HOME/**,'          )     | endif
+    if finddir(s:pathcurrfile.'/../BACKINFO')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../BACKINFO/**,'      )     | endif
+    if finddir(s:pathcurrfile.'/../CS')           !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../CS/**,'            )     | endif
+  endif
+  if s:rapidpath == ''
+    if finddir(s:pathcurrfile.'/SYSPAR')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )     | endif " for .prg files
+  endif
 
   execute "setlocal path=".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
