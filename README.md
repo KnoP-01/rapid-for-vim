@@ -191,7 +191,7 @@ A: `:let g:knopVerbose=1` any time.
 If you like this plugin please rate it on [vim.org][4]. If you don't but you
 think it could be useful if this or that would be different, don't hesitate to
 email me or even better open an [issue][5]. With a little luck and good
-timing you may find me on irc://irc.freenode.net/#vim as KnoP in case you have
+timing you may find me on irc://irc.libera.chat/#vim as KnoP in case you have
 any questions.  
 
 [1]: https://github.com/KnoP-01/rapid-for-vim/releases/latest
