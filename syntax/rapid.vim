@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 22. Jun 2021
+" Last Change: 06. Aug 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -579,8 +579,8 @@ else
     highlight default link rapidErrorShouldBeColonEqual Error
     "
     " WaitUntil a==b
-    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(Return|WaitUntil|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
-    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(if|elseif)>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!\\]+<then>/
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*%(Return|WaitUntil|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*%(if|elseif)>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!\\]+<then>/
     highlight default link rapidErrorShouldBeEqual Error
     "
     " WaitUntil a=>b
