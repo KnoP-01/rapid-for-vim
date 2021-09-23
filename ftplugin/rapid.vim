@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 23. Jun 2021
+" Last Change: 13. Aug 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -401,6 +401,7 @@ if !exists("*s:KnopVerboseEcho()")
         endif
       else
         if synIDattr(synID(line("."),col("."),0),"name") != "rapidNames"
+              \&& synIDattr(synID(line("."),col("."),0),"name") != "rapidStructVal"
               \&& synIDattr(synID(line("."),col("."),0),"name") != ""
           return ("inst" . l:word)
           "
