@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 06. Aug 2021
+" Last Change: 13. Oct 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -63,6 +63,8 @@ endif
 
 " Rapid does ignore case
 syn case ignore
+" spell checking
+syn spell notoplevel
 " }}} init
 
 " common highlighting {{{
@@ -87,7 +89,7 @@ highlight default link rapidBoolean Boolean
 syn match rapidFloat /\v\c%(<\d+\.|\.?<\d)\d*%(E[+-]?\d+)?>/ contains=rapidOperator
 highlight default link rapidFloat Float
 " String. Note: Don't rename group rapidString. Indent depend on this
-syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ oneline contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong
+syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ oneline contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong,@Spell
 highlight default link rapidString String
 " two adjacent "" in string for one double quote
 syn match rapidStringDoubleQuote /""/ contained
@@ -141,7 +143,7 @@ else
   syn match rapidDebugComment contained /\<DEBUG\>/
   highlight default link rapidDebugComment Debug
   " Line comment
-  syn match rapidComment /!.*$/ contains=rapidTodoComment,rapidDebugComment
+  syn match rapidComment /!.*$/ contains=rapidTodoComment,rapidDebugComment,@Spell
   highlight default link rapidComment Comment
   " }}} Comment 
 
@@ -330,7 +332,7 @@ else
 
   " Structure value {{{
   " rapid structrure values. added to be able to conceal them
-  syn region rapidConcealableString matchgroup=rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline keepend extend contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong conceal 
+  syn region rapidConcealableString matchgroup=rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline keepend extend contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong,@Spell conceal 
   highlight default link rapidConcealableString String
   syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
   highlight default link rapidStructDelimiter Delimiter
