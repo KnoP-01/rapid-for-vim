@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.3
-" Last Change: 13. Aug 2021
+" Last Change: 04. Nov 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1167,7 +1167,7 @@ if get(g:,'rapidPath',1)
     if finddir(s:pathcurrfile.'/SYSPAR')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )     | endif " for .prg files
   endif
 
-  execute "setlocal path=".s:rapidpath
+  execute "setlocal path=.,".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 
 endif " get(g:,'rapidPath',1)
