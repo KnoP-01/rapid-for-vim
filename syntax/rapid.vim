@@ -88,6 +88,15 @@ highlight default link rapidBoolean Boolean
 " syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
 syn match rapidFloat /\v\c%(<\d+\.|\.?<\d)\d*%(E[+-]?\d+)?>/ contains=rapidOperator
 highlight default link rapidFloat Float
+" integer in decimal, hexadecimal, octal and binary
+syn match rapidDec /\<[0-9]\+\>/
+highlight default link rapidDec Number
+syn match rapidHex /\<0x[0-9a-fA-F]\+\>/
+highlight default link rapidHex Number
+syn match rapidOct /\<0o[0-7]\+\>/
+highlight default link rapidOct Number
+syn match rapidBin /\<0b[01]\+\>/
+highlight default link rapidBin Number
 " String. Note: Don't rename group rapidString. Indent depend on this
 syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ oneline contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong,@Spell
 highlight default link rapidString String
@@ -334,7 +343,7 @@ else
   " rapid structrure values. added to be able to conceal them
   syn region rapidConcealableString matchgroup=rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline keepend extend contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong,@Spell conceal 
   highlight default link rapidConcealableString String
-  syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
+  syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidDec,rapidHex,rapidOct,rapidBin,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
   highlight default link rapidStructDelimiter Delimiter
   " sync for regions from start of function
   syn sync match rapidSyncStrucVal grouphere rapidStructVal /\s\c^\s*<(module|proc|func|trap|record)>/
