@@ -1,8 +1,8 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
-" Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.2.4
-" Last Change: 03. Feb 2021
+" Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
+" Version: 2.2.5
+" Last Change: 04. Nov 2021
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -215,7 +215,7 @@ if !exists("*s:KnopVerboseEcho()")
     let l:path = substitute(l:path, '\*\* ', '**/'.a:file.' ', "g") " append a / to **, . and ..
     let l:path = substitute(l:path, '\.\. ', '../'.a:file.' ', "g")
     let l:path = substitute(l:path, '\. ', './'.a:file.' ', "g")
-    call s:KnopVerboseEcho(l:path)
+    call s:KnopVerboseEcho('path prepared: ' . l:path)
     return l:path
   endfunction " s:KnopPreparePath()
 
@@ -230,29 +230,42 @@ if !exists("*s:KnopVerboseEcho()")
     return 1
   endfunction " s:KnopQfCompatible()
 
+  function! KnopEraseQFPaths(info) abort
+    let l:items = getqflist({'id': a:info.id, 'items': 1}).items
+    let l:resultQF = []
+    for l:idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+      let l:item = l:items[l:idx]
+      call add(l:resultQF, item.text[l:item.col - 1 : ])
+    endfor
+    return l:resultQF
+  endfunction
+
+  function! KnopFormatQFPaths(info) abort
+    let l:items = getqflist({'id': a:info.id, 'items': 1}).items
+    let l:resultQF = []
+    for l:idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+      let l:item = l:items[l:idx]
+      let l:line = fnamemodify(bufname(l:item.bufnr),':.')
+      if get(g:,'knopShortenQFPath',1) && strlen(l:line)>40
+        let l:line = pathshorten(l:line,5)
+      endif
+      let l:line .= "|" . l:item.lnum . " col " . l:item.col . "| "
+      let l:line .= l:item.text
+      call add( l:resultQF, l:line )
+    endfor
+    return l:resultQF
+  endfunction
+
   let g:knopPositionQf=1
-  function s:KnopOpenQf(useSyntax) abort
+  function s:KnopOpenQf(useSyntax,...) abort
     if getqflist()==[] | return -1 | endif
+    if !exists("a:1")
+      call setqflist([], ' ', {'items' : getqflist(), 'quickfixtextfunc' : 'KnopFormatQFPaths', 'nr': "$"})
+    endif
     cwindow 4
     if getbufvar('%', "&buftype")!="quickfix"
       let l:getback=1
       copen
-    endif
-    if get(g:,'knopShortenQFPath',1)
-      setlocal modifiable
-      silent! %substitute/\v\c^([^|]{40,})/\=pathshorten(submatch(1))/
-      0
-      if !exists("g:knopTmpFile")
-        let g:knopTmpFile=tempname()
-        augroup knopDelTmpFile
-          au!
-          au VimLeavePre * call delete(g:knopTmpFile)
-          au VimLeavePre * call delete(g:knopTmpFile . "~")
-        augroup END
-      endif
-      execute 'silent save! ' . g:knopTmpFile
-      setlocal nomodifiable
-      setlocal nobuflisted " to be able to remove from buffer list after writing the temp file
     endif
     augroup KnopOpenQf
       au!
@@ -280,6 +293,7 @@ if !exists("*s:KnopVerboseEcho()")
   function s:KnopSearchPathForPatternNTimes(Pattern,path,n,useSyntax) abort
     call setqflist([])
     try
+      call s:KnopVerboseEcho("try: ".':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path)
       execute ':noautocmd ' . a:n . 'vimgrep /' . a:Pattern . '/j ' . a:path
     catch /^Vim\%((\a\+)\)\=:E303/
       call s:KnopVerboseEcho(":vimgrep stopped with E303. No match found")
@@ -314,37 +328,6 @@ if !exists("*s:KnopVerboseEcho()")
   " }}} Little Helper
 
   " Rapid Helper {{{
-
-  function <SID>RapidCleanBufferList() abort
-    if exists("g:knopTmpFile")
-      let l:knopTmpFile = substitute(g:knopTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
-    endif
-    if exists("g:rapidTmpFile")
-      let l:rapidTmpFile = substitute(g:rapidTmpFile,'.*[\\/]\(VI\w\+\.tmp\)','\1','')
-    endif
-    let l:b = {}
-    for l:b in getbufinfo({'buflisted':1})
-      " unlist temp file buffer
-      if exists("g:knopTmpFile")
-            \&& l:b["name"] =~ l:knopTmpFile . '$'
-            \&& !l:b["hidden"]
-        call setbufvar(l:b["bufnr"],"&buflisted",0)
-      endif
-      if exists("g:rapidTmpFile")
-            \&& l:b["name"] =~ l:rapidTmpFile . '$'
-            \&& !l:b["hidden"]
-        call setbufvar(l:b["bufnr"],"&buflisted",0)
-      endif
-      " delete those strange empty unnamed buffers
-      if l:b['name']=='' && l:b['windows']==[] && !l:b['changed']
-        execute "silent bwipeout! " . l:b["bufnr"]
-      endif
-    endfor
-    augroup RapidCleanBufferList
-      " work around where buffer list is not cleaned if knopVerbose is enabled
-      autocmd!
-    augroup END
-  endfunction " <SID>RapidCleanBufferList()
 
   function s:RapidCurrentWordIs() abort
     " returns the string "<type><name>" depending on the word under the cursor
@@ -418,6 +401,7 @@ if !exists("*s:KnopVerboseEcho()")
         endif
       else
         if synIDattr(synID(line("."),col("."),0),"name") != "rapidNames"
+              \&& synIDattr(synID(line("."),col("."),0),"name") != "rapidStructVal"
               \&& synIDattr(synID(line("."),col("."),0),"name") != ""
           return ("inst" . l:word)
           "
@@ -633,30 +617,30 @@ if !exists("*s:KnopVerboseEcho()")
     "
     " search EIO.cfg
     call s:KnopVerboseEcho("search EIO.cfg")
-    if filereadable("./EIO.cfg")
-      let l:path = './EIO.cfg'
-    elseif filereadable("./EIO.Cfg")
-      let l:path = './EIO.Cfg'
-    elseif filereadable("./EIO.CFG")
-      let l:path = './EIO.CFG'
-    elseif filereadable("./SYSPAR/EIO.cfg")
-      let l:path = './SYSPAR/EIO.cfg'
-    elseif filereadable("./SYSPAR/EIO.Cfg")
-      let l:path = './SYSPAR/EIO.Cfg'
-    elseif filereadable("./SYSPAR/EIO.CFG")
-      let l:path = './SYSPAR/EIO.CFG'
-    elseif filereadable("./../../SYSPAR/EIO.cfg")
-      let l:path = './../../SYSPAR/EIO.cfg'
-    elseif filereadable("./../../SYSPAR/EIO.Cfg")
-      let l:path = './../../SYSPAR/EIO.Cfg'
-    elseif filereadable("./../../SYSPAR/EIO.CFG")
-      let l:path = './../../SYSPAR/EIO.CFG'
-    elseif filereadable('./../../../SYSPAR/EIO.cfg')
-      let l:path = './../../../SYSPAR/EIO.cfg'
-    elseif filereadable('./../../../SYSPAR/EIO.Cfg')
-      let l:path = './../../../SYSPAR/EIO.Cfg'
-    elseif filereadable('./../../../SYSPAR/EIO.CFG')
-      let l:path = './../../../SYSPAR/EIO.CFG'
+    if filereadable(simplify(fnameescape(expand("%:p:h"))."/EIO.cfg"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/EIO.cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/EIO.Cfg"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/EIO.Cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/EIO.CFG"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/EIO.CFG')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/SYSPAR/EIO.cfg"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/SYSPAR/EIO.cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/SYSPAR/EIO.Cfg"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/SYSPAR/EIO.Cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/SYSPAR/EIO.CFG"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/SYSPAR/EIO.CFG')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/../../SYSPAR/EIO.cfg"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../SYSPAR/EIO.cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/../../SYSPAR/EIO.Cfg"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../SYSPAR/EIO.Cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/../../SYSPAR/EIO.CFG"))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../SYSPAR/EIO.CFG')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.cfg'))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.Cfg'))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.Cfg')
+    elseif filereadable(simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.CFG'))
+      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.CFG')
     else
       call s:KnopVerboseEcho("No EIO.cfg found!",1)
       return -1
@@ -675,11 +659,6 @@ if !exists("*s:KnopVerboseEcho()")
   endfunction " s:RapidSearchUserDefined()
 
   function <SID>RapidGoDefinition() abort
-    augroup RapidCleanBufferList
-      " work around where buffer list is not cleaned if knopVerbose is enabled
-      autocmd!
-      autocmd CursorMoved * call <SID>RapidCleanBufferList()
-    augroup END
     "
     let l:declPrefix = '\c\v^\s*(local\s+|task\s+)?(var|pers|const|alias)\s+\k+\s+'
     "
@@ -1002,49 +981,16 @@ if !exists("*s:KnopVerboseEcho()")
   " List Def/Usage {{{
 
   function <SID>RapidListDefinition() abort
-    augroup RapidCleanBufferList
-      " work around where buffer list is not cleaned if knopVerbose is enabled
-      autocmd!
-      autocmd CursorMoved * call <SID>RapidCleanBufferList()
-    augroup END
     " list defs in qf
     if s:KnopSearchPathForPatternNTimes('\v\c^\s*(task\s+|local\s+)?(proc|func|trap|record|module)>','%','','rapid')==0
-      if getqflist()==[] | return | endif
-      " put cursor back after manipulating qf
-      if getbufvar('%', "&buftype")!="quickfix"
-        let l:getback=1
-        noautocmd copen
-      endif
-      if getbufvar('%', "&buftype")!="quickfix" | return | endif
-      setlocal modifiable
-      silent %substitute/\v\c^.*\|\s*((task\s+|local\s+)?(proc|func|trap|record|module)>)/\1/
-      0
-      if !exists("g:rapidTmpFile")
-        let g:rapidTmpFile=tempname()
-        augroup rapidDelTmpFile
-          au!
-          au VimLeavePre * call delete(g:rapidTmpFile)
-          au VimLeavePre * call delete(g:rapidTmpFile . "~")
-        augroup END
-      endif
-      execute 'silent save! ' . g:rapidTmpFile
-      setlocal nomodifiable
-      setlocal nobuflisted " to be able to remove from buffer list after writing the temp file
-      if exists("l:getback")
-        unlet l:getback
-        wincmd p
-      endif
+      call setqflist([], ' ', {'items' : getqflist(), 'quickfixtextfunc' : 'KnopEraseQFPaths', 'nr': "$"})
+      call s:KnopOpenQf('rapid',"don't format'")
     else
       call s:KnopVerboseEcho("Nothing found.",1)
     endif
   endfunction " <SID>RapidListDefinition()
 
   function <SID>RapidListUsage() abort
-    augroup RapidCleanBufferList
-      " work around where buffer list is not cleaned if knopVerbose is enabled
-      autocmd!
-      autocmd CursorMoved * call <SID>RapidCleanBufferList()
-    augroup END
     "
     if search('\k','cW',line("."))
       let l:currentWord = s:RapidCurrentWordIs()
@@ -1196,22 +1142,32 @@ let b:undo_ftplugin = b:undo_ftplugin." fenc<"
 " path for gf, :find etc
 if get(g:,'rapidPath',1)
 
-  let s:rapidpath=&path.'./**,'
-  let s:rapidpath=substitute(s:rapidpath,'\/usr\/include,','','g')
-  if finddir('../../../RAPID')      !='' | let s:rapidpath.='../../../RAPID/**,'        | endif
-  if finddir('../../../SYSPAR')     !='' | let s:rapidpath.='../../../SYSPAR/**,'       | endif
-  if finddir('../../../HOME')       !='' | let s:rapidpath.='../../../HOME/**,'         | endif
-  if finddir('../../../BACKINFO')   !='' | let s:rapidpath.='../../../BACKINFO/**,'     | endif
-  if finddir('../../../CS')         !='' | let s:rapidpath.='../../../CS/**,'           | endif
-  if finddir('../RAPID')            !='' | let s:rapidpath.='../RAPID/**,'              | endif
-  if finddir('../SYSPAR')           !='' | let s:rapidpath.='../SYSPAR/**,'             | endif
-  if finddir('../HOME')             !='' | let s:rapidpath.='../HOME/**,'               | endif
-  if finddir('../BACKINFO')         !='' | let s:rapidpath.='../BACKINFO/**,'           | endif
-  if finddir('../CS')               !='' | let s:rapidpath.='../CS/**,'                 | endif
-  if finddir('./SYSPAR')            !='' | let s:rapidpath.='./SYSPAR/**,'              | endif " for .prg files
+  let s:pathcurrfile = s:KnopFnameescape4Path(substitute(expand("%:p:h"), '\\', '/', 'g'))
+  let s:rapidpath=''
+  if finddir(s:pathcurrfile.'/../../../RAPID')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../RAPID/**,'   )     | endif
+  if finddir(s:pathcurrfile.'/../../../SYSPAR')   !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../SYSPAR/**,'  )     | endif
+  if finddir(s:pathcurrfile.'/../../../HOME')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../HOME/**,'    )     | endif
+  if finddir(s:pathcurrfile.'/../../../BACKINFO') !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../BACKINFO/**,')     | endif
+  if finddir(s:pathcurrfile.'/../../../CS')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../CS/**,'      )     | endif
+  if s:rapidpath == ''
+    if finddir(s:pathcurrfile.'/../../RAPID')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../RAPID/**,'      )     | endif
+    if finddir(s:pathcurrfile.'/../../SYSPAR')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../SYSPAR/**,'     )     | endif
+    if finddir(s:pathcurrfile.'/../../HOME')      !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../HOME/**,'       )     | endif
+    if finddir(s:pathcurrfile.'/../../BACKINFO')  !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../BACKINFO/**,'   )     | endif
+    if finddir(s:pathcurrfile.'/../../CS')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../CS/**,'         )     | endif
+  endif
+  if s:rapidpath == ''
+    if finddir(s:pathcurrfile.'/../RAPID')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../RAPID/**,'         )     | endif
+    if finddir(s:pathcurrfile.'/../SYSPAR')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../SYSPAR/**,'        )     | endif
+    if finddir(s:pathcurrfile.'/../HOME')         !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../HOME/**,'          )     | endif
+    if finddir(s:pathcurrfile.'/../BACKINFO')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../BACKINFO/**,'      )     | endif
+    if finddir(s:pathcurrfile.'/../CS')           !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../CS/**,'            )     | endif
+  endif
+  if s:rapidpath == ''
+    if finddir(s:pathcurrfile.'/SYSPAR')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )     | endif " for .prg files
+  endif
 
-  execute "setlocal path=".s:rapidpath
-  setlocal path-=/usr/include
+  execute "setlocal path=.,".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 
 endif " get(g:,'rapidPath',1)
@@ -1332,39 +1288,39 @@ endif
 
 if get(g:,'rapidMoveAroundKeyMap',1)
   if bufname("%") =~ '\c\.cfg$'
-    nnoremap <silent><buffer> ]] :<C-U>call search('^#','sw')<cr>
-    nnoremap <silent><buffer> [[ :<C-U>call search('^#','bsw')<cr>
-    nnoremap <silent><buffer> ][ :<C-U>call search('.*\(\n#\\|\%$\)','sw')<cr>
-    nnoremap <silent><buffer> [] :<C-U>call search('^#\n\w\+:\n\n','besw')<cr>
-    xnoremap <silent><buffer> ]] :<C-U>exe "normal! gv"<Bar>call search('\(^#\\|\%$\)','sW')<cr>
-    xnoremap <silent><buffer> [[ :<C-U>exe "normal! gv"<Bar>call search('^#','bsW')<cr>
-    xnoremap <silent><buffer> ][ :<C-U>exe "normal! gv"<Bar>call search('\(\n#\\|\%$\)','sW')<cr>
-    xnoremap <silent><buffer> [] :<C-U>exe "normal! gv"<Bar>call search('^#\n\w\+:\n\n','besW')<cr>
-    onoremap <silent><buffer> ]] :<C-U>exe "normal! v"<Bar>call search('\(\ze\n#\\|\%$\)','eW')<cr>
-    onoremap <silent><buffer> [[ :<C-U>call search('^#','bW')<cr>
-    onoremap <silent><buffer> ][ :<C-U>exe "normal! v"<Bar>call search('\(\n#\\|\%$\)','sW')<cr>
-    onoremap <silent><buffer> [] :<C-U>exe "normal! V"<Bar>call search('^#\n\w\+:\n\n','besW')<cr>
+    nnoremap <silent><buffer> ]] :<C-U>                     call search('^#'              ,   'sw')<cr>
+    onoremap <silent><buffer> ]] :<C-U>exe "normal! v" <Bar>call search('\(\ze\n#\\|\%$\)',   'eW')<cr>
+    xnoremap <silent><buffer> ]] :<C-U>exe "normal! gv"<Bar>call search('\(^#\\|\%$\)'    ,   'sW')<cr>
+    nnoremap <silent><buffer> [[ :<C-U>                     call search('^#'              ,   'bsw')<cr>
+    onoremap <silent><buffer> [[ :<C-U>                     call search('^#'              ,   'bW')<cr>
+    xnoremap <silent><buffer> [[ :<C-U>exe "normal! gv"<Bar>call search('^#'              ,   'bsW')<cr>
+    nnoremap <silent><buffer> ][ :<C-U>                     call search('.*\(\n#\\|\%$\)' ,   'sw')<cr>
+    onoremap <silent><buffer> ][ :<C-U>exe "normal! v" <Bar>call search('\(\n#\\|\%$\)'   ,   'sW')<cr>
+    xnoremap <silent><buffer> ][ :<C-U>exe "normal! gv"<Bar>call search('\(\n#\\|\%$\)'   ,   'sW')<cr>
+    nnoremap <silent><buffer> [] :<C-U>                     call search('^#\n\w\+:\n\n'   ,   'besw')<cr>
+    onoremap <silent><buffer> [] :<C-U>exe "normal! V" <Bar>call search('^#\n\w\+:\n\n'   ,   'besW')<cr>
+    xnoremap <silent><buffer> [] :<C-U>exe "normal! gv"<Bar>call search('^#\n\w\+:\n\n'   ,   'besW')<cr>
   else
     " Move around functions
-    nnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'bs')        <Bar>unlet b:knopCount<CR>:normal! zt<CR>
-    onoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n\zs', 'bsW')<Bar>unlet b:knopCount<CR>
-    xnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'bsW')     <Bar>unlet b:knopCount<CR>
-    nnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 's')         <Bar>unlet b:knopCount<CR>:normal! zt<CR>
-    onoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>', 'sW')        <Bar>unlet b:knopCount<CR>
-    xnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n', 'seWz')<Bar>unlet b:knopCount<CR>
-    nnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bs')                                    <Bar>unlet b:knopCount<CR>:normal! zb<CR>
-    onoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>\n^(.\|\n)', 'bseW')                        <Bar>unlet b:knopCount<CR>
-    xnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 'bsW')                                 <Bar>unlet b:knopCount<CR>
-    nnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>', 's')                                     <Bar>unlet b:knopCount<CR>:normal! zb<CR>
-    onoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\c\v\ze^\s*end(proc\|func\|trap\|record\|module)>', 'sW')                                 <Bar>unlet b:knopCount<CR>
-    xnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"                                                                                                                                        <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>(\n)?', 'seWz')                           <Bar>unlet b:knopCount<CR>
+    nnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>'        , 'bs'  )<Bar>unlet b:knopCount<CR>:normal! zt<CR>
+    onoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n\zs' , 'bsW' )<Bar>unlet b:knopCount<CR>
+    xnoremap <silent><buffer> [[ :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>'        , 'bsW' )<Bar>unlet b:knopCount<CR>
+    nnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>'        , 's'   )<Bar>unlet b:knopCount<CR>:normal! zt<CR>
+    onoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>'        , 'sW'  )<Bar>unlet b:knopCount<CR>
+    xnoremap <silent><buffer> ]] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*(local\s+\|task\s+)?(proc\|func\|trap\|record\|module)>.*\n'    , 'seWz')<Bar>unlet b:knopCount<CR>
+    nnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>'                         , 'bs'  )<Bar>unlet b:knopCount<CR>:normal! zb<CR>
+    onoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>\n^(.\|\n)'               , 'bseW')<Bar>unlet b:knopCount<CR>
+    xnoremap <silent><buffer> [] :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>'                         , 'bsW' )<Bar>unlet b:knopCount<CR>
+    nnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>'                         , 's'   )<Bar>unlet b:knopCount<CR>:normal! zb<CR>
+    onoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v\ze^\s*end(proc\|func\|trap\|record\|module)>'                      , 'sW'  )<Bar>unlet b:knopCount<CR>
+    xnoremap <silent><buffer> ][ :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\c\v^\s*end(proc\|func\|trap\|record\|module)>(\n)?'                    , 'seWz')<Bar>unlet b:knopCount<CR>
     " Move around comments
-    nnoremap <silent><buffer> [; :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\v(^\s*!.*\n)@<!(^\s*!)', 'bs')<Bar>unlet b:knopCount<cr>
-    onoremap <silent><buffer> [; :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\v(^\s*!.*\n)@<!(^\s*!)', 'bsW')<Bar>unlet b:knopCount<cr>
-    xnoremap <silent><buffer> [; :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v(^\s*!.*\n)@<!(^\s*!)', 'bsW')<Bar>unlet b:knopCount<cr>
-    nnoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n\s*([^!\t ]\|$)', 's')<Bar>unlet b:knopCount<cr>
-    onoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1<Bar>                     call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n(\s*[^!\t ]\|$)', 'seW')<Bar>normal! ==<Bar>unlet b:knopCount<cr>
-    xnoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n\ze\s*([^!\t ]\|$)', 'seW')<Bar>unlet b:knopCount<cr>
+    nnoremap <silent><buffer> [; :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v(^\s*!.*\n)@<!(^\s*!)'                                                , 'bs'  )<Bar>unlet b:knopCount<cr>
+    onoremap <silent><buffer> [; :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v(^\s*!.*\n)@<!(^\s*!)'                                                , 'bsW' )<Bar>unlet b:knopCount<cr>
+    xnoremap <silent><buffer> [; :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v(^\s*!.*\n)@<!(^\s*!)'                                                , 'bsW' )<Bar>unlet b:knopCount<cr>
+    nnoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n\s*([^!\t ]\|$)'                                             , 's'   )<Bar>unlet b:knopCount<cr>
+    onoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1                     <Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n(\s*[^!\t ]\|$)'                                             , 'seW' )<Bar>unlet b:knopCount<cr>
+    xnoremap <silent><buffer> ]; :<C-U>let b:knopCount=v:count1<Bar>exe "normal! gv"<Bar>call <SID>KnopNTimesSearch(b:knopCount, '\v^\s*!.*\n\ze\s*([^!\t ]\|$)'                                          , 'seW' )<Bar>unlet b:knopCount<cr>
     " inner and around function text objects
     if get(g:,'rapidFunctionTextObject',0)
           \|| mapcheck("aF","x")=="" && !hasmapto('<plug>RapidTxtObjAroundFuncInclCo','x')
@@ -1515,15 +1471,12 @@ endif
 " <PLUG> mappings {{{
 
 " Go Definition
-" nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
 nnoremap <silent><buffer> <plug>RapidGoDef :call <SID>RapidGoDefinition()<CR>
 
 " list all PROCs of current file
-" nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDefinition()<CR>:call <SID>RapidCleanBufferList()<CR>
 nnoremap <silent><buffer> <plug>RapidListDef :call <SID>RapidListDefinition()<CR>
 
 " list usage
-" nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<CR>:call <SID>RapidCleanBufferList()<CR>
 nnoremap <silent><buffer> <plug>RapidListUse :call <SID>RapidListUsage()<CR>
 
 " auto form

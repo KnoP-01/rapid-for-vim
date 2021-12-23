@@ -1,8 +1,8 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 14. Feb 2021
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 29. Apr 2021
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
-					  <knosowski@graeff.de>
+					  <knosowski@graeffrobotics.de>
 
 
 >

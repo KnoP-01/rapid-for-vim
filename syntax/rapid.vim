@@ -1,8 +1,8 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
-" Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
-" Version: 2.2.3
-" Last Change: 11. Mar 2021
+" Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
+" Version: 2.2.5
+" Last Change: 23. Dec 2021
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -63,6 +63,8 @@ endif
 
 " Rapid does ignore case
 syn case ignore
+" spell checking
+syn spell notoplevel
 " }}} init
 
 " common highlighting {{{
@@ -83,10 +85,20 @@ endif
 syn keyword rapidBoolean TRUE FALSE Edge High Low
 highlight default link rapidBoolean Boolean
 " Float (num)
-syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
+" syn match rapidFloat /\v%(\W|_)@1<=[+-]?\d+\.?\d*%(\s*[eE][+-]?\d+)?/
+syn match rapidFloat /\v\c%(<\d+\.|\.?<\d)\d*%(E[+-]?\d+)?>/ contains=rapidOperator
 highlight default link rapidFloat Float
+" integer in decimal, hexadecimal, octal and binary
+syn match rapidDec /\<[0-9]\+\>/
+highlight default link rapidDec Number
+syn match rapidHex /\<0x[0-9a-fA-F]\+\>/
+highlight default link rapidHex Number
+syn match rapidOct /\<0o[0-7]\+\>/
+highlight default link rapidOct Number
+syn match rapidBin /\<0b[01]\+\>/
+highlight default link rapidBin Number
 " String. Note: Don't rename group rapidString. Indent depend on this
-syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ contains=rapidCharCode,rapidEscapedBackSlash,rapidStringDoubleQuote,rapidErrorSingleBackslash,rapidErrorStringTooLong
+syn region rapidString matchgroup=rapidString start=/"/ skip=/""/ end=/"/ oneline contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong,@Spell
 highlight default link rapidString String
 " two adjacent "" in string for one double quote
 syn match rapidStringDoubleQuote /""/ contained
@@ -105,14 +117,15 @@ if bufname("%") =~ '\c\.cfg$'
 " {{{ highlighting for *.cfg
 
   " special chars {{{
-  syn match rapidOperator /:\|[+-]\|\*\|\/\|\\/
+  " syn match rapidOperator /:\|[+-]\|\*\|\/\|\\/
+  syn match rapidOperator /[-+*/:\\]/
   syn match rapidOperator /^#/
   highlight default link rapidOperator Operator
   " }}} special chars
 
   " sections {{{
   syn match rapidException /^\w\+/
-  syn match rapidException /CFG\ze_/
+  syn match rapidException /CFG_\d\+/
   highlight default link rapidException Exception
   " }}} sections
 
@@ -139,7 +152,7 @@ else
   syn match rapidDebugComment contained /\<DEBUG\>/
   highlight default link rapidDebugComment Debug
   " Line comment
-  syn match rapidComment /!.*$/ contains=rapidTodoComment,rapidDebugComment
+  syn match rapidComment /!.*$/ contains=rapidTodoComment,rapidDebugComment,@Spell
   highlight default link rapidComment Comment
   " }}} Comment 
 
@@ -171,7 +184,7 @@ else
   syn keyword rapidType egmframetype egmident egm_minmax egmstate egmstopmode errdomain errnum ErrorInfo errstr errtype event_type exec_level extjoint handler_type
   syn keyword rapidType icondata identno inposdata intnum inttypes iodev iounit_state jointtarget
   syn keyword rapidType listitem loaddata loadidnum loadsession mecunit motionprocessmode motsetdata
-  syn keyword rapidType num
+  " syn keyword rapidType num
   syn keyword rapidType opcalc opnum orient paridnum paridvalidnum pathrecid pnpdata pos pose proc_times progdisp o_jointtarget o_robtarget
   syn keyword rapidType rawbytes restartdata rmqheader rmqmessage rmqslot robjoint robtarget
   syn keyword rapidType searchdata sensor sensorstate sensorvardata shapedata signalai signalao signaldi signaldo signalgi signalgo signalorigin singdata socketdev socketstatus speeddata stopmovestartmove_mem stoppoint stoppointdata string stringdig sup_timeouts supervtype switch symnum syncident 
@@ -191,7 +204,7 @@ else
   syn keyword rapidType beaddata equipdata
   " Spot data types
   syn keyword rapidType gundata gunnum spotdata forcedata simdata smeqdata smeqtype
-  " Tool change types
+  " Tool change data types
   syn keyword rapidType standno ToolInfo toolno
   " Continuous Application Platform data types
   syn keyword rapidType capaptrreferencedata capdata capevent caplatrackdata capmvsttim capspeeddata capspeeddata capstopmode captestno captrackdata capweavedata flypointdata processtimes restartblkdata supervtimeouts weavestartdata 
@@ -229,7 +242,7 @@ else
   " Keyword
   syn keyword rapidKeyword AccSet ActEventBuffer ActUnit Add AliasCamera AliasIO AliasIOReset BitClear BitSet BookErrNo BrakeCheck
   syn keyword rapidKeyword CallByVar CancelLoad CheckProgRef CirPathMode Clear ClearIOBuff ClearPath ClearRawBytes ClkReset ClkStart ClkStop Close CloseDir ConfJ ConfL CONNECT CopyFile CopyRawBytes CornerPathWarning CorrClear CorrCon CorrDiscon CorrWrite
-  syn keyword rapidKeyword CSSAct CSSDeact CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTune  CyclicBrakeCheck
+  syn keyword rapidKeyword CSSAct CSSDeact CSSForceOffsetAct CSSForceOffsetDeact CSSOffsetTune CyclicBrakeCheck
   syn keyword rapidKeyword DeactEventBuffer DeactUnit Decr DitherAct DitherDeact DropSensor 
   syn keyword rapidKeyword EGMActJoint EGMActMove EGMActPose EGMGetId EGMReset EGMSetupAI EGMSetupAO EGMSetupGI EGMSetupLTAPP EGMSetupUC EOffsOff EOffsOn EOffsSet EraseModule ErrLog ErrWrite
   syn keyword rapidKeyword FitCircle FricIdInit FricIdEvaluate FricIdSetFricLevels 
@@ -245,6 +258,7 @@ else
   syn keyword rapidKeyword ArcRefresh RecoveryMenu RecoveryMenuWR RecoveryPosSet RecoveryPosReset SetWRProcName 
   " conveyor tracking instructions
   syn keyword rapidKeyword UseACCProfile WaitWObj DropWObj RecordProfile WaitAndRecProf StoreProfile LoadProfile ActivateProfile DeactProfile CnvGenInstr CnvSync CnvGenInstr IndCnvInit IndCnvEnable IndCnvDisable IndCnvReset IndCnvAddObject 
+  syn keyword rapidKeyword UseReachableTargets GetMaxUsageTime ResetMaxUsageTime CnvPredictReach
   " Integrated Vision instructions
   syn keyword rapidKeyword CamFlush CamGetParameter CamGetResult CamLoadJob CamReqImage CamSetExposure CamSetParameter CamSetProgramMode CamSetRunMode CamStartLoadJob CamWaitLoadJob 
   " arc Weldguide and MultiPass instructions
@@ -276,7 +290,7 @@ else
   highlight default link rapidException Exception
   " }}} Statements, keywords et al
 
-  " special keyword for move command {{{
+  " Special keyword for move command {{{
   " uncategorized yet
   syn keyword rapidMovement MovePnP
   syn keyword rapidMovement EGMMoveC EGMMoveL EGMRunJoint EGMRunPose EGMStop
@@ -320,12 +334,19 @@ else
   syn match rapidNames /\v[[:upper:][:lower:]](\k|\.)*/
   " }}} Any name
 
+  " Attempt to avoid false highlight of num in case of parameter name:
+  "   TPWrite "goPosNo="\num:=GOutput(goPosNo);
+  " Must follow after rapidNames in this file
+  syn match rapidType /\c\v<num>\s*\ze[^ :]/
+
   " Structure value {{{
   " rapid structrure values. added to be able to conceal them
-  syn region rapidConcealableString matchgroup=rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline keepend extend contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong conceal 
+  syn region rapidConcealableString matchgroup=rapidConcealableString start=/"/ skip=/""/ end=/"/ oneline keepend extend contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash,rapidErrorStringTooLong,@Spell conceal 
   highlight default link rapidConcealableString String
-  syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
+  syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidDec,rapidHex,rapidOct,rapidBin,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
   highlight default link rapidStructDelimiter Delimiter
+  " sync for regions from start of function
+  syn sync match rapidSyncStrucVal grouphere rapidStructVal /\s\c^\s*<(module|proc|func|trap|record)>/
   " check edge cases like this one:
   "  LOCAL CONST listitem lstAuswService{18}:=[["","Service Position"],["","Bremsentest"],["","Referenzfahrt"],["","Manuelles Abfahren"],["","Justagestellung"],["","Transportposition"],
   "      ["","Spitze-Spitze Greifer 1, [RT]"],["","Spitze-Spitze Greifer 2, [FT]"],["","Spitze-Spitze Pruefspitze"],["","Werkobjekt Ablage"],["","Werkobjekt Modul 1"],
@@ -571,8 +592,8 @@ else
     highlight default link rapidErrorShouldBeColonEqual Error
     "
     " WaitUntil a==b
-    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(Return|WaitUntil|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
-    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*(if|elseif)>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!\\]+<then>/
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*%(Return|WaitUntil|while)>[^!\\]+[^!<>])@<=%(\=|:)\=/
+    syn match rapidErrorShouldBeEqual    /\c\v%(^\s*%(if|elseif)>[^!\\]+[^!<>])@<=%(\=|:)\=\ze[^!\\]+<then>/
     highlight default link rapidErrorShouldBeEqual Error
     "
     " WaitUntil a=>b
@@ -603,7 +624,7 @@ if get(g:,'rapidShowError',1)
   "
   " This error must be defined after rapidString
   " string too long
-  " syn match rapidErrorStringTooLong /\v("[^"]{80})@81<=[^"]+\ze"/ contained
+  " syn match rapidErrorStringTooLong /\v%("%(""|\\\\|\\\x\x|[^"\\]){80})@240<=%([^"]|"{2})+/ contained contains=rapidStringDoubleQuote,rapidEscapedBackSlash,rapidCharCode,rapidErrorSingleBackslash
   highlight default link rapidErrorStringTooLong Error
   "
 endif

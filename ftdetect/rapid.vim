@@ -1,8 +1,8 @@
 " ABB Rapid Command file type detection for Vim
 " Language: ABB Rapid Command
-" Maintainer: Patrick Meiser-Knosowski <knosowski@graeff.de>
+" Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.0.0
-" Last Change: 17. Sep 2020
+" Last Change: 29. Apr 2021
 " Credits:
 "
 " Suggestions of improvement are very welcome. Please email me!
