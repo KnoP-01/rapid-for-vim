@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.6
-" Last Change: 04. Jan 2022
+" Last Change: 05. Jan 2022
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -547,6 +547,10 @@ if !exists("*s:KnopVerboseEcho()")
       endif
       try
         execute ':noautocmd lvimgrep '.l:prefix.a:currentWord.l:suffix.' '.l:path
+      catch /^Vim\%((\a\+)\)\=:E479/
+        call s:KnopVerboseEcho(":lvimgrep stopped with E479!",1)
+        return -1
+        "
       catch /^Vim\%((\a\+)\)\=:E480/
         call s:KnopVerboseEcho(":lvimgrep stopped with E480!",1)
         return -1
