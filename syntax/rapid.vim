@@ -1,8 +1,8 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
-" Version: 2.2.5
-" Last Change: 23. Dec 2021
+" Version: 2.2.7
+" Last Change: 24. Jan 2022
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -455,7 +455,7 @@ else
   syn keyword rapidConstant ERR_ROBLIMIT ERR_SC_WRITE
   syn keyword rapidConstant ERR_SGUN_ESTOP ERR_SGUN_MOTOFF ERR_SGUN_NEGVAL ERR_SGUN_NOTACT ERR_SGUN_NOTINIT ERR_SGUN_NOTOPEN ERR_SGUN_NOTSYNC
   syn keyword rapidConstant ERR_SIG_NAME ERR_SIGSUPSEARCH ERR_SIG_NOT_VALID
-  syn keyword rapidConstant ERR_SOCK_ADDR_INUSE ERR_SOCK_CLOSED ERR_SOCK_TIMEOUT
+  syn keyword rapidConstant ERR_SOCK_ADDR_INVALID ERR_SOCK_ADDR_INUSE ERR_SOCK_CLOSED ERR_SOCK_IS_BOUND ERR_SOCK_IS_CONN ERR_SOCK_NET_UNREACH ERR_SOCK_NOT_BOUND ERR_SOCK_NOT_CONN ERR_SOCK_TIMEOUT ERR_SOCK_UNSPEC
   syn keyword rapidConstant ERR_SPEEDLIM_VALUE ERR_SPEED_REFRESH_LIM
   syn keyword rapidConstant ERR_STARTMOVE ERR_STORE_PROF ERR_STRTOOLNG ERR_SYMBOL_TYPE ERR_SYM_ACCESS ERR_SYNCMOVEOFF ERR_SYNCMOVEON ERR_SYNTAX
   syn keyword rapidConstant ERR_TASKNAME
