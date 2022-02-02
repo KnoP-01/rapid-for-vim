@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 24. Jan 2022
+" Last Change: 02. Feb 2022
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -214,6 +214,27 @@ else
   syn keyword rapidType fcboxvol fccondstatus fccylindervol fcdamping fcforcevector fcframe fclindir fcprocessdata fcplane fcrotdir fcspeedvector fcspherevol fcspdchgtunetype fcxyznum
   " Discrete application platform data types
   syn keyword rapidType dadescapp dadescprc daintdata
+  " VW Konzernstandard VWKS_1.07.02
+  syn keyword rapidType merker 
+  syn keyword rapidType frgnum frgwert robnum 
+  syn keyword rapidType fmnum applid calibdatavorr stepdata 
+  syn keyword rapidType tsmethode tsdaten teilspeicherdaten
+  syn keyword rapidType greiferdaten greiferposition bauteildaten bauteilkontrolle g_datenident g_sensor g_signal g_teilident g_ventil 
+  syn keyword rapidType strgnum typnum 
+  syn keyword rapidType hubnum kopfnum 
+  syn keyword rapidType applservicetype 
+  syn keyword rapidType applfraesdaten kwdionum 
+  syn keyword rapidType butechnum
+  syn keyword rapidType toolnum dbnum 
+  " das folgende sind datentypen aber das kann man doch nicht machen...
+  " syn keyword rapidType position wert
+  syn keyword rapidType camdata camlimitdata cammode camprotocoldata camstatus camsequence campositionstatus
+  syn keyword rapidType saposnum sabereichnum autofocusnum focusposnum lascaledata laleistungnum larobnum laprognum uebwnum dgbanum dgjobnum gasspuelnum davalve gasuebwnum 
+  syn keyword rapidType lsfigurnum lsstarttype 
+  syn keyword rapidType lwprognum lwdiodnum lsstarttype 
+  syn keyword rapidType lztype diskrethubnum lztipnum 
+  syn keyword rapidType gblmethod
+  syn keyword rapidType buatypenum buatechnum buadirnum 
   highlight default link rapidType Type
   " Storage class
   syn keyword rapidStorageClass LOCAL TASK VAR PERS CONST ALIAS NOVIEW NOSTEPIN VIEWONLY READONLY SYSMODULE INOUT
@@ -323,6 +344,40 @@ else
   syn keyword rapidMovement HR_ContMove HR_MoveBack HR_MoveRoutine HR_MoveTo HR_MoveToHome SCSSDeactMoveL 
   " Discrete application platform instructions
   syn keyword rapidMovement DaProcML DaProcMJ
+  " VW Konzernstandard VWKS_1.07.02
+  syn keyword rapidMovement MoveABS  MoveABS_FB  MoveABS_FRG  MoveABS_ROB
+  syn keyword rapidMovement MoveCIRC MoveCIRC_FB MoveCIRC_FRG MoveCIRC_ROB
+  syn keyword rapidMovement MoveLIN  MoveLIN_FB  MoveLIN_FRG  MoveLIN_ROB 
+  syn keyword rapidMovement MovePTP  MovePTP_FB  MovePTP_FRG  MovePTP_ROB 
+  syn keyword rapidMovement SearchCIRC SearchCIRC_M 
+  syn keyword rapidMovement SearchLIN  SearchLIN_M 
+  syn keyword rapidMovement MoveABS_AO  MoveABS_DO  MoveABS_GO
+  syn keyword rapidMovement MoveCIRC_AO MoveCIRC_DO MoveCIRC_GO
+  syn keyword rapidMovement MoveLIN_AO  MoveLIN_DO  MoveLIN_GO
+  syn keyword rapidMovement KW_LoesenLIN
+  syn keyword rapidMovement SPZ_FraesenLIN SPZ_FraesenPTP SPZ_MessenLIN SPZ_MessenPTP SPZ_LIN SPZ_PTP 
+  syn keyword rapidMovement BZ_LIN BZ_PTP
+  syn keyword rapidMovement KL_LIN KL_CIRC
+  syn keyword rapidMovement BP_LIN BP_PTP
+  syn keyword rapidMovement BU_CIRC BU_LIN
+  syn keyword rapidMovement CZ_LIN CZ_LIN_V CZ_PTP CZ_PTP_V
+  syn keyword rapidMovement FD_LIN FD_PTP
+  syn keyword rapidMovement KG_LIN KG_PTP
+  syn keyword rapidMovement DA_LIN 
+  syn keyword rapidMovement LK_CIRC LK_LIN 
+  syn keyword rapidMovement LL_CIRC LL_LIN
+  syn keyword rapidMovement LS_CIRC LS_LIN LS_LIN_F LS_PTP_F
+  syn keyword rapidMovement LW_CIRC LW_LIN
+  syn keyword rapidMovement LZ_LIN LZ_PTP LZ_ReinigenLIN LZ_ReinigenPTP
+  syn keyword rapidMovement MS_CIRC MS_LIN MS_ReinigenLIN MS_SearchLIN MS_PTP_CS MS_LIN_CS GBL_LIN GBL_PTP GBL_RefPointLIN
+  syn keyword rapidMovement NK_LIN
+  syn keyword rapidMovement NZ_LIN NZ_LIN_V NZ_PTP NZ_PTP_V 
+  syn keyword rapidMovement PR_LIN PR_PTP
+  syn keyword rapidMovement RF_CIRC RF_LIN
+  syn keyword rapidMovement STP_FraesenLIN STP_FraesenPTP STP_LIN STP_PTP 
+  syn keyword rapidMovement SM_LIN SM_PTP
+  syn keyword rapidMovement BUA_CIRC BUA_LIN BUA_MessenLIN BUA_MessenPTP
+  syn keyword rapidMovement KE_LIN 
   if g:rapidGroupName
     highlight default link rapidMovement Movement
   else
@@ -573,6 +628,10 @@ else
   syn keyword rapidConstant END_OF_LIST WAIT_MAX
   syn keyword rapidErrNo ERRNO
   syn keyword rapidIntNo INTNO
+  " VW Konzernstandard VWKS_1.07.02
+  syn keyword rapidIntNo KG_UNDEFINIERT KG_LETZTEPOS KG_GREIFPOS KG_ZWISCHENPOS KG_TOOLINFO KG_GREIFPOSKORR
+  syn keyword rapidIntNo BA1 BA2
+  syn keyword rapidIntNo SetupXY SetupZ KorrekturXY KorrekturZ
   if g:rapidGroupName
     highlight default link rapidConstant Sysvars
     highlight default link rapidErrNo Sysvars
