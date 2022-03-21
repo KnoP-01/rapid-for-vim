@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.0.7
-" Last Change: 16. Mar 2022
+" Last Change: 21. Mar 2022
 " Credits:
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -13,13 +13,13 @@ set cpo&vim
 
 " change default autocmd
 augroup filetypedetect
-  au! BufNewFile *.prg\c
+  au! BufNewFile *.prg,*.Prg,*.PRG
         \  if exists("g:filetype_prg")
         \|   exe "setf " . g:filetype_prg
         \| else
         \|   setf rapid
         \| endif
-  au! BufRead *.prg\c
+  au! BufRead *.prg,*.Prg,*.PRG
         \  if s:ftIsRapid()
         \|   setf rapid
         \| elseif exists("g:filetype_prg")
@@ -27,13 +27,13 @@ augroup filetypedetect
         \| else
         \|   setf clipper
         \| endif
-  au! BufNewFile *.mod\c
+  au! BufNewFile *.mod,*.Mod,*.MOD
         \  if exists("g:filetype_mod")
 	\|   exe "setf " . g:filetype_mod
         \| else
         \|   setf rapid
         \| endif
-  au! BufRead *.mod\c
+  au! BufRead *.mod,*.Mod,*.MOD
         \  if exists("*dist#ft#FTmod()")
         \|   call dist#ft#FTmod()
         \| elseif s:ftIsRapid()
@@ -45,17 +45,17 @@ augroup filetypedetect
         \| elseif expand("<afile>") =~ '\<go.mod$'
         \|   setf gomod
         \| endif
-  au! BufNewFile *.sys\c
+  au! BufNewFile *.sys,*.Sys,*.SYS
         \  setf rapid 
-  au! BufRead *.sys\c
+  au! BufRead *.sys,*.Sys,*.SYS
         \  if s:ftIsRapid()
         \|   setf rapid 
         \| else 
         \|   setf dosbatch 
         \| endif
-  au! BufNewFile *.cfg\c
+  au! BufNewFile *.cfg,*.Cfg,*.CFG
         \  setf rapid
-  au! BufRead *.cfg\c
+  au! BufRead *.cfg,*.Cfg,*.CFG
         \  if getline(1) =~? '\c\v^(EIO|MMC|MOC|PROC|SIO|SYS):CFG'
         \|   call <SID>RapidSetFandCorrEOL() 
         \| else 
