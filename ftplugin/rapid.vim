@@ -1151,7 +1151,9 @@ if get(g:,'rapidPath',1)
     if s:KnopDirExists(s:pathcurrfile.'/SYSPAR')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )   | endif " for .prg files
   endif
 
-  let s:rapidpath = substitute(s:rapidpath,'\\','\\\\\\','g') " mache aus einem backslash wieder drei, simplify() oben hat das reduziert
+  if has("win32")
+    let s:rapidpath = substitute(s:rapidpath,'\\','\\\\\\','g') " mache aus einem backslash wieder drei, simplify() oben hat das reduziert
+  endif
   execute "setlocal path=.,".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 
