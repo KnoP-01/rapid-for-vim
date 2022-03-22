@@ -627,8 +627,15 @@ if !exists("*s:KnopVerboseEcho()")
     "
     " search EIO.cfg
     call s:KnopVerboseEcho("search EIO.cfg")
-    let l:path = fnameescape(findfile("EIO.cfg"))
-    if l:path==""
+    " findfile() uses suffixesadd, but does not respect 'fileignorecase'
+    let l:path = fnameescape(findfile("EIO"))
+    if l:path == ""
+      let l:path = fnameescape(findfile("eio"))
+    endif
+    if l:path == ""
+      let l:path = fnameescape(findfile("Eio"))
+    endif
+    if l:path == ""
       call s:KnopVerboseEcho("No EIO.cfg found!",1)
       return -1
       "
