@@ -128,6 +128,9 @@ if !exists("*s:KnopVerboseEcho()")
     let l:out = fnameescape( a:in )
     let l:out = substitute(l:out, '\\#', '#', "g") " # and % will get escaped by fnameescape() but must not be escaped for set path...
     let l:out = substitute(l:out, '\\%', '%', "g")
+    if !has("win32")
+      let l:out = substitute(l:out, '\$', '\\$', "g") " escape $ sign only on none windows
+    endif
     let l:out = substitute(l:out, '\\ ', '\\\\\\ ', 'g') " escape spaces with three backslashes
     let l:out = substitute(l:out, ',', '\\\\,', 'g') " escape comma and semicolon with two backslashes
     let l:out = substitute(l:out, ';', '\\\\;', "g")
