@@ -1,8 +1,8 @@
 " ABB Rapid Command file type plugin for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
-" Version: 2.2.6
-" Last Change: 05. Jan 2022
+" Version: 2.2.7
+" Last Change: 22. Mar 2022
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1151,29 +1151,30 @@ if get(g:,'rapidPath',1)
 
   let s:pathcurrfile = s:KnopFnameescape4Path(substitute(expand("%:p:h"), '\\', '/', 'g'))
   let s:rapidpath=''
-  if finddir(s:pathcurrfile.'/../../../RAPID')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../RAPID/**,'   )     | endif
-  if finddir(s:pathcurrfile.'/../../../SYSPAR')   !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../SYSPAR/**,'  )     | endif
-  if finddir(s:pathcurrfile.'/../../../HOME')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../HOME/**,'    )     | endif
-  if finddir(s:pathcurrfile.'/../../../BACKINFO') !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../BACKINFO/**,')     | endif
-  if finddir(s:pathcurrfile.'/../../../CS')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../CS/**,'      )     | endif
+  if s:KnopDirExists(s:pathcurrfile.'/../../../RAPID')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../RAPID/**,'   )   | endif
+  if s:KnopDirExists(s:pathcurrfile.'/../../../SYSPAR')   !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../SYSPAR/**,'  )   | endif
+  if s:KnopDirExists(s:pathcurrfile.'/../../../HOME')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../HOME/**,'    )   | endif
+  if s:KnopDirExists(s:pathcurrfile.'/../../../BACKINFO') !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../BACKINFO/**,')   | endif
+  if s:KnopDirExists(s:pathcurrfile.'/../../../CS')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../../CS/**,'      )   | endif
   if s:rapidpath == ''
-    if finddir(s:pathcurrfile.'/../../RAPID')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../RAPID/**,'      )     | endif
-    if finddir(s:pathcurrfile.'/../../SYSPAR')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../SYSPAR/**,'     )     | endif
-    if finddir(s:pathcurrfile.'/../../HOME')      !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../HOME/**,'       )     | endif
-    if finddir(s:pathcurrfile.'/../../BACKINFO')  !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../BACKINFO/**,'   )     | endif
-    if finddir(s:pathcurrfile.'/../../CS')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../CS/**,'         )     | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../../RAPID')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../RAPID/**,'      )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../../SYSPAR')    !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../SYSPAR/**,'     )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../../HOME')      !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../HOME/**,'       )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../../BACKINFO')  !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../BACKINFO/**,'   )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../../CS')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../../CS/**,'         )   | endif
   endif
   if s:rapidpath == ''
-    if finddir(s:pathcurrfile.'/../RAPID')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../RAPID/**,'         )     | endif
-    if finddir(s:pathcurrfile.'/../SYSPAR')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../SYSPAR/**,'        )     | endif
-    if finddir(s:pathcurrfile.'/../HOME')         !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../HOME/**,'          )     | endif
-    if finddir(s:pathcurrfile.'/../BACKINFO')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../BACKINFO/**,'      )     | endif
-    if finddir(s:pathcurrfile.'/../CS')           !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../CS/**,'            )     | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../RAPID')        !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../RAPID/**,'         )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../SYSPAR')       !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../SYSPAR/**,'        )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../HOME')         !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../HOME/**,'          )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../BACKINFO')     !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../BACKINFO/**,'      )   | endif
+    if s:KnopDirExists(s:pathcurrfile.'/../CS')           !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/../CS/**,'            )   | endif
   endif
   if s:rapidpath == ''
-    if finddir(s:pathcurrfile.'/SYSPAR')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )     | endif " for .prg files
+    if s:KnopDirExists(s:pathcurrfile.'/SYSPAR')          !='' | let s:rapidpath.=simplify(s:pathcurrfile.'/SYSPAR/**,'           )   | endif " for .prg files
   endif
 
+  let s:rapidpath = substitute(s:rapidpath,'\\','\\\\\\','g') " mache aus einem backslash wieder drei, simplify() oben hat das reduziert
   execute "setlocal path=.,".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 
