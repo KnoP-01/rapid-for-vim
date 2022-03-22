@@ -624,31 +624,8 @@ if !exists("*s:KnopVerboseEcho()")
     "
     " search EIO.cfg
     call s:KnopVerboseEcho("search EIO.cfg")
-    if filereadable(simplify(fnameescape(expand("%:p:h"))."/EIO.cfg"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/EIO.cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/EIO.Cfg"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/EIO.Cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/EIO.CFG"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/EIO.CFG')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/SYSPAR/EIO.cfg"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/SYSPAR/EIO.cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/SYSPAR/EIO.Cfg"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/SYSPAR/EIO.Cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/SYSPAR/EIO.CFG"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/SYSPAR/EIO.CFG')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/../../SYSPAR/EIO.cfg"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../SYSPAR/EIO.cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/../../SYSPAR/EIO.Cfg"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../SYSPAR/EIO.Cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h"))."/../../SYSPAR/EIO.CFG"))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../SYSPAR/EIO.CFG')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.cfg'))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.Cfg'))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.Cfg')
-    elseif filereadable(simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.CFG'))
-      let l:path = simplify(fnameescape(expand("%:p:h")).'/../../../SYSPAR/EIO.CFG')
-    else
+    let l:path = fnameescape(findfile("EIO.cfg"))
+    if l:path==""
       call s:KnopVerboseEcho("No EIO.cfg found!",1)
       return -1
       "
