@@ -1,4 +1,4 @@
-*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 29. Apr 2021
+*rapid.txt*	Abb Rapid Command for Vim version 7.4	Last change: 25. Mar 2022
 
 
 		  VIM REFERENCE MANUAL    by Patrick Meiser-Knosowski
@@ -568,8 +568,8 @@ g:rapidPath:
 Disables the modification of 'path': >
     let g:rapidPath = 0
 
-If omitted or set to 1 rapid-for-vim tries to set 'path' to the root
-`.../KRC/**` of a kuka backup.
+If omitted or set to 1 rapid-for-vim tries to set 'path' to 
+`.../RAPID/**`, `.../SYSPAR/**` et al of a Abb backup.
 
 Note: Many features of rapid-for-vim depend on a proper 'path' setting.
 
@@ -587,7 +587,7 @@ SYSPAR/
 rapid-for-vim does look 1 or 3 levels upward for a `BACKINFO/`, `CS`, 
 `HOME`, `RAPID/` and `SYSPAR/` folders. If found those get added to 
 'path' with ** appended See |starstar|.
-In case you work with a .prg file, put your SYSPAR/ folder parallel to that
+In case you work with a `.prg` file, put your `SYSPAR/` folder parallel to that
 file.
 
 
