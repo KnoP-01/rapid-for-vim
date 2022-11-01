@@ -1164,6 +1164,7 @@ if get(g:,'rapidPath',1)
   if has("win32")
     let s:rapidpath = substitute(s:rapidpath,'\\','\\\\\\','g') " mache aus einem backslash wieder drei, simplify() oben hat das reduziert
   endif
+  call s:KnopVerboseEcho("'path' set to: " . s:rapidpath)
   execute "setlocal path=.,".s:rapidpath
   let b:undo_ftplugin = b:undo_ftplugin." pa<"
 
