@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 22. Mar 2022
+" Last Change: 12. May 2023
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1287,10 +1287,10 @@ endif
 if get(g:,'rapidMoveAroundKeyMap',1)
   if bufname("%") =~ '\c\.cfg$'
     nnoremap <silent><buffer> ]] :<C-U>                     call search('^#'              ,   'sw')<cr>
-    onoremap <silent><buffer> ]] :<C-U>exe "normal! v" <Bar>call search('\(\ze\n#\\|\%$\)',   'eW')<cr>
+    onoremap <silent><buffer> ]] :<C-U>exe "normal! v" <Bar>call search('\(\ze\n#\\|\%$\)',   'esW')<cr>
     xnoremap <silent><buffer> ]] :<C-U>exe "normal! gv"<Bar>call search('\(^#\\|\%$\)'    ,   'sW')<cr>
     nnoremap <silent><buffer> [[ :<C-U>                     call search('^#'              ,   'bsw')<cr>
-    onoremap <silent><buffer> [[ :<C-U>                     call search('^#'              ,   'bW')<cr>
+    onoremap <silent><buffer> [[ :<C-U>                     call search('^#'              ,   'bsW')<cr>
     xnoremap <silent><buffer> [[ :<C-U>exe "normal! gv"<Bar>call search('^#'              ,   'bsW')<cr>
     nnoremap <silent><buffer> ][ :<C-U>                     call search('.*\(\n#\\|\%$\)' ,   'sw')<cr>
     onoremap <silent><buffer> ][ :<C-U>exe "normal! v" <Bar>call search('\(\n#\\|\%$\)'   ,   'sW')<cr>

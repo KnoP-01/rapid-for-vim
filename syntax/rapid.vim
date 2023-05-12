@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 27. Oct 2022
+" Last Change: 12. May 2023
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -285,7 +285,7 @@ else
   " arc Weldguide and MultiPass instructions
   syn keyword rapidKeyword MPSavePath MPLoadPath MPReadInPath MPOffsEaxOnPath
   " Paint instructions
-  syn keyword rapidKeyword IpsSetParam PntProdUserLog SetBrush SetBrushFac
+  syn keyword rapidKeyword ConsoleWrite IpsSetParam PntProdUserLog SetBrush SetBrushFac
   " Spot instructions
   syn keyword rapidKeyword SetForce Calibrate ReCalcTCP IndGunMove IndGunMoveReset OpenHighLift CloseHighLift SwSetIntSpotData SwSetIntForceData SwSetIntGunData SwSetIntSimData SwGetCalibData SwGetFixTipData 
   " Tool change instructions
@@ -335,7 +335,7 @@ else
   syn keyword rapidMovement NutL NutJ
   syn keyword rapidMovement PathRecMoveBwd PathRecMoveFwd 
   " Paint instructions"
-  syn keyword rapidMovement PaintL PaintLDO PaintC
+  syn keyword rapidMovement PaintL PaintLSig PaintLDO PaintC
   syn keyword rapidMovement StartMove StartMoveRetry StepBwdPath StopMove StopMoveReset
   " Spot instructions
   syn keyword rapidMovement SpotL SpotJ SpotML SpotMJ CalibL CalibJ MeasureWearL 
