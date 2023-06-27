@@ -1,8 +1,8 @@
 " ABB Rapid Command syntax file for Vim
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
-" Version: 2.2.7
-" Last Change: 12. May 2023
+" Version: 2.3.0
+" Last Change: 27. Jun 2023
 " Credits: Thanks for beta testing to Thomas Baginski
 "
 " Suggestions of improvement are very welcome. Please email me!
@@ -35,22 +35,6 @@ endif
 let s:keepcpo= &cpo
 set cpo&vim
 
-" if rapidGroupName exists it overrides rapidNoHighlight and rapidNoHighLink
-if exists("g:rapidGroupName")
-  silent! unlet g:rapidNoHighLink
-  silent! unlet g:rapidNoHighlight
-endif
-" if rapidNoHighLink exists it overrides rapidNoHighlight and it's pushed to rapidGroupName
-if exists("g:rapidNoHighLink")
-  silent! unlet g:rapidNoHighlight
-  let g:rapidGroupName = g:rapidNoHighLink
-  unlet g:rapidNoHighLink
-endif
-" if rapidNoHighlight still exists it's pushed to rapidGroupName
-if exists("g:rapidNoHighlight")
-  let g:rapidGroupName = g:rapidNoHighlight
-  unlet g:rapidNoHighlight
-endif
 " if colorscheme is tortus rapidNoHighLink defaults to 1
 if (get(g:,'colors_name'," ")=="tortus" || get(g:,'colors_name'," ")=="tortusless") 
       \&& !exists("g:rapidGroupName")
