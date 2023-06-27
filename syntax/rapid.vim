@@ -128,6 +128,9 @@ if bufname("%") =~ '\c\.cfg$'
 else
   " highlighting for *.mod, *.sys and *.prg {{{
 
+  " sync for regions from a line comment or the start of a function
+  syn sync match rapidSync grouphere NONE /\v\c^\s*%(!|%(task\s+|local\s+)?%(module|proc|func|trap|record)>)/
+
   " Comment {{{ 
   " TODO Comment
   syn match rapidTodoComment contained /\<TODO\>\|\<FIXME\>\|\<XXX\>/
@@ -384,8 +387,6 @@ else
   highlight default link rapidConcealableString String
   syn region rapidStructVal matchgroup=rapidStructDelimiter start=/\[/ end=/\]/ contains=rapidStructVal,rapidBoolean,rapidDec,rapidHex,rapidOct,rapidBin,rapidFloat,rapidConcealableString,rapidDelimiter,rapidConstant,rapidErrNo,rapidIntNo,rapidOperator keepend extend conceal cchar=* 
   highlight default link rapidStructDelimiter Delimiter
-  " sync for regions from start of function
-  syn sync match rapidSyncStrucVal grouphere rapidStructVal /\s\c^\s*<(module|proc|func|trap|record)>/
   " check edge cases like this one:
   "  LOCAL CONST listitem lstAuswService{18}:=[["","Service Position"],["","Bremsentest"],["","Referenzfahrt"],["","Manuelles Abfahren"],["","Justagestellung"],["","Transportposition"],
   "      ["","Spitze-Spitze Greifer 1, [RT]"],["","Spitze-Spitze Greifer 2, [FT]"],["","Spitze-Spitze Pruefspitze"],["","Werkobjekt Ablage"],["","Werkobjekt Modul 1"],
