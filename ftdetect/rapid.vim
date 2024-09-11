@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 12. May 2023
+" Last Change: 11. Sep 2024
 " Credits:
 "
 
@@ -22,9 +22,9 @@ au! BufRead *.prg,*.Prg,*.PRG,*.prg\c
       \| else
       \|   setf clipper
       \| endif
-au! BufNewFile *.mod,*.Mod,*.MOD,*.mod\c
+au! BufNewFile *.modx,*.mod,*.Mod,*.MOD,*.mod\c,*.modx\c
       \  setf rapid
-au! BufRead *.mod,*.Mod,*.MOD,*.mod\c
+au! BufRead *.modx,*.mod,*.Mod,*.MOD,*.mod\c,*.modx\c
       \  if s:IsRapid()
       \|   setf rapid
       \| elseif exists("g:filetype_mod")
@@ -38,9 +38,9 @@ au! BufRead *.mod,*.Mod,*.MOD,*.mod\c
       \| else
       \|   setf modsim3
       \| endif
-au! BufNewFile *.sys,*.Sys,*.SYS,*.sys\c
+au! BufNewFile *.sysx,*.sys,*.Sys,*.SYS,*.sys\c,*.sysx\c
       \  setf rapid 
-au! BufRead *.sys,*.Sys,*.SYS,*.sys\c
+au! BufRead *.sysx,*.sys,*.Sys,*.SYS,*.sys\c,*.sysx\c
       \  if s:IsRapid()
       \|   setf rapid 
       \| elseif exists("g:filetype_sys")

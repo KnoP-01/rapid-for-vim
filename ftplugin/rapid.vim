@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 12. May 2023
+" Last Change: 11. Sep 2024
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -537,15 +537,15 @@ if !exists("*s:KnopVerboseEcho()")
       let l:suffix = '>|(end)?(proc|func|trap|record)>)/j' " since this finds all (not only global) ends, the previous must also list local
       if l:i =~ 'task'
         if has("win32")
-          let l:path = './*.prg ./*.mod ./*.sys '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys'
+          let l:path = './*.prg ./*.mod ./*.sys ./*.modx ./*.sysx '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.modx '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys ' .fnameescape(expand("%:p:h")).'/../SYSMOD/*.sysx '
         else
-          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.SYS '
+          let l:path = './*.prg ./*.Prg ./*.PRG ./*.modx ./*.mod ./*.Mod ./*.MOD ./*.sysx ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.modx '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sysx '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../SYSMOD/*.SYS '
         endif
       elseif l:i =~ 'system'
         if has("win32")
-          let l:path = './*.prg ./*.mod ./*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys'
+          let l:path = './*.prg ./*.mod ./*.sys ./*.modx ./*.sysx '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.modx '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sysx '
         else
-          let l:path = './*.prg ./*.Prg ./*.PRG ./*.mod ./*.Mod ./*.MOD ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
+          let l:path = './*.prg ./*.Prg ./*.PRG ./*.modx ./*.mod ./*.Mod ./*.MOD ./*.sysx ./*.sys ./*.Sys ./*.SYS '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.modx '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.Mod '.fnameescape(expand("%:p:h")).'/../../TASK*/PROGMOD/*.MOD '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sysx '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.Sys '.fnameescape(expand("%:p:h")).'/../../TASK*/SYSMOD/*.SYS '
         endif
       endif
       try
@@ -1102,9 +1102,9 @@ endif " !exists("*s:KnopVerboseEcho()")
 setlocal commentstring=!%s
 setlocal comments=:\!
 if has("win32")
-  setlocal suffixesadd+=.mod,.sys,.prg,.cfg
+  setlocal suffixesadd+=.mod,.sys,.prg,.cfg,.modx,.sysx
 else
-  setlocal suffixesadd+=.mod,.Mod,.MOD,.sys,.Sys,.SYS,.prg,.Prg,.PRG,.cfg,.Cfg,.CFG
+  setlocal suffixesadd+=.modx,.Modx,.ModX,.MODX,.sysx,.Sysx,.SysX,.SYSX,.mod,.Mod,.MOD,.sys,.Sys,.SYS,.prg,.Prg,.PRG,.cfg,.Cfg,.CFG
 endif
 let b:undo_ftplugin = "setlocal com< cms< sua<"
 
@@ -1221,7 +1221,6 @@ unlet s:pathToCurrentFile
 if !exists("*<SID>RapidConcealLevel")
   function <SID>RapidConcealLevel(lvl) abort
     " g:rapidConcealStructs may be used as input for a:lvl
-
 
     if a:lvl == 2
       " conceal all structure values
