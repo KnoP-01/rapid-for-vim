@@ -296,7 +296,7 @@ else
   highlight default link rapidKeyword Keyword
   " Exception
   syn keyword rapidException Exit ErrRaise ExitCycle Raise RaiseToUser Retry Return TryNext
-  syn match rapidException /^\s*Stop\s*[\\;]/me=e-1
+  syn match rapidException /\s\+Stop\s*[\\;]/me=e-1
   highlight default link rapidException Exception
   " }}} Statements, keywords et al
 
