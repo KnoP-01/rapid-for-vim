@@ -187,6 +187,8 @@ else
   syn keyword rapidType cameradev cameratarget 
   " arc Weldguide and MultiPass data types
   syn keyword rapidType adaptdata trackdata multidata 
+  " GAP
+  syn keyword rapidType partdata partadv ee_event menudata
   " dispense data types
   syn keyword rapidType beaddata equipdata
   " Spot data types
