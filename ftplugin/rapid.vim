@@ -673,7 +673,8 @@ if !exists("*s:KnopVerboseEcho()")
         "
       elseif l:currentWord =~ '^inst.*'
         let l:currentWord = substitute(l:currentWord,'^inst','','')
-        call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD. No search performed."],1)
+        call s:KnopVerboseEcho([l:currentWord,"appear to be a Rapid KEYWORD. Try search anyway..."],1)
+        return s:RapidSearchUserDefined(l:declPrefix,l:currentWord)
       elseif l:currentWord =~ '^num.*'
         let l:currentWord = substitute(l:currentWord,'^num','','')
         call s:KnopVerboseEcho([l:currentWord,"appear to be a NUMBER. No search performed."],1)
