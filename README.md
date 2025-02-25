@@ -160,7 +160,7 @@ A: rapid-for-vim will not override existing mappings unless the corresponding
             Override existing mapping with
         let g:rapidAutoFormKeyMap = 1
 
-Q: When I switch syntax off I get false indentation sometimes?
+Q: When I switch syntax off I get false indentation sometimes?  
 A: Indentation partly depends on `syntax on` . If you have strings with ! or
    keywords in it Indentation may get confused without syntax on. It should
    do fine for the most part of your editing. See next question.
