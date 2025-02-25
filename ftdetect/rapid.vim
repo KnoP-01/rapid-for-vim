@@ -22,9 +22,9 @@ au! BufRead *.prg,*.Prg,*.PRG,*.prg\c
       \| else
       \|   setf clipper
       \| endif
-au! BufNewFile *.modx,*.mod,*.Mod,*.MOD,*.mod\c,*.modx\c
+au! BufNewFile *.mod\c,*.modx\c
       \  setf rapid
-au! BufRead *.modx,*.mod,*.Mod,*.MOD,*.mod\c,*.modx\c
+au! BufRead *.mod\c,*.modx\c
       \  if s:IsRapid()
       \|   setf rapid
       \| elseif exists("g:filetype_mod")
@@ -38,9 +38,9 @@ au! BufRead *.modx,*.mod,*.Mod,*.MOD,*.mod\c,*.modx\c
       \| else
       \|   setf modsim3
       \| endif
-au! BufNewFile *.sysx,*.sys,*.Sys,*.SYS,*.sys\c,*.sysx\c
+au! BufNewFile *.sys\c,*.sysx\c
       \  setf rapid 
-au! BufRead *.sysx,*.sys,*.Sys,*.SYS,*.sys\c,*.sysx\c
+au! BufRead ,*.sys\c,*.sysx\c
       \  if s:IsRapid()
       \|   setf rapid 
       \| elseif exists("g:filetype_sys")
