@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 11. Sep 2024
+" Last Change: 24. Feb 2025
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1131,7 +1131,12 @@ if get(g:,'rapidFormatComments',1)
   endif
 endif " format comments
 
-setlocal fileencoding=latin1
+if          expand('%:t:e')=~?'modx'
+      \ ||  expand('%:t:e')=~?'sysx'
+  setlocal fileencoding=utf8
+else
+  setlocal fileencoding=latin1
+endif
 let b:undo_ftplugin = b:undo_ftplugin." fenc<"
 
 " path for gf, :find etc
