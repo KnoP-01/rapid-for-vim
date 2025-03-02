@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 24. Feb 2025
+" Last Change: 02. Mar 2025
 " Credits: Peter Oddings (KnopUniqueListItems/xolox#misc#list#unique)
 "          Thanks for beta testing to Thomas Baginski
 "
@@ -1134,6 +1134,9 @@ endif " format comments
 if          expand('%:t:e')=~?'modx'
       \ ||  expand('%:t:e')=~?'sysx'
   setlocal fileencoding=utf8
+elseif      expand('%:t:e')=~?'cfg'
+  " leave fenc untouched for rapid cfg-files, since we cannot distingish old
+  " and new ones easily
 else
   setlocal fileencoding=latin1
 endif
