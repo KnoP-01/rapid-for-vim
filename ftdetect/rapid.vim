@@ -2,7 +2,7 @@
 " Language: ABB Rapid Command
 " Maintainer: Patrick Meiser-Knosowski <knosowski@graeffrobotics.de>
 " Version: 2.2.7
-" Last Change: 11. Sep 2024
+" Last Change: 14. May 2025
 " Credits:
 "
 
@@ -52,16 +52,16 @@ au! BufNewFile *.cfg,*.Cfg,*.CFG,*.cfg\c
       \  setf rapid
 au! BufRead *.cfg,*.Cfg,*.CFG,*.cfg\c
       \  if s:IsRapid("cfg")
-      \|   call <SID>RapidSetFandCorrEOL() 
+      \|   call <SID>RapidSetfAndCorrEOL() 
       \| elseif exists("g:filetype_cfg")
       \|   exe "setf " . g:filetype_cfg
       \| else 
       \|   setf cfg 
       \| endif
 
-if !exists("*<SID>RapidSetFandCorrEOL()")
+if !exists("*<SID>RapidSetfAndCorrEOL()")
 
-  function <SID>RapidSetFandCorrEOL() abort
+  function <SID>RapidSetfAndCorrEOL() abort
     setf rapid
     if get(g:,'rapidAutoCorrCfgLineEnd',1)
       silent! %s/\r//
