@@ -1,3 +1,5 @@
+# rapid-for-vim
+
 ```
                                              _           _______
                                             /.\\        /  ___  \_________  _
@@ -17,11 +19,6 @@
         industrial robot programming                  |           |      |     |
                                                       |___________|      |_____|
 ```
-# rapid-for-vim
-
-**READ [FAQ][2] FIRST** if you want more than just syntax highlight and 
-automatic indenting. It is a quick overview over the most important options 
-and mappings provided by Rapid for Vim. For more details see the [help][3] file.
 
 ## Introduction:
 
@@ -45,12 +42,16 @@ backup folder structure. Rapid for Vim modifies 'path' accordingly.
 **Note to Linux users:** Keep your files to edit on a FAT file system.  
 Some features need the case insensitive file system to work properly.
 
+**READ [FAQ][2]** if you want more than just syntax highlight and automatic 
+indenting. It is a quick overview over the most important options and mappings
+provided by Rapid for Vim. For more details see the [help][3] file.
+
 
 ## Installation:
 
-### Installation with [vim-plug][14]:  ~  
+### Installation with [vim-plug][14]:
 
-Put this in your .vimrc:  >
+Put this in your .vimrc:
 
     call plug#begin('~/.vim/plugged')
       Plug 'KnoP-01/rapid-for-vim'
@@ -60,35 +61,35 @@ Put this in your .vimrc:  >
     syntax on                  " syntax and filetype on in that order
     filetype plugin indent on  " syntax and filetype on in that order
 
-For the first installation run: >
+For the first installation run:
 
     :PlugInstall
 
-Update every once in a while with: >
+Update every once in a while with:
 
     :PlugUpdate
 
-### Manual installation:  ~  
+### Manual installation:
 
 Extract the most recent [release][1] and copy the folders 
 `/doc`, `/ftdetect`, `/ftplugin`, `/indent` and `/syntax` 
 into your `~/.vim/` or `%USERPROFILE%\vimfiles\` directory. 
 Overwrite rapid.\* files from older installation. 
 
-Put the following in your .vimrc: >
+Put the following in your .vimrc:
 
     syntax on                  " syntax and filetype on in that order
     filetype plugin indent on  " syntax and filetype on in that order
 
-You may have to run >
+You may have to run
 
     :helptags ~/.vim/doc/
 
-or >
+or
 
     :helptags ~/vimfiles/doc/
 
-to use the help within Vim after installation. >
+to use the help within Vim after installation.
 
     :help rapid
 
@@ -96,7 +97,7 @@ to use the help within Vim after installation. >
 ## FAQ
 
 Q: How do I disable an annoying feature of rapid-for-vim?  
-A: Disable feature in your `vimrc`, see [rapid-options][6] for details: >
+A: Disable feature in your `vimrc`, see [rapid-options][6] for details:
 
     let g:rapidShortenQFPath   = 0 " don't shorten paths in quickfix
     let g:rapidAutoComment     = 0 " don't continue comments with o, O or Enter
@@ -111,7 +112,7 @@ Q: Which keys get mapped to what? Will that override my own mappings?
 A: rapid-for-vim will not override existing mappings unless the corresponding
    option is explicitly set. To use different key bindings see :help 
    [rapid-key-mappings][13] for \<Plug\> mappings.  
-   Otherwise rapid-for-vim create the following mappings: >
+   Otherwise rapid-for-vim create the following mappings:
 
     <F2> Show all structure values
     <F3> Show structure values at cursorline
@@ -167,16 +168,16 @@ A: Indentation partly depends on `syntax on` . If you have strings with ! or
 
 Q: Does rapid-for-vim provide a mapping for indenting the whole file?  
 A: No, but you may put the following in your .vimrc or
-   `~/.vim/after/ftplugin/rapid.vim`: >
+   `~/.vim/after/ftplugin/rapid.vim`:
 
     nnoremap ANYKEY gg=G``zz
 
-or if you don't use syntax highlighting >
+or if you don't use syntax highlighting
 
     nnoremap ANYKEY :syntax on<bar>normal gg=G``zz<cr>:syntax off<cr>
 
 Q: Scrolling feels sluggish. What can I do?  
-A: Switch error highlighting off: >
+A: Switch error highlighting off:
 
     let g:rapidShowError = 0      " better performance
 
